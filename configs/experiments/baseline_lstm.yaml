@@ -1,0 +1,14 @@
+profile_name: baseline_lstm
+description: Baseline Deep LSTM trained with standard MSE loss
+model:
+  architecture: lstm
+  lstm_hidden_dim1: 64
+  lstm_hidden_dim2: 32
+  dropout: 0.2
+loss:
+  name: mse
+training:
+  epochs: 35
+  batch_size: 64
+  learning_rate: 0.001
+  optimizer: adam

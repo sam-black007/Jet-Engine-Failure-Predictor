@@ -1,0 +1,5 @@
+model:
+  architecture: lstm
+  lstm_hidden_dim1: 64
+  lstm_hidden_dim2: 32
+  dropout: 0.2

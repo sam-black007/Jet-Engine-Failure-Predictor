@@ -1,0 +1,6 @@
+model:
+  architecture: attention_lstm
+  lstm_hidden_dim1: 64
+  lstm_hidden_dim2: 32
+  attention_dim: 32
+  dropout: 0.2

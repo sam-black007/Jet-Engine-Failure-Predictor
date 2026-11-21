@@ -1,0 +1,4 @@
+loss:
+  name: smooth_pinball
+  pinball_quantile: 0.35
+  smooth_beta: 0.1

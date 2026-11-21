@@ -8,7 +8,7 @@ Implements:
 3. SmoothPinballLoss: Smooth Huberized asymmetric pinball loss for continuous optimization.
 """
 
-from typing import Optional, Union
+from typing import Optional, Union, Any, Dict
 import torch
 import torch.nn as nn
 
@@ -167,3 +167,52 @@ class SmoothPinballLoss(nn.Module):
         elif self.reduction == "sum":
             return torch.sum(loss)
         return loss
+
+
+def get_loss_function(config: Any) -> nn.Module:
+    """Instantiate a PyTorch loss module from a LossConfig, dict, or string name.
+    
+    Parameters
+    ----------
+    config : LossConfig or dict or str
+        Loss configuration.
+        
+    Returns
+    -------
+    nn.Module
+    """
+    if isinstance(config, str):
+        name = config.lower()
+        cfg_dict = {"name": name}
+    elif hasattr(config, "name"):
+        name = config.name.lower()
+        cfg_dict = config.__dict__ if hasattr(config, "__dict__") else {}
+    elif isinstance(config, dict):
+        name = config.get("name", "mse").lower()
+        cfg_dict = config
+    else:
+        name = "mse"
+        cfg_dict = {}
+
+    if name == "mse":
+        return nn.MSELoss()
+    elif name == "mae":
+        return nn.L1Loss()
+    elif name == "huber":
+        delta = getattr(config, "huber_delta", cfg_dict.get("huber_delta", 1.0))
+        return nn.HuberLoss(delta=float(delta))
+    elif name == "nasa_asymmetric":
+        late_p = getattr(config, "late_penalty", cfg_dict.get("late_penalty", 10.0))
+        early_p = getattr(config, "early_penalty", cfg_dict.get("early_penalty", 13.0))
+        return NASAAsymmetricLoss(late_penalty=float(late_p), early_penalty=float(early_p))
+    elif name == "pinball":
+        q = getattr(config, "pinball_quantile", cfg_dict.get("pinball_quantile", 0.35))
+        return AsymmetricPinballLoss(quantile=float(q))
+    elif name == "smooth_pinball":
+        q = getattr(config, "pinball_quantile", cfg_dict.get("pinball_quantile", 0.35))
+        beta = getattr(config, "smooth_beta", cfg_dict.get("smooth_beta", 0.1))
+        return SmoothPinballLoss(quantile=float(q), delta=float(beta))
+    else:
+        raise ValueError(f"Unknown loss function name: '{name}'")
+
+

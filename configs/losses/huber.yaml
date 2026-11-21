@@ -1,0 +1,3 @@
+loss:
+  name: huber
+  huber_delta: 1.0

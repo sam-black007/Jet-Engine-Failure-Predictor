@@ -78,7 +78,7 @@ def load_performance_metrics_cached():
 
 @st.cache_resource
 def load_models():
-    """Load baseline sklearn models and PyTorch LSTM model."""
+    """Load baseline sklearn models and PyTorch deep models (LSTM, Pinball, Transformer)."""
     models = {}
     baselines_dir = PROJECT_ROOT / "models" / "baselines"
     for name in ["linear_regression", "random_forest", "gradient_boosting"]:
@@ -86,7 +86,7 @@ def load_models():
         if path.is_file():
             models[name] = joblib.load(path)
 
-    # PyTorch LSTM
+    # PyTorch Baseline LSTM
     lstm_path = PROJECT_ROOT / "models" / "lstm" / "lstm_model.pt"
     if lstm_path.is_file():
         checkpoint = torch.load(lstm_path, map_location="cpu", weights_only=False)
@@ -95,15 +95,37 @@ def load_models():
         lstm.eval()
         models["lstm"] = lstm
 
+    # Phase 1 Best Pinball LSTM (q=0.35)
+    pinball_path = PROJECT_ROOT / "models" / "lstm_asymmetric" / "pinball_q35_lstm.pt"
+    if pinball_path.is_file():
+        checkpoint = torch.load(pinball_path, map_location="cpu", weights_only=False)
+        pinball_m = LSTMPredictor(input_dim=17)
+        pinball_m.load_state_dict(checkpoint["model_state_dict"])
+        pinball_m.eval()
+        models["pinball_lstm_q35 (Best)"] = pinball_m
+
+    # Phase 2 Time-Series Transformer
+    transformer_path = PROJECT_ROOT / "models" / "transformer" / "transformer_exp_p2_transformer.pt"
+    if transformer_path.is_file():
+        try:
+            from src.models.transformer import TransformerRULPredictor
+            trans_ckpt = torch.load(transformer_path, map_location="cpu", weights_only=False)
+            trans_m = TransformerRULPredictor(input_dim=17, d_model=64, nhead=4, num_layers=2, max_seq_len=100)
+            trans_m.load_state_dict(trans_ckpt["model_state_dict"])
+            trans_m.eval()
+            models["transformer (Phase 2)"] = trans_m
+        except Exception:
+            pass
+
     return models
 
 
 # ---------------------------------------------------------------------------
 # Data Preprocessing for Inference
 # ---------------------------------------------------------------------------
-def predict_rul(model, sequence_norm: np.ndarray, is_lstm: bool = False) -> float:
+def predict_rul(model, sequence_norm: np.ndarray, is_3d: bool = False) -> float:
     """Predict RUL given normalized sequence of shape (30, 17)."""
-    if is_lstm:
+    if is_3d or isinstance(model, torch.nn.Module):
         # 3D: (1, 30, 17)
         pred = model.predict(sequence_norm[np.newaxis, ...])
         return float(pred[0])
@@ -153,7 +175,7 @@ selected_model_key = st.sidebar.selectbox(
     format_func=lambda x: model_display_names.get(x, x)
 )
 selected_model = models[selected_model_key]
-is_lstm = (selected_model_key == "lstm")
+is_3d = isinstance(selected_model, torch.nn.Module)
 
 # Maintenance alert threshold
 alert_threshold = st.sidebar.slider(
@@ -195,7 +217,7 @@ else:
     # Prepare latest sequence window
     latest_window = engine_trajectory[sensor_cols].iloc[-window_len:].values.astype(np.float32)
     norm_window = (latest_window - sensor_means) / sensor_stds
-    predicted_rul = predict_rul(selected_model, norm_window, is_lstm=is_lstm)
+    predicted_rul = predict_rul(selected_model, norm_window, is_3d=is_3d)
     
     # Ground truth RUL at the end of observed run-to-failure trajectory is 0
     actual_final_rul = min(max_observed_cycle - engine_trajectory["cycle"].iloc[-1], rul_clip)
@@ -259,7 +281,7 @@ for eid in val_ids:
         continue
     w = e_df[sensor_cols].iloc[-window_len:].values.astype(np.float32)
     w_norm = (w - sensor_means) / sensor_stds
-    p = predict_rul(selected_model, w_norm, is_lstm=is_lstm)
+    p = predict_rul(selected_model, w_norm, is_3d=is_3d)
     act = min(e_df["cycle"].max() - e_df["cycle"].iloc[-1], rul_clip)
     
     val_preds.append(p)

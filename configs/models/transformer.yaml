@@ -1,0 +1,7 @@
+model:
+  architecture: transformer
+  transformer_d_model: 64
+  transformer_nhead: 4
+  transformer_num_layers: 2
+  transformer_dim_feedforward: 128
+  transformer_dropout: 0.1

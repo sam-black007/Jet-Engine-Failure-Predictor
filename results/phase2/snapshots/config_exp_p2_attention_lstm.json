@@ -1,0 +1,102 @@
+{
+  "version": "2.0.0",
+  "experiment_id": "exp_p2_attention_lstm",
+  "profile_name": "attention_lstm_experiment",
+  "description": "JETWISE AI experiment configuration",
+  "created_at": "2026-11-21T17:30:06.283873",
+  "git_commit": "b675a59b5fc1bb481e425b0944a89b79913dee69",
+  "dataset": {
+    "subset": "FD001",
+    "raw_dir": "dataset/raw/CMAPSSData",
+    "train_val_split": 0.8,
+    "seed": 42
+  },
+  "sensor": {
+    "selection_mode": "auto_variance",
+    "variance_threshold": 0.0,
+    "default_excluded": [
+      "sensor_1",
+      "sensor_10",
+      "sensor_18",
+      "sensor_19"
+    ],
+    "manual_sensors": null,
+    "include_operational_settings": false
+  },
+  "preprocessing": {
+    "scaler_type": "standard",
+    "window_size": 30,
+    "stride": 1,
+    "padding_mode": "first",
+    "rul_clip_train": 125,
+    "rul_clip_eval": 125
+  },
+  "model": {
+    "architecture": "attention_lstm",
+    "input_dim": 17,
+    "dropout": 0.2,
+    "lstm_hidden_dim1": 64,
+    "lstm_hidden_dim2": 32,
+    "bidirectional": false,
+    "attention_dim": 32,
+    "tcn_num_channels": [
+      32,
+      64,
+      64
+    ],
+    "tcn_kernel_size": 3,
+    "tcn_dropout": 0.2,
+    "transformer_d_model": 64,
+    "transformer_nhead": 4,
+    "transformer_num_layers": 2,
+    "transformer_dim_feedforward": 128,
+    "transformer_dropout": 0.1,
+    "n_estimators": 100,
+    "max_depth": 10
+  },
+  "loss": {
+    "name": "pinball",
+    "pinball_quantile": 0.35,
+    "late_penalty": 10.0,
+    "early_penalty": 13.0,
+    "huber_delta": 1.0,
+    "smooth_beta": 0.1
+  },
+  "training": {
+    "epochs": 30,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "weight_decay": 1e-05,
+    "scheduler": "plateau",
+    "scheduler_patience": 5,
+    "scheduler_factor": 0.5,
+    "early_stopping": true,
+    "early_stopping_patience": 8,
+    "gradient_clip_norm": 1.0,
+    "seed": 42,
+    "device": "auto",
+    "checkpoint_freq": 5
+  },
+  "prediction": {
+    "strategy": "standard",
+    "bias_offset": 0.0,
+    "mc_samples": 30,
+    "confidence_level": 0.9,
+    "quantile_lower": 0.1,
+    "quantile_upper": 0.9,
+    "clip_output_to_zero": true
+  },
+  "evaluation": {
+    "metrics": [
+      "MAE",
+      "RMSE",
+      "NASA_score",
+      "Mean_Bias",
+      "Overestimates"
+    ],
+    "official_test_subset": "FD001",
+    "per_engine": true,
+    "save_plots": true
+  }
+}

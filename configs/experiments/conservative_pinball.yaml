@@ -1,0 +1,15 @@
+profile_name: conservative_pinball
+description: Best reported Pinball LSTM (q=0.35) penalizing late predictions
+model:
+  architecture: lstm
+  lstm_hidden_dim1: 64
+  lstm_hidden_dim2: 32
+  dropout: 0.2
+loss:
+  name: pinball
+  pinball_quantile: 0.35
+training:
+  epochs: 35
+  batch_size: 64
+  learning_rate: 0.001
+  optimizer: adam

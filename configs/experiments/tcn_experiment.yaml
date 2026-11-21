@@ -1,0 +1,18 @@
+profile_name: tcn_experiment
+description: Temporal Convolutional Network with dilated causal convolutions
+model:
+  architecture: tcn
+  tcn_num_channels:
+  - 32
+  - 64
+  - 64
+  tcn_kernel_size: 3
+  tcn_dropout: 0.2
+loss:
+  name: pinball
+  pinball_quantile: 0.35
+training:
+  epochs: 35
+  batch_size: 64
+  learning_rate: 0.001
+  optimizer: adam

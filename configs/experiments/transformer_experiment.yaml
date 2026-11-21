@@ -1,0 +1,17 @@
+profile_name: transformer_experiment
+description: Time-Series Transformer Encoder with Multi-Head Self-Attention
+model:
+  architecture: transformer
+  transformer_d_model: 64
+  transformer_nhead: 4
+  transformer_num_layers: 2
+  transformer_dim_feedforward: 128
+  transformer_dropout: 0.1
+loss:
+  name: pinball
+  pinball_quantile: 0.35
+training:
+  epochs: 35
+  batch_size: 64
+  learning_rate: 0.001
+  optimizer: adam

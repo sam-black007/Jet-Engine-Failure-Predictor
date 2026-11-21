@@ -1,0 +1,8 @@
+model:
+  architecture: tcn
+  tcn_num_channels:
+  - 32
+  - 64
+  - 64
+  tcn_kernel_size: 3
+  tcn_dropout: 0.2
