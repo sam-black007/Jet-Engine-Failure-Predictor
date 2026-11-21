@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Exploratory Notebook",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/notebooks/exploratory_analysis.ipynb",
+            "justMyCode": false,
+            "console": "integratedTerminal"
+        }
+    ]
+}

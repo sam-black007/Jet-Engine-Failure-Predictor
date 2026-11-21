@@ -1,0 +1,70 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# IDE and Editor configurations
+.vscode/*
+!.vscode/launch.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs and runtime artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Large Datasets & Archives
+# Raw archive zip (raw text files in CMAPSSData are preserved for out-of-the-box fresh clone test execution)
+dataset/raw/*.zip
+
+# Generated heavy numpy binary arrays (reproducible via python src/preprocessing.py)
+dataset/processed/*.npy
+
+# Keep preprocessing metadata and tracking configurations
+!dataset/processed/preprocess_metadata.json
+
+# Models: Preserve trained models necessary for out-of-the-box dashboard execution
+# (Trained baseline pickles & PyTorch LSTM checkpoint total ~27.4 MB, well within GitHub 50MB limit)
+!models/baselines/*.pkl
+!models/lstm/*.pt
+!models/performance_metrics.json
+
+# Scratch and diagnostic scripts
+check_missing*.py
+run_check*.py
+run_preprocess*.py

@@ -1,0 +1,54 @@
+{
+  "linear_regression": {
+    "sequence_level": {
+      "MAE": 14.7319,
+      "RMSE": 18.228,
+      "NASA_score": 20521.9211
+    },
+    "per_engine": {
+      "MAE": 37.1216,
+      "RMSE": 42.345,
+      "NASA_score": 848.6973
+    }
+  },
+  "random_forest": {
+    "sequence_level": {
+      "MAE": 14.1532,
+      "RMSE": 19.0604,
+      "NASA_score": 37720.1179
+    },
+    "per_engine": {
+      "MAE": 3.3604,
+      "RMSE": 3.4697,
+      "NASA_score": 8.0934
+    }
+  },
+  "gradient_boosting": {
+    "sequence_level": {
+      "MAE": 13.0141,
+      "RMSE": 17.5554,
+      "NASA_score": 26176.9998
+    },
+    "per_engine": {
+      "MAE": 4.5177,
+      "RMSE": 4.7104,
+      "NASA_score": 11.5652
+    }
+  },
+  "lstm": {
+    "sequence_level": {
+      "MAE": 11.518,
+      "RMSE": 15.2137,
+      "NASA_score": 17090.1588
+    },
+    "per_engine": {
+      "MAE": 2.5435,
+      "RMSE": 2.5795,
+      "NASA_score": 5.8165
+    },
+    "training_details": {
+      "best_epoch": 23,
+      "best_val_mse": 231.4565
+    }
+  }
+}

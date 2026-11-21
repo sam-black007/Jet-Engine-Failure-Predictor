@@ -1,0 +1,22 @@
+# Project Status Tracker: Jet Engine Failure Predictor
+
+- [x] Project directory created & structured
+- [x] NASA C-MAPSS dataset downloaded & extracted
+- [x] Exploratory Data Analysis (EDA) completed (`notebooks/exploratory_analysis.ipynb`)
+- [x] Data loader implemented (`src/data_loader.py`)
+- [x] Preprocessing pipeline implemented, executed & validated (`src/preprocessing.py`)
+- [x] Dataset audit completed: 100 engines verified (80 train / 20 validation, 0 missing)
+- [x] Baseline regression models trained and saved (`models/baselines/`)
+  - Linear Regression
+  - Random Forest Regressor
+  - Gradient Boosting Regressor
+- [x] PyTorch Deep LSTM model trained and saved (`models/lstm/lstm_model.pt`)
+- [x] NASA asymmetric scoring function implemented & verified (`src/evaluation.py`)
+- [x] Both Sequence-level and Per-engine truncated evaluations completed (`models/performance_metrics.json`)
+- [x] Streamlit industrial monitoring dashboard implemented & tested (`dashboard/app.py`)
+- [x] Full test suite implemented & passing 11/11 tests (`tests/`)
+- [x] Technical documentation created (`README.md`, `docs/models.md`)
+- [x] GitHub CI workflow configured (`.github/workflows/tests.yml`)
+- [x] Repository requirements defined (`requirements.txt`, `dashboard/requirements.txt`)
+- [x] Professional `.gitignore` and Apache-2.0 `LICENSE` configured
+- [x] Repository ready for GitHub publication (awaiting user authorization)
