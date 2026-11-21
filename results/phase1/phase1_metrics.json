@@ -1,0 +1,147 @@
+{
+  "evaluation_target": "Official NASA C-MAPSS FD001 Test Set (100 Engines)",
+  "timestamp": "2026-11-21 21:24:33",
+  "models": {
+    "baseline_lstm": {
+      "name": "Existing MSE LSTM",
+      "raw_target": {
+        "MAE": 11.6931,
+        "RMSE": 16.3288,
+        "NASA_score": 537.0058
+      },
+      "clipped_target": {
+        "MAE": 10.6231,
+        "RMSE": 14.9864,
+        "NASA_score": 497.1455
+      },
+      "mean_bias": 0.0525,
+      "overestimation_count": 43,
+      "underestimation_count": 57,
+      "max_abs_error": 48.0208,
+      "latency_ms": 4.209
+    },
+    "nasa_asymmetric_lstm": {
+      "name": "NASA Asymmetric LSTM",
+      "raw_target": {
+        "MAE": 12.377,
+        "RMSE": 17.1224,
+        "NASA_score": 435.3424
+      },
+      "clipped_target": {
+        "MAE": 11.307,
+        "RMSE": 15.2724,
+        "NASA_score": 359.253
+      },
+      "mean_bias": -4.7427,
+      "overestimation_count": 41,
+      "underestimation_count": 59,
+      "max_abs_error": 59.5562,
+      "latency_ms": 3.925
+    },
+    "pinball_lstm": {
+      "name": "Pinball LSTM (q=0.40)",
+      "raw_target": {
+        "MAE": 13.0752,
+        "RMSE": 17.152,
+        "NASA_score": 528.6711
+      },
+      "clipped_target": {
+        "MAE": 12.0052,
+        "RMSE": 15.465,
+        "NASA_score": 439.974
+      },
+      "mean_bias": 0.2317,
+      "overestimation_count": 55,
+      "underestimation_count": 45,
+      "max_abs_error": 52.7303,
+      "latency_ms": 3.754
+    },
+    "pinball_q35_lstm": {
+      "name": "Pinball LSTM (q=0.35)",
+      "raw_target": {
+        "MAE": 12.5929,
+        "RMSE": 16.4024,
+        "NASA_score": 362.0723
+      },
+      "clipped_target": {
+        "MAE": 11.5229,
+        "RMSE": 14.3552,
+        "NASA_score": 277.2321
+      },
+      "mean_bias": -1.7976,
+      "overestimation_count": 56,
+      "underestimation_count": 44,
+      "max_abs_error": 42.8856,
+      "latency_ms": 3.571
+    },
+    "gradient_boosting": {
+      "name": "Gradient Boosting (Ref)",
+      "raw_target": {
+        "MAE": 11.7445,
+        "RMSE": 15.4369,
+        "NASA_score": 385.9002
+      },
+      "clipped_target": {
+        "MAE": 10.6745,
+        "RMSE": 14.2058,
+        "NASA_score": 352.6222
+      },
+      "mean_bias": 2.7819,
+      "overestimation_count": 61,
+      "underestimation_count": 39,
+      "max_abs_error": 41.8616,
+      "latency_ms": 1.326
+    },
+    "random_forest": {
+      "name": "Random Forest (Ref)",
+      "raw_target": {
+        "MAE": 13.4414,
+        "RMSE": 17.8107,
+        "NASA_score": 894.5056
+      },
+      "clipped_target": {
+        "MAE": 12.3714,
+        "RMSE": 16.7482,
+        "NASA_score": 860.8464
+      },
+      "mean_bias": 4.3904,
+      "overestimation_count": 58,
+      "underestimation_count": 42,
+      "max_abs_error": 52.0714,
+      "latency_ms": 18.02
+    },
+    "linear_regression": {
+      "name": "Linear Regression (Ref)",
+      "raw_target": {
+        "MAE": 14.3039,
+        "RMSE": 17.5391,
+        "NASA_score": 494.676
+      },
+      "clipped_target": {
+        "MAE": 13.386,
+        "RMSE": 16.3907,
+        "NASA_score": 450.9635
+      },
+      "mean_bias": 0.38,
+      "overestimation_count": 55,
+      "underestimation_count": 45,
+      "max_abs_error": 44.2059,
+      "latency_ms": 1.097
+    }
+  },
+  "improvements_vs_baseline_lstm": {
+    "nasa_asymmetric_lstm": {
+      "raw_nasa_reduction_pct": 18.93,
+      "clip_nasa_reduction_pct": 27.74,
+      "bias_shift_cycles": -4.8
+    },
+    "pinball_lstm": {
+      "raw_nasa_reduction_pct": 1.55,
+      "clip_nasa_reduction_pct": 11.5
+    },
+    "pinball_q35_lstm": {
+      "raw_nasa_reduction_pct": 32.58,
+      "clip_nasa_reduction_pct": 44.24
+    }
+  }
+}

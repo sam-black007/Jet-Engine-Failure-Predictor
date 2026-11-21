@@ -1,0 +1,46 @@
+{
+  "nasa_asymmetric": {
+    "loss_name": "nasa_asymmetric",
+    "best_epoch": 16,
+    "best_val_nasa": 12691.5627,
+    "val_mae": 12.6516,
+    "val_rmse": 16.0025,
+    "val_bias": -4.3953,
+    "overestimation_pct": 39.54349167180752,
+    "training_time_sec": 143.68,
+    "latency_single_ms": 0.059
+  },
+  "pinball_q40": {
+    "loss_name": "pinball_q40",
+    "best_epoch": 26,
+    "best_val_nasa": 12123.5889,
+    "val_mae": 11.1783,
+    "val_rmse": 14.687,
+    "val_bias": -2.1695,
+    "overestimation_pct": 40.62307217766811,
+    "training_time_sec": 215.54,
+    "latency_single_ms": 0.061
+  },
+  "pinball_q35": {
+    "loss_name": "pinball_q35",
+    "best_epoch": 23,
+    "best_val_nasa": 11330.9693,
+    "val_mae": 12.6501,
+    "val_rmse": 16.1031,
+    "val_bias": -5.2616,
+    "overestimation_pct": 37.07587908698334,
+    "training_time_sec": 196.07,
+    "latency_single_ms": 0.061
+  },
+  "pinball_q45": {
+    "loss_name": "pinball_q45",
+    "best_epoch": 23,
+    "best_val_nasa": 13124.5823,
+    "val_mae": 12.6415,
+    "val_rmse": 16.1067,
+    "val_bias": -3.6544,
+    "overestimation_pct": 39.75940777297964,
+    "training_time_sec": 172.16,
+    "latency_single_ms": 0.048
+  }
+}
