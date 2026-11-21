@@ -1,7 +1,27 @@
 """Playwright integration tests for Streamlit Dashboard using pytest-playwright fixtures."""
 
 import pathlib
+import socket
 import pytest
+
+# Skip this module in environments without pytest-playwright or active Streamlit server (e.g. CI)
+try:
+    import pytest_playwright
+except ImportError:
+    pytest.skip("pytest-playwright is not installed. Skipping live browser E2E tests.", allow_module_level=True)
+
+
+def is_streamlit_running(host="localhost", port=8501, timeout=1.0):
+    """Check if the Streamlit dashboard server is listening."""
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except (socket.timeout, ConnectionRefusedError, OSError):
+        return False
+
+
+if not is_streamlit_running():
+    pytest.skip("Streamlit dashboard is not running on localhost:8501. Skipping live browser tests.", allow_module_level=True)
 
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE_URL = "http://localhost:8501"
