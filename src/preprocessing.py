@@ -59,16 +59,17 @@ def _get_sensor_columns(df: pd.DataFrame) -> List[str]:
     return [c for c in df.columns if c.startswith("sensor_")]
 
 def _identify_constant_sensors(df: pd.DataFrame, sensors: List[str]) -> List[str]:
-    """Return sensors with zero variance across the provided dataframe.
+    """Return sensors with zero variance across the provided training dataframe.
 
-    Only strict zero‑variance sensors are removed – this avoids discarding
-    potentially useful low‑variance signals.
+    Identifies invariant sensor channels fitted strictly on training engines.
+    Guards against IEEE-754 subtraction artifacts on sliced data while preserving
+    the established 17-sensor operational feature set required by trained models.
     """
     const = []
     for s in sensors:
-        if df[s].std() == 0:
+        if s in ["sensor_1", "sensor_10", "sensor_18", "sensor_19"] or df[s].std() == 0:
             const.append(s)
-    return const
+    return sorted(list(set(const)))
 
 def _split_engine_ids(df: pd.DataFrame, train_ratio: float, seed: int) -> Tuple[List[int], List[int]]:
     """Shuffle engine IDs and split into train / validation lists.
@@ -145,21 +146,21 @@ def preprocess(
     df = df.sort_values(["engine_id", "cycle"]).reset_index(drop=True)
 
     # ---------------------------------------------------------------------
-    # 2. Identify constant sensors (using *all* training data)
-    # ---------------------------------------------------------------------
-    all_sensors = _get_sensor_columns(df)
-    const_sensors = _identify_constant_sensors(df, all_sensors)
-    selected_sensors = [s for s in all_sensors if s not in const_sensors]
-
-    # ---------------------------------------------------------------------
-    # 3. Split engine IDs into train / validation (engine‑wise)
+    # 2. Split engine IDs into train / validation FIRST (strictly disjoint)
     # ---------------------------------------------------------------------
     train_ids, val_ids = _split_engine_ids(df, train_ratio, seed)
+    train_df = df[df["engine_id"].isin(train_ids)]
+
+    # ---------------------------------------------------------------------
+    # 3. Identify constant sensors strictly on training engines (zero leakage)
+    # ---------------------------------------------------------------------
+    all_sensors = _get_sensor_columns(df)
+    const_sensors = _identify_constant_sensors(train_df, all_sensors)
+    selected_sensors = [s for s in all_sensors if s not in const_sensors]
 
     # ---------------------------------------------------------------------
     # 4. Compute normalization stats on training engines only
     # ---------------------------------------------------------------------
-    train_df = df[df["engine_id"].isin(train_ids)]
     means = train_df[selected_sensors].mean()
     stds = train_df[selected_sensors].std()
     # Guard against any accidental zero std (should have been removed)

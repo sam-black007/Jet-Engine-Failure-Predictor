@@ -17,7 +17,10 @@ Key characteristics:
 2. The score is strictly non-negative: S >= 0, with S = 0 for perfect predictions.
 """
 
-from typing import Dict, Union, List, Any
+from typing import Dict, Union, List, Any, Optional
+import os
+import json
+import pathlib
 import numpy as np
 import pandas as pd
 
@@ -174,4 +177,153 @@ def evaluate_per_engine(
         "metrics": metrics,
         "engine_details": engine_details,
         "num_engines_evaluated": len(true_ruls)
+    }
+
+
+def evaluate_official_test_set(
+    model: Any,
+    test_df: Optional[pd.DataFrame] = None,
+    rul_series: Optional[Union[pd.Series, np.ndarray, List[float]]] = None,
+    subset: str = "FD001",
+    window_length: int = 30,
+    rul_clip: int = 125,
+    is_3d: bool = False,
+    metadata_path: Optional[Union[str, pathlib.Path]] = None
+) -> Dict[str, Any]:
+    """Evaluate model performance on the official NASA C-MAPSS test set.
+
+    In the official C-MAPSS test set (test_FD001.txt), each engine trajectory is
+    truncated at a random point in time prior to failure. The true remaining
+    cycles after the final observed cycle are provided in RUL_FD001.txt.
+
+    This function extracts the final `window_length` (30) cycles for each test engine,
+    normalizes using training set statistics from `preprocess_metadata.json`,
+    runs model prediction, and evaluates both:
+    1. Raw Target Metrics: Directly against official NASA ground-truth RUL values.
+    2. Clipped Target Metrics: Against RUL clipped to `rul_clip` cycles (125).
+
+    Parameters
+    ----------
+    model : fitted estimator or PyTorch model
+        The predictive maintenance model.
+    test_df : pd.DataFrame, optional
+        Loaded test dataset. If None, loaded via data_loader.load_dataset(subset, kind="test").
+    rul_series : pd.Series or np.ndarray or list, optional
+        Official RUL labels. If None, loaded via data_loader.load_rul(subset).
+    subset : str, default "FD001"
+        Dataset subset name.
+    window_length : int, default 30
+        Sequence window length.
+    rul_clip : int, default 125
+        Upper bound for clipped target evaluation.
+    is_3d : bool, default False
+        Whether the model expects 3D inputs (batch, time, features) or 2D (batch, time*features).
+    metadata_path : str or Path, optional
+        Path to preprocess_metadata.json.
+
+    Returns
+    -------
+    dict
+        Dictionary containing:
+        - 'metrics_raw': Dict with MAE, RMSE, NASA_score on raw ground-truth RUL
+        - 'metrics_clipped': Dict with MAE, RMSE, NASA_score on clipped ground-truth RUL
+        - 'predictions': List of predicted RUL for each engine (in ascending engine_id order)
+        - 'ground_truth_raw': List of true RUL values
+        - 'ground_truth_clipped': List of clipped true RUL values
+        - 'engine_details': Detailed record per engine
+        - 'num_engines_evaluated': Number of evaluated engines
+    """
+    project_root = pathlib.Path(__file__).resolve().parent.parent
+    if metadata_path is None:
+        metadata_path = project_root / "dataset" / "processed" / "preprocess_metadata.json"
+    
+    with open(metadata_path, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+
+    sensor_cols = meta["selected_sensors"]
+    sensor_means = np.array([meta["sensor_means"][s] for s in sensor_cols], dtype=np.float32)
+    sensor_stds = np.array([meta["sensor_stds"][s] for s in sensor_cols], dtype=np.float32)
+
+    if test_df is None:
+        from src.data_loader import load_dataset
+        test_df = load_dataset(subset, kind="test")
+
+    if rul_series is None:
+        from src.data_loader import load_rul
+        rul_series = load_rul(subset)
+
+    rul_values = np.asarray(rul_series, dtype=np.float32).flatten()
+    engine_ids = sorted(test_df["engine_id"].unique())
+
+    if len(rul_values) != len(engine_ids):
+        raise ValueError(
+            f"Mismatch between number of test engines ({len(engine_ids)}) and RUL labels ({len(rul_values)})"
+        )
+
+    true_ruls_raw = []
+    true_ruls_clipped = []
+    pred_ruls = []
+    engine_details = []
+
+    for idx, eid in enumerate(engine_ids):
+        actual_rul_raw = float(rul_values[idx])
+        actual_rul_clip = float(min(actual_rul_raw, rul_clip))
+
+        eng_df = test_df[test_df["engine_id"] == eid].sort_values("cycle").reset_index(drop=True)
+        if len(eng_df) == 0:
+            continue
+
+        last_cycle = int(eng_df["cycle"].iloc[-1])
+
+        # Handle trajectory length (pad if shorter than window_length)
+        if len(eng_df) < window_length:
+            pad_count = window_length - len(eng_df)
+            first_row = eng_df[sensor_cols].iloc[[0]]
+            pad_df = pd.concat([first_row] * pad_count, ignore_index=True)
+            sensor_vals = pd.concat([pad_df, eng_df[sensor_cols]], ignore_index=True).values.astype(np.float32)
+        else:
+            sensor_vals = eng_df[sensor_cols].iloc[-window_length:].values.astype(np.float32)
+
+        # Normalize with training stats
+        norm_window = (sensor_vals - sensor_means) / sensor_stds
+
+        # Predict RUL
+        if is_3d:
+            if hasattr(model, "predict"):
+                pred = float(model.predict(norm_window[np.newaxis, ...]).squeeze())
+            else:
+                import torch
+                model.eval()
+                with torch.no_grad():
+                    t_in = torch.tensor(norm_window[np.newaxis, ...], dtype=torch.float32)
+                    pred = float(model(t_in).item())
+        else:
+            flat = norm_window.reshape(1, -1)
+            pred = float(model.predict(flat)[0])
+
+        true_ruls_raw.append(actual_rul_raw)
+        true_ruls_clipped.append(actual_rul_clip)
+        pred_ruls.append(pred)
+
+        engine_details.append({
+            "engine_id": int(eid),
+            "final_observed_cycle": last_cycle,
+            "actual_rul_raw": actual_rul_raw,
+            "actual_rul_clipped": actual_rul_clip,
+            "predicted_rul": float(pred),
+            "error_raw": float(pred - actual_rul_raw),
+            "error_clipped": float(pred - actual_rul_clip)
+        })
+
+    metrics_raw = compute_metrics(true_ruls_raw, pred_ruls)
+    metrics_clipped = compute_metrics(true_ruls_clipped, pred_ruls)
+
+    return {
+        "metrics_raw": metrics_raw,
+        "metrics_clipped": metrics_clipped,
+        "predictions": pred_ruls,
+        "ground_truth_raw": true_ruls_raw,
+        "ground_truth_clipped": true_ruls_clipped,
+        "engine_details": engine_details,
+        "num_engines_evaluated": len(true_ruls_raw)
     }

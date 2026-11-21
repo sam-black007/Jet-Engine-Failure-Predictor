@@ -7,9 +7,10 @@
 
 A full-stack, end-to-end testing campaign was executed across the **Jet Engine Failure Predictor** project. Testing spanned dataset schema validation, preprocessing pipelines, model inference, mathematical scoring functions, Streamlit dashboard mechanics, Playwright browser automation, empirical performance profiling, security audits, and GitHub Actions continuous integration.
 
-* **Unit & Integration Tests:** **21 Passed**, 0 Failed (100% success rate).
+* **Unit & Integration Tests:** **32 Passed**, 0 Failed (100% success rate).
 * **Playwright E2E Browser Tests:** **5 Test Suites Passed**, 0 Console Errors, 0 Network Failures.
 * **Trained Models Tested:** 4/4 Models validated (`linear_regression.pkl`, `random_forest.pkl`, `gradient_boosting.pkl`, `lstm_model.pt`).
+* **Official Test Set Benchmarked:** Evaluated on all 100 test engines with official NASA `RUL_FD001.txt` labels.
 * **GitHub Actions CI Status:** **Passed (Green)** on both Python 3.10 and 3.11 runners.
 * **Final Verdict:** **PASS — Fully Certified & Production Ready.**
 
@@ -82,8 +83,14 @@ $$s_i = \begin{cases} e^{-d_i / 13} - 1 & \text{if } d_i < 0 \text{ (early predi
 1. **Zero Error:** $d = 0 \implies s = 0.0$ (Verified).
 2. **Asymmetry Ratio:** An error of $+10$ cycles (overestimation) yields penalty factor $1.7183$, while an error of $-10$ cycles (underestimation) yields penalty factor $1.1582$. Confirmed late predictions receive $\approx 48\%$ higher penalty.
 3. **Strict Non-Negativity:** Evaluated across 200 random positive, negative, and zero error vectors; all results $S \ge 0$.
-4. **Per-Engine vs Sequence-Level Consistency:** Verified against `models/performance_metrics.json` without discrepancies:
-   - Deep LSTM achieves lowest Sequence MAE (**11.52**) and lowest Per-Engine MAE (**2.54**).
+4. **Model Performance Across Evaluation Schemes:**
+   - **Official NASA Test Set Benchmark (100 Test Engines, `RUL_FD001.txt`):**
+     - Deep LSTM: MAE = **11.69** (Raw) / **10.62** (Clip125), RMSE = 16.33 (Raw) / 14.99 (Clip125), NASA Score = 537.01 (Raw) / 497.15 (Clip125)
+     - Gradient Boosting: MAE = 11.74 (Raw) / 10.67 (Clip125), RMSE = **15.44** (Raw) / **14.21** (Clip125), NASA Score = **385.90** (Raw) / **352.62** (Clip125)
+     - Random Forest: MAE = 13.44 (Raw) / 12.37 (Clip125), RMSE = 17.81 (Raw) / 16.75 (Clip125), NASA Score = 894.51 (Raw) / 860.85 (Clip125)
+     - Linear Regression: MAE = 14.30 (Raw) / 13.39 (Clip125), RMSE = 17.54 (Raw) / 16.39 (Clip125), NASA Score = 494.68 (Raw) / 450.96 (Clip125)
+   - **Internal Validation Fleet (3,242 sequences, 20 engines):**
+     - Deep LSTM achieves lowest Sequence MAE (**11.52**) and lowest Val End-of-Life MAE (**2.54**).
 
 ---
 

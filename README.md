@@ -63,16 +63,31 @@ For error $d_i = \hat{y}_i - y_i$:
 - If $d_i \ge 0$ (late prediction): $s_i = e^{d_i / 10} - 1$
 Total penalty $S = \sum s_i$ heavily penalizes overestimating remaining engine life (late prediction) over conservative underestimation.
 
-### Performance Comparison (From `models/performance_metrics.json`)
+### Performance Benchmarking (From `models/performance_metrics.json`)
 
-| Model | Sequence MAE | Sequence RMSE | Sequence NASA Score | Per-Engine MAE | Per-Engine RMSE | Per-Engine NASA Score |
+#### 1. Official NASA C-MAPSS FD001 Test Set Benchmark (100 Test Engines)
+Evaluated on `test_FD001.txt` trajectories truncated prior to failure, compared against ground-truth remaining useful life in `RUL_FD001.txt`:
+
+| Model Architecture | Official Test MAE (Raw / Clip125) | Official Test RMSE (Raw / Clip125) | Official NASA Score (Raw / Clip125) |
+|---|---|---|---|
+| **Linear Regression** | 14.30 / 13.39 cycles | 17.54 / 16.39 cycles | 494.68 / 450.96 |
+| **Random Forest** | 13.44 / 12.37 cycles | 17.81 / 16.75 cycles | 894.51 / 860.85 |
+| **Gradient Boosting** | 11.74 / 10.67 cycles | **15.44** / **14.21** cycles | **385.90** / **352.62** |
+| **Deep LSTM (PyTorch)** | **11.69** / **10.62** cycles | 16.33 / 14.99 cycles | 537.01 / 497.15 |
+
+*Note: Raw Target evaluates against the unclipped NASA ground-truth RUL (7–145 cycles); Clipped Target evaluates with an upper threshold of 125 cycles matching the piecewise linear degradation assumption used during training.*
+
+#### 2. Engine-Disjoint Validation Fleet Metrics (20 Validation Engines)
+Evaluated on the internal 80/20 train/validation split across 3,242 sliding sequence windows and 20 end-of-life inspection points:
+
+| Model | Sequence MAE | Sequence RMSE | Sequence NASA Score | Val EOL MAE* | Val EOL RMSE* | Val EOL NASA Score* |
 |---|---|---|---|---|---|---|
 | **Linear Regression** | 14.73 | 18.23 | 20,521.92 | 37.12 | 42.35 | 848.70 |
 | **Random Forest** | 14.15 | 19.06 | 37,720.12 | 3.36 | 3.47 | 8.09 |
 | **Gradient Boosting** | 13.01 | 17.56 | 26,177.00 | 4.52 | 4.71 | 11.57 |
 | **Deep LSTM (PyTorch)** | **11.52** | **15.21** | **17,090.16** | **2.54** | **2.58** | **5.82** |
 
-The Deep LSTM achieves superior predictive accuracy across both evaluation schemes, with lowest MAE, RMSE, and asymmetric NASA penalty.
+*\*Val EOL represents final observed window in run-to-failure training data where ground truth RUL = 0.*
 
 ---
 

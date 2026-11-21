@@ -9,6 +9,19 @@
       "MAE": 37.1216,
       "RMSE": 42.345,
       "NASA_score": 848.6973
+    },
+    "official_test_set": {
+      "raw_target": {
+        "MAE": 14.3039,
+        "RMSE": 17.5391,
+        "NASA_score": 494.676
+      },
+      "clipped_target": {
+        "MAE": 13.386,
+        "RMSE": 16.3907,
+        "NASA_score": 450.9635
+      },
+      "num_engines": 100
     }
   },
   "random_forest": {
@@ -21,6 +34,19 @@
       "MAE": 3.3604,
       "RMSE": 3.4697,
       "NASA_score": 8.0934
+    },
+    "official_test_set": {
+      "raw_target": {
+        "MAE": 13.4414,
+        "RMSE": 17.8107,
+        "NASA_score": 894.5056
+      },
+      "clipped_target": {
+        "MAE": 12.3714,
+        "RMSE": 16.7482,
+        "NASA_score": 860.8464
+      },
+      "num_engines": 100
     }
   },
   "gradient_boosting": {
@@ -33,6 +59,19 @@
       "MAE": 4.5177,
       "RMSE": 4.7104,
       "NASA_score": 11.5652
+    },
+    "official_test_set": {
+      "raw_target": {
+        "MAE": 11.7445,
+        "RMSE": 15.4369,
+        "NASA_score": 385.9002
+      },
+      "clipped_target": {
+        "MAE": 10.6745,
+        "RMSE": 14.2058,
+        "NASA_score": 352.6222
+      },
+      "num_engines": 100
     }
   },
   "lstm": {
@@ -49,6 +88,19 @@
     "training_details": {
       "best_epoch": 23,
       "best_val_mse": 231.4565
+    },
+    "official_test_set": {
+      "raw_target": {
+        "MAE": 11.6931,
+        "RMSE": 16.3288,
+        "NASA_score": 537.0058
+      },
+      "clipped_target": {
+        "MAE": 10.6231,
+        "RMSE": 14.9864,
+        "NASA_score": 497.1455
+      },
+      "num_engines": 100
     }
   }
 }
