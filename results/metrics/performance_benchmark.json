@@ -1,0 +1,34 @@
+{
+  "model_loading_times_ms": {
+    "Linear Regression": 2259.376899999552,
+    "Random Forest": 202.5182000015775,
+    "Gradient Boosting": 23.1301000003441,
+    "Deep LSTM (PyTorch)": 5.975699999908102
+  },
+  "inference_latencies": {
+    "Linear Regression": {
+      "single_mean_ms": 0.383,
+      "single_p95_ms": 0.556,
+      "batch100_mean_ms": 0.39
+    },
+    "Random Forest": {
+      "single_mean_ms": 31.744,
+      "single_p95_ms": 34.822,
+      "batch100_mean_ms": 33.03
+    },
+    "Gradient Boosting": {
+      "single_mean_ms": 0.919,
+      "single_p95_ms": 1.156,
+      "batch100_mean_ms": 1.023
+    },
+    "Deep LSTM (PyTorch)": {
+      "single_mean_ms": 2.908,
+      "single_p95_ms": 3.351,
+      "batch100_mean_ms": 5.24
+    }
+  },
+  "memory_profile_mb": {
+    "current_heap_mb": 47.52,
+    "peak_memory_mb": 72.69
+  }
+}
