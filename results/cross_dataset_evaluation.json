@@ -1,0 +1,289 @@
+{
+  "model_path": "C:\\Users\\samjo\\Downloads\\simulation\\Jet-Engine-Failure-Predictor\\models\\lstm\\lstm_model.pt",
+  "feature_dim": 17,
+  "sequence_window": 30,
+  "comparisons": {
+    "FD001": {
+      "mae_raw": 11.6931,
+      "mae_clipped": 10.6231,
+      "rmse": 16.3288,
+      "nasa_score": 537.0058,
+      "delta_mae": 0.0,
+      "delta_rmse": 0.0,
+      "delta_nasa_score": 0.0,
+      "mae_relative_increase_pct": 0.0
+    },
+    "FD003": {
+      "mae_raw": 26.8253,
+      "mae_clipped": 25.2653,
+      "rmse": 37.2977,
+      "nasa_score": 92746.938,
+      "delta_mae": 15.1322,
+      "delta_rmse": 20.9689,
+      "delta_nasa_score": 92209.9322,
+      "mae_relative_increase_pct": 129.41
+    },
+    "FD002": {
+      "mae_raw": 44.186,
+      "mae_clipped": 36.6918,
+      "rmse": 55.4104,
+      "nasa_score": 382109.5369,
+      "delta_mae": 32.4929,
+      "delta_rmse": 39.0816,
+      "delta_nasa_score": 381572.5311,
+      "mae_relative_increase_pct": 277.88
+    },
+    "FD004": {
+      "mae_raw": 53.1337,
+      "mae_clipped": 44.4401,
+      "rmse": 65.7647,
+      "nasa_score": 4828844.5864,
+      "delta_mae": 41.4406,
+      "delta_rmse": 49.4359,
+      "delta_nasa_score": 4828307.5806,
+      "mae_relative_increase_pct": 354.4
+    }
+  },
+  "detailed_subsets": {
+    "FD001": {
+      "num_engines": 100,
+      "metrics_raw": {
+        "MAE": 11.6931,
+        "RMSE": 16.3288,
+        "NASA_score": 537.0058
+      },
+      "metrics_clipped": {
+        "MAE": 10.6231,
+        "RMSE": 14.9864,
+        "NASA_score": 497.1455
+      },
+      "sample_predictions": [
+        {
+          "engine_id": 1,
+          "final_observed_cycle": 31,
+          "actual_rul_raw": 112.0,
+          "actual_rul_clipped": 112.0,
+          "predicted_rul": 109.73628234863281,
+          "error_raw": -2.2637176513671875,
+          "error_clipped": -2.2637176513671875
+        },
+        {
+          "engine_id": 2,
+          "final_observed_cycle": 49,
+          "actual_rul_raw": 98.0,
+          "actual_rul_clipped": 98.0,
+          "predicted_rul": 111.98846435546875,
+          "error_raw": 13.98846435546875,
+          "error_clipped": 13.98846435546875
+        },
+        {
+          "engine_id": 3,
+          "final_observed_cycle": 126,
+          "actual_rul_raw": 69.0,
+          "actual_rul_clipped": 69.0,
+          "predicted_rul": 47.13809585571289,
+          "error_raw": -21.86190414428711,
+          "error_clipped": -21.86190414428711
+        },
+        {
+          "engine_id": 4,
+          "final_observed_cycle": 106,
+          "actual_rul_raw": 82.0,
+          "actual_rul_clipped": 82.0,
+          "predicted_rul": 72.07987976074219,
+          "error_raw": -9.920120239257812,
+          "error_clipped": -9.920120239257812
+        },
+        {
+          "engine_id": 5,
+          "final_observed_cycle": 98,
+          "actual_rul_raw": 91.0,
+          "actual_rul_clipped": 91.0,
+          "predicted_rul": 61.01505661010742,
+          "error_raw": -29.984943389892578,
+          "error_clipped": -29.984943389892578
+        }
+      ]
+    },
+    "FD003": {
+      "num_engines": 100,
+      "metrics_raw": {
+        "MAE": 26.8253,
+        "RMSE": 37.2977,
+        "NASA_score": 92746.938
+      },
+      "metrics_clipped": {
+        "MAE": 25.2653,
+        "RMSE": 36.2179,
+        "NASA_score": 92647.4772
+      },
+      "sample_predictions": [
+        {
+          "engine_id": 1,
+          "final_observed_cycle": 233,
+          "actual_rul_raw": 44.0,
+          "actual_rul_clipped": 44.0,
+          "predicted_rul": 91.40834045410156,
+          "error_raw": 47.40834045410156,
+          "error_clipped": 47.40834045410156
+        },
+        {
+          "engine_id": 2,
+          "final_observed_cycle": 124,
+          "actual_rul_raw": 51.0,
+          "actual_rul_clipped": 51.0,
+          "predicted_rul": 59.343326568603516,
+          "error_raw": 8.343326568603516,
+          "error_clipped": 8.343326568603516
+        },
+        {
+          "engine_id": 3,
+          "final_observed_cycle": 234,
+          "actual_rul_raw": 27.0,
+          "actual_rul_clipped": 27.0,
+          "predicted_rul": 110.30653381347656,
+          "error_raw": 83.30653381347656,
+          "error_clipped": 83.30653381347656
+        },
+        {
+          "engine_id": 4,
+          "final_observed_cycle": 68,
+          "actual_rul_raw": 120.0,
+          "actual_rul_clipped": 120.0,
+          "predicted_rul": 112.24065399169922,
+          "error_raw": -7.759346008300781,
+          "error_clipped": -7.759346008300781
+        },
+        {
+          "engine_id": 5,
+          "final_observed_cycle": 138,
+          "actual_rul_raw": 101.0,
+          "actual_rul_clipped": 101.0,
+          "predicted_rul": 93.87226867675781,
+          "error_raw": -7.1277313232421875,
+          "error_clipped": -7.1277313232421875
+        }
+      ]
+    },
+    "FD002": {
+      "num_engines": 259,
+      "metrics_raw": {
+        "MAE": 44.186,
+        "RMSE": 55.4104,
+        "NASA_score": 382109.5369
+      },
+      "metrics_clipped": {
+        "MAE": 36.6918,
+        "RMSE": 42.1852,
+        "NASA_score": 14350.5197
+      },
+      "sample_predictions": [
+        {
+          "engine_id": 1,
+          "final_observed_cycle": 258,
+          "actual_rul_raw": 18.0,
+          "actual_rul_clipped": 18.0,
+          "predicted_rul": 51.64694595336914,
+          "error_raw": 33.64694595336914,
+          "error_clipped": 33.64694595336914
+        },
+        {
+          "engine_id": 2,
+          "final_observed_cycle": 55,
+          "actual_rul_raw": 79.0,
+          "actual_rul_clipped": 79.0,
+          "predicted_rul": 61.51148223876953,
+          "error_raw": -17.48851776123047,
+          "error_clipped": -17.48851776123047
+        },
+        {
+          "engine_id": 3,
+          "final_observed_cycle": 165,
+          "actual_rul_raw": 106.0,
+          "actual_rul_clipped": 106.0,
+          "predicted_rul": 54.30854034423828,
+          "error_raw": -51.69145965576172,
+          "error_clipped": -51.69145965576172
+        },
+        {
+          "engine_id": 4,
+          "final_observed_cycle": 86,
+          "actual_rul_raw": 110.0,
+          "actual_rul_clipped": 110.0,
+          "predicted_rul": 57.19942855834961,
+          "error_raw": -52.80057144165039,
+          "error_clipped": -52.80057144165039
+        },
+        {
+          "engine_id": 5,
+          "final_observed_cycle": 148,
+          "actual_rul_raw": 15.0,
+          "actual_rul_clipped": 15.0,
+          "predicted_rul": 47.67212677001953,
+          "error_raw": 32.67212677001953,
+          "error_clipped": 32.67212677001953
+        }
+      ]
+    },
+    "FD004": {
+      "num_engines": 248,
+      "metrics_raw": {
+        "MAE": 53.1337,
+        "RMSE": 65.7647,
+        "NASA_score": 4828844.5864
+      },
+      "metrics_clipped": {
+        "MAE": 44.4401,
+        "RMSE": 51.8431,
+        "NASA_score": 130069.9084
+      },
+      "sample_predictions": [
+        {
+          "engine_id": 1,
+          "final_observed_cycle": 230,
+          "actual_rul_raw": 22.0,
+          "actual_rul_clipped": 22.0,
+          "predicted_rul": 59.09804153442383,
+          "error_raw": 37.09804153442383,
+          "error_clipped": 37.09804153442383
+        },
+        {
+          "engine_id": 2,
+          "final_observed_cycle": 153,
+          "actual_rul_raw": 39.0,
+          "actual_rul_clipped": 39.0,
+          "predicted_rul": 49.65445327758789,
+          "error_raw": 10.65445327758789,
+          "error_clipped": 10.65445327758789
+        },
+        {
+          "engine_id": 3,
+          "final_observed_cycle": 141,
+          "actual_rul_raw": 107.0,
+          "actual_rul_clipped": 107.0,
+          "predicted_rul": 43.170658111572266,
+          "error_raw": -63.829341888427734,
+          "error_clipped": -63.829341888427734
+        },
+        {
+          "engine_id": 4,
+          "final_observed_cycle": 208,
+          "actual_rul_raw": 75.0,
+          "actual_rul_clipped": 75.0,
+          "predicted_rul": 24.00984001159668,
+          "error_raw": -50.99015998840332,
+          "error_clipped": -50.99015998840332
+        },
+        {
+          "engine_id": 5,
+          "final_observed_cycle": 51,
+          "actual_rul_raw": 149.0,
+          "actual_rul_clipped": 125.0,
+          "predicted_rul": 49.78194046020508,
+          "error_raw": -99.21805953979492,
+          "error_clipped": -75.21805953979492
+        }
+      ]
+    }
+  }
+}

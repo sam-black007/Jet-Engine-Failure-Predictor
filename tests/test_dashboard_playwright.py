@@ -46,24 +46,29 @@ def test_dashboard_title_and_metrics(page):
 
 
 def test_dashboard_tab_interaction(page):
-    """Test switching tabs between Sensor Trajectories and Degradation Curve."""
+    """Test switching tabs between Sensor Trajectories, Degradation Curve, and Replay Simulation."""
     page.goto(BASE_URL, wait_until="networkidle", timeout=30000)
     page.wait_for_selector('[data-testid="stTab"]', timeout=20000)
 
     tabs = page.locator('[data-testid="stTab"]').all()
-    assert len(tabs) >= 2, f"Expected 2 tabs, found {len(tabs)}"
+    assert len(tabs) >= 3, f"Expected at least 3 tabs, found {len(tabs)}"
 
     # Click second tab (Engine Degradation Curve)
     tabs[1].click()
     page.wait_for_timeout(500)
     assert tabs[1].is_visible()
 
+    # Click third tab (Historical Telemetry Replay Simulation)
+    tabs[2].click()
+    page.wait_for_timeout(500)
+    assert tabs[2].is_visible()
+
 
 def test_dashboard_sidebar_controls(page):
-    """Test that sidebar contains engine and model selection dropdowns."""
+    """Test that sidebar contains dataset, engine, and model selection dropdowns."""
     page.goto(BASE_URL, wait_until="networkidle", timeout=30000)
     page.wait_for_selector('[data-testid="stSidebar"]', timeout=20000)
 
     sidebar = page.locator('[data-testid="stSidebar"]')
     selectboxes = sidebar.locator('[data-testid="stSelectbox"]').all()
-    assert len(selectboxes) >= 2, "Sidebar should contain Engine and Model selectboxes"
+    assert len(selectboxes) >= 3, "Sidebar should contain Dataset, Engine and Model selectboxes"

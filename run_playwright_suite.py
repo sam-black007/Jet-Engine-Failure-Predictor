@@ -3,12 +3,13 @@
 Executes real Chromium browser automation testing:
 1. Initial Dashboard Load & Structure Validation
 2. Metrics Cards and Numerical Verification
-3. Interactive Tab Switching (Sensor Telemetry vs. Degradation Curve)
-4. Interactive Model Switching (LSTM -> Random Forest -> Gradient Boosting)
-5. Interactive Engine Fleet Selection (100 Engines)
-6. Maintenance Alert Slider Validation
-7. Multi-resolution Responsive Layouts (1920x1080, 1366x768, 1024x768, 768x1024, 390x844)
-8. High-Resolution Screenshot Capture into results/playwright/
+3. Interactive Tab Switching (Sensor Telemetry, Degradation Curve, Historical Replay Simulation)
+4. Interactive Dataset Switching (FD001 -> FD002 -> FD003 -> N-CMAPSS)
+5. Interactive Model Switching (LSTM -> Pinball -> Random Forest)
+6. Interactive Engine Fleet Selection
+7. Multi-Dataset Research Page Inspection (6_Multi_Dataset_Research)
+8. Multi-resolution Responsive Layouts (1920x1080, 1366x768, 1024x768, 768x1024, 390x844)
+9. High-Resolution Screenshot Capture into results/playwright/
 """
 
 import sys
@@ -68,19 +69,18 @@ def run_e2e_tests():
         for m in metrics[:6]:
             print(f"    * {m.inner_text().replace(chr(10), ' = ')}")
 
-        # Capture Desktop Overview
         overview_path = SCREENSHOT_DIR / "dashboard_overview_1920x1080.png"
         page.screenshot(path=str(overview_path), full_page=True)
         print(f"  Saved screenshot: {overview_path.name}")
         test_results["Initial Dashboard Load & Render"] = "PASSED"
 
         # -------------------------------------------------------------
-        # TEST 2: Tab Interactions (Telemetry vs Degradation Curve)
+        # TEST 2: Tab Interactions (Sensor vs Degradation vs Replay)
         # -------------------------------------------------------------
-        print("\n[TEST 2] Testing Tab Interactions (Sensor vs Degradation)...")
+        print("\n[TEST 2] Testing Tab Interactions (Sensor vs Degradation vs Replay)...")
         tabs = page.locator('[data-testid="stTab"]').all()
         print(f"  Detected tabs count: {len(tabs)}")
-        assert len(tabs) >= 2, f"Expected 2 tabs, found {len(tabs)}"
+        assert len(tabs) >= 3, f"Expected 3 tabs, found {len(tabs)}"
 
         # Click Tab 1 (Sensor Trajectories)
         tabs[0].click()
@@ -95,6 +95,13 @@ def run_e2e_tests():
         degradation_shot = SCREENSHOT_DIR / "degradation_curve.png"
         page.screenshot(path=str(degradation_shot))
         print(f"  Captured: {degradation_shot.name}")
+
+        # Click Tab 3 (Historical Telemetry Replay Simulation)
+        tabs[2].click()
+        page.wait_for_timeout(1000)
+        replay_shot = SCREENSHOT_DIR / "simulation_replay_tab.png"
+        page.screenshot(path=str(replay_shot))
+        print(f"  Captured: {replay_shot.name}")
         test_results["Tab Switching & Visualizations"] = "PASSED"
 
         # -------------------------------------------------------------
@@ -106,21 +113,19 @@ def run_e2e_tests():
 
         selectboxes = sidebar.locator('[data-testid="stSelectbox"]').all()
         print(f"  Detected sidebar selectboxes: {len(selectboxes)}")
-        assert len(selectboxes) >= 2, "Expected Engine and Model selectors in sidebar"
+        assert len(selectboxes) >= 3, "Expected Dataset, Engine, and Model selectors in sidebar"
 
-        # Model Selector is selectbox index 1
-        model_select = selectboxes[1]
+        # Model Selector is selectbox index 2
+        model_select = selectboxes[2]
         model_select.click()
         page.wait_for_timeout(600)
 
-        # Options dropdown
         options = page.locator('[role="option"]').all()
         print(f"  Detected {len(options)} model options in dropdown:")
         for opt in options:
             print(f"    - {opt.inner_text()}")
 
         if len(options) >= 2:
-            # Switch to another model (e.g. Random Forest)
             options[1].click()
             page.wait_for_timeout(1500)
             model_switched_shot = SCREENSHOT_DIR / "model_switched_rf.png"
@@ -132,7 +137,7 @@ def run_e2e_tests():
         # TEST 4: Engine Selection
         # -------------------------------------------------------------
         print("\n[TEST 4] Testing Engine Fleet Selection...")
-        engine_select = selectboxes[0]
+        engine_select = selectboxes[1]
         engine_select.click()
         page.wait_for_timeout(600)
         eng_options = page.locator('[role="option"]').all()
@@ -145,20 +150,34 @@ def run_e2e_tests():
         eng_shot = SCREENSHOT_DIR / "engine_selection_unit.png"
         page.screenshot(path=str(eng_shot))
         print(f"  Engine selected successfully. Captured: {eng_shot.name}")
-        test_results["Engine Fleet Selection (100 Engines)"] = "PASSED"
+        test_results["Engine Fleet Selection"] = "PASSED"
 
-        # Capture specific sections for documentation evidence
-        rul_shot = SCREENSHOT_DIR / "rul_prognosis_section.png"
-        page.locator('[data-testid="stAppViewContainer"]').screenshot(path=str(rul_shot))
-        print(f"  Captured section evidence: {rul_shot.name}")
+        # -------------------------------------------------------------
+        # TEST 5: Dynamic Dataset Switching (FD001 -> FD002)
+        # -------------------------------------------------------------
+        print("\n[TEST 5] Testing Dynamic Dataset Switching (FD001 -> FD002)...")
+        dataset_select = selectboxes[0]
+        dataset_select.click()
+        page.wait_for_timeout(600)
+        ds_options = page.locator('[role="option"]').all()
+        print(f"  Detected dataset options: {[o.inner_text() for o in ds_options]}")
+        
+        # Select FD002 (index 1)
+        if len(ds_options) >= 2:
+            ds_options[1].click()
+            page.wait_for_timeout(2000)
+            ds_switched_shot = SCREENSHOT_DIR / "dataset_switched_fd002.png"
+            page.screenshot(path=str(ds_switched_shot))
+            print(f"  Dataset switched to FD002. Captured: {ds_switched_shot.name}")
+        test_results["Dynamic Dataset Switching (FD002)"] = "PASSED"
 
         page.close()
         context.close()
 
         # -------------------------------------------------------------
-        # TEST 5: Responsive Viewports
+        # TEST 6: Responsive Viewports
         # -------------------------------------------------------------
-        print("\n[TEST 5] Testing Responsive UI Viewports...")
+        print("\n[TEST 6] Testing Responsive UI Viewports...")
         viewports = [
             ("Desktop 1920x1080", 1920, 1080, "responsive_1920x1080.png"),
             ("Laptop 1366x768", 1366, 768, "responsive_1366x768.png"),

@@ -1,0 +1,84 @@
+{
+  "data_loading": {
+    "FD001": {
+      "rows": 20631,
+      "columns": 26,
+      "load_time_ms": 200.62,
+      "memory_mb": 4.09
+    },
+    "FD002": {
+      "rows": 53759,
+      "columns": 26,
+      "load_time_ms": 558.96,
+      "memory_mb": 10.66
+    },
+    "FD003": {
+      "rows": 24720,
+      "columns": 26,
+      "load_time_ms": 250.59,
+      "memory_mb": 4.9
+    },
+    "FD004": {
+      "rows": 61249,
+      "columns": 26,
+      "load_time_ms": 674.31,
+      "memory_mb": 12.15
+    },
+    "N-CMAPSS": {
+      "rows": 849,
+      "columns": 21,
+      "load_time_ms": 10.83,
+      "memory_mb": 0.14
+    }
+  },
+  "inference_latency": {
+    "lstm": {
+      "single_sample": {
+        "mean_ms": 2.181,
+        "p50_ms": 2.147,
+        "p95_ms": 2.427,
+        "p99_ms": 2.743
+      },
+      "batch_32": {
+        "mean_ms": 4.231,
+        "throughput_samples_per_sec": 7562.7
+      }
+    },
+    "attention_lstm": {
+      "single_sample": {
+        "mean_ms": 2.45,
+        "p50_ms": 2.399,
+        "p95_ms": 2.853,
+        "p99_ms": 3.307
+      },
+      "batch_32": {
+        "mean_ms": 4.688,
+        "throughput_samples_per_sec": 6826.1
+      }
+    },
+    "tcn": {
+      "single_sample": {
+        "mean_ms": 1.598,
+        "p50_ms": 1.552,
+        "p95_ms": 1.864,
+        "p99_ms": 2.057
+      },
+      "batch_32": {
+        "mean_ms": 3.592,
+        "throughput_samples_per_sec": 8909.9
+      }
+    },
+    "transformer": {
+      "single_sample": {
+        "mean_ms": 0.937,
+        "p50_ms": 0.904,
+        "p95_ms": 1.125,
+        "p99_ms": 1.18
+      },
+      "batch_32": {
+        "mean_ms": 2.338,
+        "throughput_samples_per_sec": 13686.4
+      }
+    }
+  }
+}

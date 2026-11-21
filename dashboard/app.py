@@ -1,7 +1,8 @@
-"""Streamlit Industrial Dashboard for Jet Engine Failure Predictor (NASA C-MAPSS).
+"""Streamlit Industrial Dashboard for Jet Engine Failure Predictor (JETWISE AI).
 
 Interactive monitoring interface for turbofan engine degradation forecasting,
-Remaining Useful Life (RUL) estimation, and predictive maintenance scheduling.
+Remaining Useful Life (RUL) estimation, predictive maintenance scheduling,
+multi-dataset operational switching, and historical telemetry replay simulation.
 """
 
 import os
@@ -21,13 +22,16 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.data_loader import load_dataset
 from src.train_lstm import LSTMPredictor
+from src.dataset_registry import DatasetRegistry
+from src.dataset_metadata import CMAPSS_SENSOR_METADATA, CMAPSS_OP_SETTINGS_METADATA
+from src.data_replay import EngineReplaySimulator
 
 
 # ---------------------------------------------------------------------------
 # Page Configuration & Industrial Styling
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Turbofan AI - Jet Engine Health Monitor",
+    page_title="JETWISE AI - Jet Engine Health Monitor",
     page_icon="✈️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -45,6 +49,26 @@ st.markdown("""
     .status-normal { color: #198754; font-weight: bold; }
     .status-caution { color: #fd7e14; font-weight: bold; }
     .status-critical { color: #dc3545; font-weight: bold; }
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    .badge-healthy { background-color: #d1fae5; color: #065f46; }
+    .badge-monitor { background-color: #fef3c7; color: #92400e; }
+    .badge-warning { background-color: #ffedd5; color: #9a3412; }
+    .badge-critical { background-color: #fee2e2; color: #991b1b; }
+    .simulation-banner {
+        background-color: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+        padding: 10px 16px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -64,7 +88,8 @@ def load_metadata_cached():
 
 @st.cache_data
 def load_raw_dataset_cached(subset: str = "FD001"):
-    return load_dataset(subset, kind="train")
+    adapter = DatasetRegistry.get_adapter(subset)
+    return adapter.load_train()
 
 
 @st.cache_data
@@ -127,8 +152,14 @@ def predict_rul(model, sequence_norm: np.ndarray, is_3d: bool = False) -> float:
     """Predict RUL given normalized sequence of shape (30, 17)."""
     if is_3d or isinstance(model, torch.nn.Module):
         # 3D: (1, 30, 17)
-        pred = model.predict(sequence_norm[np.newaxis, ...])
-        return float(pred[0])
+        if hasattr(model, "predict"):
+            pred = model.predict(sequence_norm[np.newaxis, ...])
+            return float(pred[0])
+        else:
+            model.eval()
+            with torch.no_grad():
+                t_in = torch.tensor(sequence_norm[np.newaxis, ...], dtype=torch.float32)
+                return float(model(t_in).item())
     else:
         # 2D flattened: (1, 510)
         flat = sequence_norm.reshape(1, -1)
@@ -139,21 +170,30 @@ def predict_rul(model, sequence_norm: np.ndarray, is_3d: bool = False) -> float:
 # Main App Flow
 # ---------------------------------------------------------------------------
 metadata = load_metadata_cached()
-raw_df = load_raw_dataset_cached(metadata.get("dataset_subset", "FD001"))
 metrics_data = load_performance_metrics_cached()
 models = load_models()
 
-sensor_cols = metadata["selected_sensors"]
-sensor_means = np.array([metadata["sensor_means"][s] for s in sensor_cols], dtype=np.float32)
-sensor_stds = np.array([metadata["sensor_stds"][s] for s in sensor_cols], dtype=np.float32)
-window_len = metadata["window_length"]
-rul_clip = metadata["rul_clip"]
-
 # Sidebar Navigation & Selection
 st.sidebar.title("✈️ Industrial Telemetry Control")
-st.sidebar.markdown("**NASA C-MAPSS FD001 Fleet Telemetry**")
 
-all_engines = sorted(metadata["train_engine_ids"] + metadata["val_engine_ids"])
+# Multi-Dataset Dynamic Selector
+available_datasets = DatasetRegistry.get_available_datasets()
+selected_dataset = st.sidebar.selectbox(
+    "Active Dataset & Fleet",
+    available_datasets,
+    index=0,
+    help="Switch between NASA C-MAPSS FD001-FD004 benchmarks or N-CMAPSS fleet."
+)
+
+adapter = DatasetRegistry.get_adapter(selected_dataset)
+ds_meta = adapter.get_metadata()
+
+st.sidebar.markdown(f"**Conditions:** `{ds_meta.get('conditions_count', 1)}` ({ds_meta.get('complexity', 'Standard')})")
+faults = ds_meta.get("fault_modes", ["Single Fault"])
+st.sidebar.caption(f"Faults: {', '.join(faults)}")
+
+raw_df = adapter.load_train()
+all_engines = adapter.get_engine_ids(kind="train")
 selected_engine = st.sidebar.selectbox("Select Engine Fleet ID", all_engines, index=0)
 
 model_names = list(models.keys())
@@ -165,17 +205,32 @@ model_display_names = {
     "linear_regression": "Linear Regression (Baseline)",
     "random_forest": "Random Forest Regressor",
     "gradient_boosting": "Gradient Boosting Regressor",
-    "lstm": "Deep LSTM Neural Network (Recommended)"
+    "lstm": "Deep LSTM Neural Network (MSE)",
+    "pinball_lstm_q35 (Best)": "Pinball Asymmetric LSTM (q=0.35)",
+    "transformer (Phase 2)": "Temporal Transformer (Phase 2)"
 }
 
 selected_model_key = st.sidebar.selectbox(
     "Active Predictive Model",
     model_names,
-    index=model_names.index("lstm") if "lstm" in model_names else 0,
+    index=model_names.index("pinball_lstm_q35 (Best)") if "pinball_lstm_q35 (Best)" in model_names else 0,
     format_func=lambda x: model_display_names.get(x, x)
 )
 selected_model = models[selected_model_key]
 is_3d = isinstance(selected_model, torch.nn.Module)
+
+# Compatibility Check
+model_input_dim = len(metadata["selected_sensors"])
+compat_info = DatasetRegistry.check_model_compatibility(
+    model_input_dim=model_input_dim,
+    model_seq_len=metadata["window_length"],
+    dataset_name=selected_dataset
+)
+
+if compat_info["status"] == "COMPATIBLE":
+    st.sidebar.success(f"Model Compatible with {selected_dataset}")
+elif compat_info["warnings"]:
+    st.sidebar.warning(f"⚠️ {compat_info['warnings'][0]}")
 
 # Maintenance alert threshold
 alert_threshold = st.sidebar.slider(
@@ -185,7 +240,7 @@ alert_threshold = st.sidebar.slider(
 
 st.title("Turbofan Jet Engine Degradation & RUL Prediction System")
 st.markdown(
-    "*Continuous Prognostics and Health Management (PHM) Dashboard powered by Deep Learning.*"
+    "*Continuous Prognostics and Health Management (PHM) Platform powered by Deep Learning.*"
 )
 
 # ---------------------------------------------------------------------------
@@ -195,24 +250,40 @@ st.subheader("1. Fleet Health & Operational Overview")
 col1, col2, col3, col4 = st.columns(4)
 
 total_engines = len(all_engines)
-split_type = "Validation Engine" if selected_engine in metadata["val_engine_ids"] else "Training Engine"
-engine_trajectory = raw_df[raw_df["engine_id"] == selected_engine].sort_values("cycle").reset_index(drop=True)
+is_val = selected_engine in metadata.get("val_engine_ids", []) if selected_dataset == "FD001" else False
+split_type = "Validation Engine" if is_val else "Training Engine"
+engine_trajectory = adapter.get_engine_trajectory(selected_engine, kind="train")
 max_observed_cycle = int(engine_trajectory["cycle"].max())
 
 col1.metric("Total Fleet Engines", f"{total_engines} Units")
-col2.metric("Dataset Subset", metadata.get("dataset_subset", "FD001"))
-col3.metric("Selected Unit Classification", split_type)
+col2.metric("Active Dataset", selected_dataset)
+col3.metric("Unit Classification", split_type)
 col4.metric("Logged Operational Cycles", f"{max_observed_cycle} Cycles")
 
 st.markdown("---")
 
 # ---------------------------------------------------------------------------
-# Section 2 & 3: Selected Engine Remaining Useful Life (RUL) Prediction
+# Section 2: Selected Engine Remaining Useful Life (RUL) Prediction
 # ---------------------------------------------------------------------------
-st.subheader(f"2. Remaining Useful Life (RUL) Prognosis — Engine #{selected_engine}")
+st.subheader(f"2. Remaining Useful Life (RUL) Prognosis — Engine #{selected_engine} ({selected_dataset})")
 
-if len(engine_trajectory) < window_len:
-    st.error(f"Engine #{selected_engine} has fewer than {window_len} cycles ({len(engine_trajectory)}). Cannot form sequence.")
+window_len = metadata["window_length"]
+rul_clip = metadata["rul_clip"]
+sensor_cols = metadata["selected_sensors"]
+sensor_means = np.array([metadata["sensor_means"][s] for s in sensor_cols], dtype=np.float32)
+sensor_stds = np.array([metadata["sensor_stds"][s] for s in sensor_cols], dtype=np.float32)
+
+can_predict = compat_info["is_compatible"] and all(c in engine_trajectory.columns for c in sensor_cols)
+
+if not can_predict:
+    st.info(
+        f"Selected dataset `{selected_dataset}` schema differs from the model's training configuration ({model_input_dim} features). "
+        "Use the Historical Telemetry Replay or Multi-Dataset Research tab for cross-domain inspection."
+    )
+    predicted_rul = None
+elif len(engine_trajectory) < window_len:
+    st.error(f"Engine #{selected_engine} has fewer than {window_len} cycles ({len(engine_trajectory)}).")
+    predicted_rul = None
 else:
     # Prepare latest sequence window
     latest_window = engine_trajectory[sensor_cols].iloc[-window_len:].values.astype(np.float32)
@@ -239,17 +310,22 @@ else:
 st.markdown("---")
 
 # ---------------------------------------------------------------------------
-# Section 4 & 5: Sensor Monitoring & Engine Degradation Visualization
+# Section 3: Telemetry, Degradation & Historical Replay Simulation
 # ---------------------------------------------------------------------------
 st.subheader("3. Real-Time Telemetry & Degradation Trajectory")
 
-tab1, tab2 = st.tabs(["📊 Sensor Trajectories", "📉 Engine Health Degradation Curve"])
+tab1, tab2, tab3 = st.tabs([
+    "📊 Sensor Trajectories",
+    "📉 Engine Health Degradation Curve",
+    "⏱️ Historical Telemetry Replay Simulation"
+])
 
 with tab1:
+    available_sensors = [c for c in engine_trajectory.columns if c.startswith("sensor_") or c in ds_meta.get("active_sensors", [])]
     selected_sensors = st.multiselect(
         "Select Sensor Measurements to Inspect",
-        options=sensor_cols,
-        default=[sensor_cols[0], sensor_cols[1], sensor_cols[2]] if len(sensor_cols) >= 3 else sensor_cols[:1]
+        options=available_sensors,
+        default=available_sensors[:3] if len(available_sensors) >= 3 else available_sensors
     )
     if selected_sensors:
         plot_df = engine_trajectory[["cycle"] + selected_sensors].set_index("cycle")
@@ -261,58 +337,129 @@ with tab2:
     degradation_df = engine_trajectory[["cycle"]].copy()
     degradation_df["True_RUL"] = np.clip(max_observed_cycle - degradation_df["cycle"], 0, rul_clip)
     st.line_chart(degradation_df.set_index("cycle"), height=350)
-    st.caption("Linear run-to-failure degradation trajectory clipped at 125 cycles.")
+    st.caption(f"Run-to-failure degradation trajectory for Engine #{selected_engine} ({selected_dataset}).")
+
+with tab3:
+    st.markdown("""
+    <div class="simulation-banner">
+        <strong>⏱️ Mode: Historical Dataset Replay / Simulated Monitoring</strong><br>
+        Simulating cycle-by-cycle telemetry stream playback from validated benchmark dataset.
+        Enables flight engineers to step through operational cycles and observe real-time RUL degradation.
+    </div>
+    """, unsafe_allow_html=True)
+
+    sim_col1, sim_col2 = st.columns([1, 2])
+    with sim_col1:
+        playback_cycle = st.slider(
+            "Playback Operational Cycle Scrubber",
+            min_value=1,
+            max_value=max_observed_cycle,
+            value=min(max_observed_cycle, 35),
+            step=1,
+            help="Step or slide through historical flight cycles to observe telemetry and RUL changes."
+        )
+
+        sim_engine = EngineReplaySimulator(dataset_name=selected_dataset)
+        sim_engine.load_engine(engine_id=selected_engine, kind="train")
+        cycle_info = sim_engine.get_cycle_snapshot(playback_cycle)
+        cycle_gt_rul = max_observed_cycle - playback_cycle
+
+        # Compute real-time model prediction at this playback cycle
+        if can_predict:
+            sim_window = sim_engine.get_sliding_window(
+                cycle=playback_cycle,
+                window_size=window_len,
+                feature_cols=sensor_cols
+            )
+            sim_window_norm = (sim_window - sensor_means) / sensor_stds
+            sim_pred_rul = predict_rul(selected_model, sim_window_norm, is_3d=is_3d)
+            risk_cat, badge_color = EngineReplaySimulator.classify_risk(sim_pred_rul)
+        else:
+            sim_pred_rul = float(cycle_gt_rul)
+            risk_cat, badge_color = EngineReplaySimulator.classify_risk(sim_pred_rul)
+
+        st.metric("Simulated Flight Cycle", f"{playback_cycle} / {max_observed_cycle}")
+        st.metric("Real-Time Predicted RUL", f"{sim_pred_rul:.1f} Cycles")
+        st.metric("Ground-Truth Remaining Cycles", f"{cycle_gt_rul} Cycles")
+        st.markdown(f"**Prognostic Status:** <span style='color:{badge_color}; font-weight:bold;'>{risk_cat}</span>", unsafe_allow_html=True)
+
+    with sim_col2:
+        # Multi-cycle degradation trajectory up to current playback cycle
+        sim_history_cycles = list(range(1, playback_cycle + 1))
+        sim_history_gt = [max_observed_cycle - c for c in sim_history_cycles]
+
+        chart_history = pd.DataFrame({
+            "Cycle": sim_history_cycles,
+            "Ground Truth RUL": sim_history_gt,
+        }).set_index("Cycle")
+
+        st.markdown(f"##### Telemetry & RUL Degradation at Cycle {playback_cycle}")
+        st.line_chart(chart_history, height=280)
+
+        # Show key physical sensor readings at current cycle
+        tel = cycle_info["telemetry"]
+        tel_cols = [k for k in tel.keys() if k.startswith("sensor_") or k in ds_meta.get("active_sensors", [])][:6]
+        if tel_cols:
+            kpi_cols = st.columns(len(tel_cols))
+            for i, col_name in enumerate(tel_cols):
+                s_meta = CMAPSS_SENSOR_METADATA.get(col_name, {})
+                label = f"{s_meta.get('symbol', col_name)} ({s_meta.get('units', '')})"
+                val = tel[col_name]
+                kpi_cols[i].metric(label, f"{val:.2f}" if isinstance(val, (int, float)) else str(val))
 
 st.markdown("---")
 
 # ---------------------------------------------------------------------------
-# Section 6: Validation Fleet Evaluation (Actual vs Predicted)
+# Section 4: Validation Fleet Evaluation (Actual vs Predicted)
 # ---------------------------------------------------------------------------
 st.subheader("4. Actual vs. Predicted RUL Across Validation Fleet")
 
-val_ids = metadata["val_engine_ids"]
+val_ids = metadata.get("val_engine_ids", [])[:20] if selected_dataset == "FD001" else all_engines[:20]
 val_preds = []
 val_actuals = []
 engine_records = []
 
-for eid in val_ids:
-    e_df = raw_df[raw_df["engine_id"] == eid].sort_values("cycle").reset_index(drop=True)
-    if len(e_df) < window_len:
-        continue
-    w = e_df[sensor_cols].iloc[-window_len:].values.astype(np.float32)
-    w_norm = (w - sensor_means) / sensor_stds
-    p = predict_rul(selected_model, w_norm, is_3d=is_3d)
-    act = min(e_df["cycle"].max() - e_df["cycle"].iloc[-1], rul_clip)
-    
-    val_preds.append(p)
-    val_actuals.append(act)
-    engine_records.append({
-        "Engine ID": eid,
-        "Actual RUL": act,
-        "Predicted RUL": round(p, 1),
-        "Error (Cycles)": round(p - act, 1),
-        "Maintenance Alert": "🚨 REQUIRED" if p <= alert_threshold else "✅ OK"
-    })
+if can_predict:
+    for eid in val_ids:
+        e_df = adapter.get_engine_trajectory(eid, kind="train")
+        if len(e_df) < window_len:
+            continue
+        w = e_df[sensor_cols].iloc[-window_len:].values.astype(np.float32)
+        w_norm = (w - sensor_means) / sensor_stds
+        p = predict_rul(selected_model, w_norm, is_3d=is_3d)
+        act = min(e_df["cycle"].max() - e_df["cycle"].iloc[-1], rul_clip)
+        
+        val_preds.append(p)
+        val_actuals.append(act)
+        engine_records.append({
+            "Engine ID": eid,
+            "Actual RUL": act,
+            "Predicted RUL": round(p, 1),
+            "Error (Cycles)": round(p - act, 1),
+            "Maintenance Alert": "🚨 REQUIRED" if p <= alert_threshold else "✅ OK"
+        })
 
-val_table_df = pd.DataFrame(engine_records)
+    val_table_df = pd.DataFrame(engine_records)
 
-vcol1, vcol2 = st.columns([2, 1])
-with vcol1:
-    chart_data = pd.DataFrame({
-        "Engine ID": [f"Unit #{r['Engine ID']}" for r in engine_records],
-        "Actual RUL": val_actuals,
-        "Predicted RUL": val_preds
-    }).set_index("Engine ID")
-    st.bar_chart(chart_data, height=320)
-with vcol2:
-    st.dataframe(val_table_df[["Engine ID", "Predicted RUL", "Maintenance Alert"]], height=320, use_container_width=True)
+    vcol1, vcol2 = st.columns([2, 1])
+    with vcol1:
+        chart_data = pd.DataFrame({
+            "Engine ID": [f"Unit #{r['Engine ID']}" for r in engine_records],
+            "Actual RUL": val_actuals,
+            "Predicted RUL": val_preds
+        }).set_index("Engine ID")
+        st.bar_chart(chart_data, height=320)
+    with vcol2:
+        st.dataframe(val_table_df[["Engine ID", "Predicted RUL", "Maintenance Alert"]], height=320, width="stretch")
+else:
+    st.info("Validation fleet evaluation available for models matching active dataset schema.")
 
 st.markdown("---")
 
 # ---------------------------------------------------------------------------
-# Section 7 & 8: Model Comparison & Benchmark Metrics
+# Section 5: Model Comparison & Benchmark Metrics
 # ---------------------------------------------------------------------------
-st.subheader("5. Baseline vs. LSTM Architectural Benchmark")
+st.subheader("5. Baseline vs. Deep Prognostic Architecture Benchmark")
 
 if metrics_data:
     summary_rows = []
@@ -334,16 +481,16 @@ else:
     st.info("Performance metrics file not found. Run train_baselines.py and train_lstm.py first.")
 
 # ---------------------------------------------------------------------------
-# Section 9: Predictive Maintenance Alerts
+# Section 6: Predictive Maintenance Alerts
 # ---------------------------------------------------------------------------
 st.subheader("6. Active Fleet Maintenance Dispatch Alerts")
 
 urgent_engines = [r for r in engine_records if r["Predicted RUL"] <= alert_threshold]
 if urgent_engines:
-    st.warning(f"⚠️ {len(urgent_engines)} units in the validation fleet require immediate hangar servicing!")
-    st.dataframe(pd.DataFrame(urgent_engines), use_container_width=True)
+    st.warning(f"⚠️ {len(urgent_engines)} units in the fleet require immediate hangar servicing!")
+    st.dataframe(pd.DataFrame(urgent_engines), width="stretch")
 else:
-    st.success(f"All validation engines have predicted RUL above current safety threshold ({alert_threshold} cycles).")
+    st.success(f"All inspected fleet engines have predicted RUL above current safety threshold ({alert_threshold} cycles).")
 
 st.markdown("---")
-st.caption("Turbofan Jet Engine Failure Predictor | NASA C-MAPSS Benchmark | Built with PyTorch, Scikit-Learn & Streamlit")
+st.caption("JETWISE AI | Turbofan Jet Engine Prognostic & Health Management Platform | NASA C-MAPSS & N-CMAPSS")
