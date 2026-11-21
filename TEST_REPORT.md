@@ -171,10 +171,11 @@ Measured via `tests/benchmark_performance.py` using `time.perf_counter()` and `t
 
 * **Repository:** [https://github.com/sam-black007/Jet-Engine-Failure-Predictor](https://github.com/sam-black007/Jet-Engine-Failure-Predictor)
 * **Workflow:** `.github/workflows/tests.yml`
-* **Trigger:** Push to `main` (`commit 80c04e1`)
+* **Trigger:** Push to `main` (`commit b447f8f`)
+* **Run ID:** `44912296082` ([https://github.com/sam-black007/Jet-Engine-Failure-Predictor/actions/runs/44912296082](https://github.com/sam-black007/Jet-Engine-Failure-Predictor/actions/runs/44912296082))
 * **Execution Status:** **SUCCESS (Green)**
-  * Python 3.10: Passed (2m 13s)
-  * Python 3.11: Passed (2m 09s)
+  * Python 3.10: Passed (1m 48s) — 21 unit tests passed, 1 browser integration suite skipped cleanly
+  * Python 3.11: Passed (1m 38s) — 21 unit tests passed, 1 browser integration suite skipped cleanly
 
 ---
 
