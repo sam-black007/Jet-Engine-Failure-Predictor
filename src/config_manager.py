@@ -225,8 +225,96 @@ class EvaluationConfig(BaseModel):
     save_plots: bool = Field(default=True)
 
 
+# ---------------------------------------------------------------------------
+# Phase 11 & Phase 12 Advanced Intelligence Configurations
+# ---------------------------------------------------------------------------
+
+class FDIRConfig(BaseModel):
+    """Configuration for Sensor Fault Detection, Isolation, and Recovery."""
+    stuck_at_variance_threshold: float = Field(default=1e-4, ge=0.0)
+    drift_slope_threshold: float = Field(default=0.05, ge=0.0)
+    noise_snr_threshold_db: float = Field(default=15.0, ge=0.0)
+    missing_packet_tolerance: int = Field(default=2, ge=0)
+    multivariate_residual_z_threshold: float = Field(default=3.0, ge=1.0)
+    fdir_enabled: bool = Field(default=True)
+
+
+class PhysicsConfig(BaseModel):
+    """Configuration for Physics-Informed Engine Intelligence & Thermodynamics."""
+    gamma_air: float = Field(default=1.4, ge=1.0, le=1.67)
+    gas_constant_r: float = Field(default=287.05, ge=200.0, le=400.0)
+    hpc_polytropic_efficiency_nominal: float = Field(default=0.89, ge=0.7, le=0.98)
+    combustor_heat_value: float = Field(default=43100.0, ge=30000.0, le=55000.0)
+    validate_thermodynamic_monotonicity: bool = Field(default=True)
+    virtual_sensor_method: Literal["isentropic", "enthalpy_balance", "hybrid"] = Field(default="isentropic")
+
+
+class ModelTrustConfig(BaseModel):
+    """Configuration for Out-of-Distribution Detection and Model Trust."""
+    ood_method: Literal["mahalanobis", "isolation_forest", "convex_hull", "ensemble"] = Field(default="mahalanobis")
+    mahalanobis_threshold_percentile: float = Field(default=95.0, ge=50.0, le=99.9)
+    isolation_forest_contamination: float = Field(default=0.05, ge=0.001, le=0.5)
+    pca_components: int = Field(default=3, ge=2, le=10)
+
+
+class UncertaintyCalibrationConfig(BaseModel):
+    """Configuration for Prediction Uncertainty and Conformal Calibration."""
+    target_coverage: float = Field(default=0.90, ge=0.50, le=0.99)
+    calibration_method: Literal["conformal", "mc_dropout", "quantile_regression"] = Field(default="conformal")
+    conformal_alpha: float = Field(default=0.10, ge=0.01, le=0.50)
+    calibration_split_ratio: float = Field(default=0.20, ge=0.05, le=0.50)
+
+
+class MaintenanceOptimizationConfig(BaseModel):
+    """Configuration for Constrained Maintenance Scheduling Optimizer."""
+    max_daily_bay_capacity: int = Field(default=4, ge=1, le=20)
+    technician_hours_per_day: float = Field(default=32.0, ge=8.0, le=200.0)
+    cost_weight_downtime: float = Field(default=0.6, ge=0.0, le=1.0)
+    cost_weight_risk_penalty: float = Field(default=0.4, ge=0.0, le=1.0)
+    solver_type: Literal["priority_greedy", "integer_programming"] = Field(default="priority_greedy")
+
+
+class FleetSimulationConfig(BaseModel):
+    """Configuration for Fleet Digital Twin and What-If Scenario Simulation."""
+    simulation_horizon_cycles: int = Field(default=150, ge=10, le=500)
+    fleet_size: int = Field(default=50, ge=2, le=500)
+    tempo_load_factor: float = Field(default=1.0, ge=0.5, le=2.0)
+    default_intervention_policy: Literal["condition_based", "fixed_interval", "run_to_failure"] = Field(default="condition_based")
+
+
+class ModelMonitoringConfig(BaseModel):
+    """Configuration for Continuous MLOps and Model Health Monitoring."""
+    drift_metric: Literal["ks_test", "wasserstein", "psi"] = Field(default="ks_test")
+    drift_threshold: float = Field(default=0.05, ge=0.001, le=0.5)
+    check_interval_cycles: int = Field(default=10, ge=1, le=100)
+    champion_challenger_enabled: bool = Field(default=True)
+
+
+class EngineeringReviewConfig(BaseModel):
+    """Configuration for Human-in-the-Loop Review Queue and Verification."""
+    auto_flag_mpi_threshold: float = Field(default=65.0, ge=0.0, le=100.0)
+    require_human_signoff_for_grounding: bool = Field(default=True)
+    default_review_sla_hours: int = Field(default=24, ge=1, le=168)
+
+
+class ResearchConfig(BaseModel):
+    """Configuration for Phase 12 Advanced Aerospace Research Modules."""
+    active_mission_profile: Literal["nominal", "short_haul", "long_haul", "hot_high", "severe_dust"] = Field(default="nominal")
+    multimodal_modalities: List[str] = Field(default_factory=lambda: ["telemetry", "vibration_spectrum", "maintenance_logs"])
+    reliability_distribution: Literal["weibull", "kaplan_meier", "exponential"] = Field(default="weibull")
+    edge_target_format: Literal["onnx", "int8_quantized", "torchscript"] = Field(default="onnx")
+
+
+class VisualizationConfig(BaseModel):
+    """Configuration for UI themes and rendering options."""
+    theme: Literal["aerospace_dark", "scada_high_contrast"] = Field(default="aerospace_dark")
+    chart_renderer: Literal["plotly", "threejs", "svg"] = Field(default="plotly")
+    enable_3d_webgl_animations: bool = Field(default=True)
+
+
 class MasterConfig(BaseModel):
-    """Unified master configuration for JETWISE AI experiments."""
+    """Unified master configuration for JETWISE AI experiments and operational modules."""
+    model_config = {"protected_namespaces": ()}
     version: str = Field(default="2.0.0", description="Configuration schema version")
     experiment_id: str = Field(
         default_factory=lambda: f"exp_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
@@ -248,6 +336,18 @@ class MasterConfig(BaseModel):
     training: TrainingConfig = Field(default_factory=TrainingConfig)
     prediction: PredictionConfig = Field(default_factory=PredictionConfig)
     evaluation: EvaluationConfig = Field(default_factory=EvaluationConfig)
+
+    # Advanced Intelligence & Research Extensions
+    fdir: FDIRConfig = Field(default_factory=FDIRConfig)
+    physics: PhysicsConfig = Field(default_factory=PhysicsConfig)
+    model_trust: ModelTrustConfig = Field(default_factory=ModelTrustConfig)
+    uncertainty_calibration: UncertaintyCalibrationConfig = Field(default_factory=UncertaintyCalibrationConfig)
+    maintenance_optimization: MaintenanceOptimizationConfig = Field(default_factory=MaintenanceOptimizationConfig)
+    fleet_simulation: FleetSimulationConfig = Field(default_factory=FleetSimulationConfig)
+    model_monitoring: ModelMonitoringConfig = Field(default_factory=ModelMonitoringConfig)
+    engineering_review: EngineeringReviewConfig = Field(default_factory=EngineeringReviewConfig)
+    research: ResearchConfig = Field(default_factory=ResearchConfig)
+    visualization: VisualizationConfig = Field(default_factory=VisualizationConfig)
 
     def freeze(self) -> MasterConfig:
         """Return an immutable deep-copy snapshot of this configuration."""
