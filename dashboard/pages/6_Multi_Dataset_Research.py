@@ -92,7 +92,7 @@ with tab1:
         "Complexity Tier": "Multi-Condition Accelerated Life Testing"
     })
 
-    st.dataframe(pd.DataFrame(rows), width="stretch")
+    st.dataframe(pd.DataFrame(rows), use_container_width=True)
 
 # ---------------------------------------------------------------------------
 # Tab 2: Physical Sensor Dictionary
@@ -116,7 +116,7 @@ with tab2:
             "Physical Engineering Role": s_info["description"]
         })
 
-    st.dataframe(pd.DataFrame(sensor_records), width="stretch")
+    st.dataframe(pd.DataFrame(sensor_records), use_container_width=True)
 
     st.markdown("##### Flight Condition Operating Settings")
     op_records = []
@@ -181,7 +181,7 @@ with tab4:
         st.dataframe(comp_df[[
             "Dataset", "mae_raw", "mae_clipped", "rmse", "nasa_score",
             "delta_mae", "mae_relative_increase_pct"
-        ]], width="stretch")
+        ]], use_container_width=True)
 
         c1, c2 = st.columns(2)
         with c1:
