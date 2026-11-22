@@ -328,11 +328,18 @@ def render_threejs_digital_twin_html(
     mpi: float = 25.0,
     telemetry: Optional[Dict[str, float]] = None,
     anomaly_info: Optional[Dict[str, Any]] = None,
-    max_cycles: int = 200
+    max_cycles: int = 200,
+    highlight_components: Optional[List[str]] = None,
+    component_visual_states: Optional[Dict[str, str]] = None,
+    scenario_info: Optional[Dict[str, Any]] = None,
+    compare_mode: bool = False
 ) -> str:
     """Generate interactive WebGL 3D turbofan digital twin HTML using Three.js with full component inspection."""
     telemetry = telemetry or {}
     anomaly_info = anomaly_info or {}
+    highlight_components = highlight_components or []
+    component_visual_states = component_visual_states or {}
+    scenario_info = scenario_info or {}
 
     state_colors = {
         "HEALTHY": "#21C77A",
@@ -357,6 +364,15 @@ def render_threejs_digital_twin_html(
         components_payload[k] = comp_copy
 
     components_json = json.dumps(components_payload)
+    visual_states_json = json.dumps(component_visual_states)
+    highlight_json = json.dumps(highlight_components)
+    default_selected = highlight_components[0] if highlight_components else "hpc"
+    scenario_badge_html = f"""
+    <div style="margin-top: 6px; padding: 4px 6px; background: rgba(0, 184, 217, 0.15); border: 1px solid #00B8D9; border-radius: 4px; font-size: 10px;">
+        <span style="color: #00B8D9; font-weight: bold;">⚡ SCENARIO:</span> {scenario_info.get("name", "Active What-If")}
+        <br><span style="color: #94A3B8;">Mode:</span> {scenario_info.get("mode", "MODE_A")} | <span style="color: #94A3B8;">ΔRUL:</span> <b style="color: {'#EF4444' if scenario_info.get('rul_delta', 0) < 0 else '#21C77A'};">{scenario_info.get('rul_delta', 0.0):+.1f} cycles</b>
+    </div>
+    """ if scenario_info else ""
 
     html_code = f"""
     <!DOCTYPE html>
@@ -517,6 +533,7 @@ def render_threejs_digital_twin_html(
                 <div style="font-size: 10px; color: #94A3B8; margin-top: 2px;">
                     Anomaly Severity: <span style="color: {'#FF5252' if anomaly_info.get('is_anomaly') else '#21C77A'};">{anomaly_info.get('severity', 'NORMAL')}</span>
                 </div>
+                {scenario_badge_html}
             </div>
 
             <!-- Component Inspector Panel -->
@@ -603,24 +620,84 @@ def render_threejs_digital_twin_html(
             // Subassembly Groups for Exploded View
             const partGroups = {{}};
             let isExploded = false;
-            let currentSelected = "hpc";
+            let currentSelected = "{default_selected}";
+            const visualStates = {visual_states_json};
+            const highlightComps = {highlight_json};
+
+            function getCompColor(compKey, defaultHex) {{
+                if (visualStates && visualStates[compKey]) {{
+                    const s = visualStates[compKey];
+                    if (s === "CRITICAL") return 0xEF4444;
+                    if (s === "WARNING") return 0xF59E0B;
+                    if (s === "MODIFIED") return 0x00B8D9;
+                    if (s === "NORMAL") return 0x10B981;
+                }}
+                return defaultHex;
+            }}
+
+            function getCompEmissive(compKey, defaultHex, defaultIntensity = 0.0) {{
+                if (highlightComps && highlightComps.includes(compKey)) {{
+                    return {{ color: 0x00B8D9, intensity: 0.85 }};
+                }}
+                if (visualStates && visualStates[compKey] === "CRITICAL") {{
+                    return {{ color: 0xEF4444, intensity: 0.75 }};
+                }}
+                if (visualStates && visualStates[compKey] === "WARNING") {{
+                    return {{ color: 0xF59E0B, intensity: 0.6 }};
+                }}
+                if (visualStates && visualStates[compKey] === "MODIFIED") {{
+                    return {{ color: 0x00B8D9, intensity: 0.6 }};
+                }}
+                return {{ color: defaultHex, intensity: defaultIntensity }};
+            }}
 
             // Materials
+            const emFan = getCompEmissive("fan_assembly", 0x000000);
+            const emLPC = getCompEmissive("lpc", 0x000000);
+            const emHPC = getCompEmissive("hpc", 0x000000);
+            const emHPT = getCompEmissive("hpt", 0x000000);
+            const emLPT = getCompEmissive("lpt", 0x000000);
+
             const matCasing = new THREE.MeshStandardMaterial({{
                 color: 0x1E293B, metalness: 0.7, roughness: 0.3, transparent: true, opacity: 0.35
             }});
             const matShaft = new THREE.MeshStandardMaterial({{ color: 0x94A3B8, metalness: 0.9, roughness: 0.15 }});
-            const matFan = new THREE.MeshStandardMaterial({{ color: 0xCBD5E1, metalness: 0.85, roughness: 0.2 }});
-            const matLPC = new THREE.MeshStandardMaterial({{ color: 0x38BDF8, metalness: 0.75, roughness: 0.3 }});
-            const matHPC = new THREE.MeshStandardMaterial({{ color: 0xF59E0B, metalness: 0.75, roughness: 0.3 }});
+            const matFan = new THREE.MeshStandardMaterial({{
+                color: getCompColor("fan_assembly", 0xCBD5E1),
+                emissive: emFan.color,
+                emissiveIntensity: emFan.intensity,
+                metalness: 0.85, roughness: 0.2
+            }});
+            const matLPC = new THREE.MeshStandardMaterial({{
+                color: getCompColor("lpc", 0x38BDF8),
+                emissive: emLPC.color,
+                emissiveIntensity: emLPC.intensity,
+                metalness: 0.75, roughness: 0.3
+            }});
+            const matHPC = new THREE.MeshStandardMaterial({{
+                color: getCompColor("hpc", 0xF59E0B),
+                emissive: emHPC.color,
+                emissiveIntensity: emHPC.intensity,
+                metalness: 0.75, roughness: 0.3
+            }});
             const matCombustor = new THREE.MeshStandardMaterial({{
                 color: {glow_color.replace('#', '0x')},
                 emissive: {glow_color.replace('#', '0x')},
                 emissiveIntensity: 0.7,
                 roughness: 0.4
             }});
-            const matHPT = new THREE.MeshStandardMaterial({{ color: 0xEF4444, metalness: 0.85, roughness: 0.2 }});
-            const matLPT = new THREE.MeshStandardMaterial({{ color: 0x10B981, metalness: 0.85, roughness: 0.2 }});
+            const matHPT = new THREE.MeshStandardMaterial({{
+                color: getCompColor("hpt", 0xEF4444),
+                emissive: emHPT.color,
+                emissiveIntensity: emHPT.intensity,
+                metalness: 0.85, roughness: 0.2
+            }});
+            const matLPT = new THREE.MeshStandardMaterial({{
+                color: getCompColor("lpt", 0x10B981),
+                emissive: emLPT.color,
+                emissiveIntensity: emLPT.intensity,
+                metalness: 0.85, roughness: 0.2
+            }});
             const matNozzle = new THREE.MeshStandardMaterial({{ color: 0x475569, metalness: 0.8, roughness: 0.4 }});
 
             // 1. FAN ASSEMBLY

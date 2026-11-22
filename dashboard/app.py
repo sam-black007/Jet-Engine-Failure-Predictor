@@ -69,6 +69,7 @@ from src.ui.phase12_workspaces import (
     render_decision_intelligence
 )
 from src.ui.configuration_centre import render_global_configuration_centre
+from src.ui.copilot_workspace import render_copilot_workspace
 
 # ---------------------------------------------------------------------------
 # Page Configuration & SCADA Dark Industrial Styling
@@ -252,12 +253,13 @@ nav_workspace = st.sidebar.selectbox(
     "Active Workspace",
     [
         "✈️ Operations & 3D Digital Twin",
+        "🧑‍✈️ Aerospace Engineering Copilot",
         "🚀 Advanced Aerospace Intelligence (Phase 11)",
         "🔬 Next-Generation Research Lab (Phase 12)",
         "⚙️ Global Configuration Centre"
     ],
     index=0,
-    help="Switch between Core Operations, Phase 11 Intelligence, Phase 12 Research, and Global Configuration."
+    help="Switch between Core Operations, Conversational Copilot, Phase 11 Intelligence, Phase 12 Research, and Global Configuration."
 )
 
 # 1. Multi-Dataset Dynamic Selector
@@ -413,7 +415,10 @@ else:
 
 st.markdown("---")
 
-if nav_workspace == "🚀 Advanced Aerospace Intelligence (Phase 11)":
+if nav_workspace == "🧑‍✈️ Aerospace Engineering Copilot":
+    render_copilot_workspace()
+
+elif nav_workspace == "🚀 Advanced Aerospace Intelligence (Phase 11)":
     p11_t1, p11_t2, p11_t3, p11_t4, p11_t5, p11_t6, p11_t7, p11_t8, p11_t9 = st.tabs([
         "🌐 Intelligence Overview",
         "🔍 Sensor FDIR (11.1)",
