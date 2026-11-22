@@ -22,7 +22,8 @@ def render_mission_control_home(switch_hub_callback):
     mode = st.session_state.get("app_presentation_mode", "simple")
 
     # 1. Hero Welcome Banner
-    st.markdown("""
+    mode_text = '🟢 Simple Mode (Beginner)' if mode == 'simple' else '🔬 Advanced Engineering View'
+    st.markdown(f"""
     <div style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border: 1px solid #334155; border-left: 5px solid #00B8D9; border-radius: 8px; padding: 22px 28px; margin-bottom: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
             <div>
@@ -32,14 +33,17 @@ def render_mission_control_home(switch_hub_callback):
                 <h2 style="color: #F8FAFC; margin: 8px 0 4px 0; font-size: 26px; font-weight: 800;">
                     ✈️ THRUSTLAB — Mission Control
                 </h2>
-                <p style="color: #94A3B8; margin: 0; font-size: 14px; max-width: 820px; line-height: 1.5;">
+                <div style="color: #00B8D9; font-weight: 600; font-size: 13px; margin-bottom: 6px;">
+                    THRUSTLAB: An Integrated AI-Driven and Physics-Informed Digital Twin Framework for Turbofan Engine Prognostics and Health Management
+                </div>
+                <p style="color: #94A3B8; margin: 0; font-size: 13px; max-width: 860px; line-height: 1.5;">
                     Autonomous Aircraft Engine Health Monitoring, Conversational Aerothermal Simulation & Predictive Maintenance Platform.
                     Empowering airline operators and propulsion engineers with physics-grounded AI predictions, real-time 3D digital twins, and certified MATLAB co-simulation.
                 </p>
             </div>
             <div style="text-align: right; margin-top: 10px;">
                 <span style="color: #64748B; font-size: 12px;">Active Mode:</span><br/>
-                <b style="color: #10B981; font-size: 14px;">{'🟢 Simple Mode (Beginner)' if mode == 'simple' else '🔬 Advanced Engineering View'}</b>
+                <b style="color: #10B981; font-size: 14px;">{mode_text}</b>
             </div>
         </div>
     </div>
