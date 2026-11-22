@@ -61,8 +61,8 @@ def render_unified_header_and_navigation() -> str:
             <span style="font-size: 26px;">✈️</span>
             <div>
                 <b style="color: #F8FAFC; font-size: 18px; letter-spacing: 0.5px;">THRUSTLAB</b>
-                <span style="color: #00B8D9; font-size: 11px; margin-left: 6px; font-weight: 700; border: 1px solid #00B8D9; padding: 1px 6px; border-radius: 3px;">PHASE 17 OS</span>
-                <div style="color: #94A3B8; font-size: 11px;">Autonomous Flight Prognostics & Multi-Engine Digital Twin</div>
+                <span style="color: #00B8D9; font-size: 11px; margin-left: 6px; font-weight: 700; border: 1px solid #00B8D9; padding: 1px 6px; border-radius: 3px;">PHM SYSTEM</span>
+                <div style="color: #94A3B8; font-size: 11px;">Integrated AI-Driven & Physics-Informed Digital Twin Framework for Turbofan Engine Prognostics</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
