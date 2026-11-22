@@ -331,6 +331,38 @@ class CopilotSimulationEngine:
         t0: float
     ) -> ScenarioResult:
         """Mode C: MATLAB / Simulink physics-based simulation with certified Python Aerothermal fallback."""
+        # Check if target engine configuration has a connected simulation model
+        from src.engine_configuration.repository import EngineRepository
+        engine_repo = EngineRepository()
+        engine_cfg = engine_repo.get_engine_configuration(scenario.selected_engine_config_id)
+        if engine_cfg and engine_cfg.supported_simulation_model_id is None:
+            explanation = (
+                f"Engine profile '{engine_cfg.manufacturer} {engine_cfg.engine_model}' is currently a CATALOGUE ONLY entry. "
+                f"A validated physical simulation model for this engine family is not yet connected. "
+                f"Physical simulation cannot be executed without an imported or compatible engineering model."
+            )
+            return ScenarioResult(
+                scenario_id=scenario.scenario_id,
+                scenario_name=scenario.scenario_name,
+                simulation_mode=scenario.simulation_mode,
+                baseline_rul=base_rul,
+                modified_rul=base_rul,
+                rul_delta=0.0,
+                baseline_uncertainty=base_unc,
+                modified_uncertainty=base_unc,
+                baseline_telemetry=base_telemetry,
+                modified_telemetry=base_telemetry,
+                time_series_data=None,
+                affected_components=[],
+                component_states={},
+                verification_status=VerificationStatus.WARNING,
+                verification_checks=[{"name": "Model Linkage Check", "status": "WARNING", "details": "Catalogue entry lacks connected simulation model."}],
+                engineering_explanation=explanation,
+                simulation_source="Catalogue Profile (No Simulation Model Connected)",
+                matlab_status="MODEL_UNCONNECTED",
+                execution_time_ms=round((time.time() - t0) * 1000, 1)
+            )
+
         # Extract modifiers
         fuel_flow = base_telemetry.get("sensor_12", 521.66)
         hpc_mod = 1.0

@@ -25,6 +25,9 @@ class ConversationalIntent(str):
     EXPLAIN_PREDICTION = "EXPLAIN_PREDICTION"
     ROLLBACK_PREVIOUS = "ROLLBACK_PREVIOUS"
     RUN_MATLAB_SIMULINK = "RUN_MATLAB_SIMULINK"
+    SELECT_ENGINE_CONFIG = "SELECT_ENGINE_CONFIG"
+    COMPARE_ENGINES = "COMPARE_ENGINES"
+    CHECK_AI_ENGINE_COMPATIBILITY = "CHECK_AI_ENGINE_COMPATIBILITY"
 
 
 class AerospaceCopilotNLU:
@@ -52,6 +55,32 @@ class AerospaceCopilotNLU:
 
         # 1. Identify Intent with strict precedence
         intent = self._identify_intent(text_lower)
+
+        # Determine target engine configuration (retains context across conversation)
+        selected_engine_cfg = current_scenario.selected_engine_config_id if current_scenario else "NASA-CMAPSS-FD001"
+        if "trent" in text_lower or "rolls-royce" in text_lower or "rolls royce" in text_lower:
+            selected_engine_cfg = "RR-TRENT-XWB-84"
+        elif "htf" in text_lower or "honeywell" in text_lower:
+            selected_engine_cfg = "HW-HTF7000"
+        elif "ge90" in text_lower:
+            selected_engine_cfg = "GE-GE90-115B"
+        elif "pw1000g" in text_lower or "pw1100g" in text_lower or "pratt" in text_lower:
+            selected_engine_cfg = "PW-PW1100G-JM"
+        elif "leap" in text_lower or "cfm" in text_lower:
+            selected_engine_cfg = "CFM-LEAP-1A"
+
+        # Handle Engine Selection
+        if intent == ConversationalIntent.SELECT_ENGINE_CONFIG:
+            scen = EngineeringScenario(
+                scenario_name=f"Selected Engine Configuration: {selected_engine_cfg}",
+                user_query=query,
+                dataset=default_dataset,
+                engine_id=default_engine,
+                cycle=default_cycle,
+                simulation_mode=SimulationMode.MODE_A_AI_SENSOR_WHAT_IF,
+                selected_engine_config_id=selected_engine_cfg
+            )
+            return intent, scen, f"Active aerospace powerplant set to '{selected_engine_cfg}'."
 
         # 2. Handle Baseline Creation
         if intent == ConversationalIntent.CREATE_BASELINE:
@@ -130,12 +159,21 @@ class AerospaceCopilotNLU:
             simulation_mode=sim_mode,
             parameters=param_changes,
             duration_cycles=duration_cycles,
-            parent_scenario_id=current_scenario.scenario_id if current_scenario else None
+            parent_scenario_id=current_scenario.scenario_id if current_scenario else None,
+            selected_engine_config_id=selected_engine_cfg
         )
 
         return intent, scen, None
 
     def _identify_intent(self, text: str) -> ConversationalIntent:
+        # Check Multi-Engine intents
+        if re.search(r"\b(compatible with this engine|compatible with engine|use my current nasa|trained model for this engine|cross-engine)\b", text):
+            return ConversationalIntent.CHECK_AI_ENGINE_COMPATIBILITY
+        if re.search(r"\b(compare these two engine|compare engine configuration|compare engines)\b", text):
+            return ConversationalIntent.COMPARE_ENGINES
+        if re.search(r"\b(select|switch to|load|use)\b.*(rolls-royce|rolls royce|trent|honeywell|htf|ge90|genx|pratt|pw1000g|pw4000|leap|cfm56)", text):
+            return ConversationalIntent.SELECT_ENGINE_CONFIG
+
         # Check MATLAB first
         if self.matlab_patterns.search(text):
             return ConversationalIntent.RUN_MATLAB_SIMULINK

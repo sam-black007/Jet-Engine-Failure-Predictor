@@ -107,6 +107,7 @@ class EngineeringScenario:
     created_at: str = field(default_factory=lambda: datetime.datetime.now().isoformat())
     parent_scenario_id: Optional[str] = None
     is_healthy_baseline: bool = False
+    selected_engine_config_id: str = "NASA-CMAPSS-FD001"
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
