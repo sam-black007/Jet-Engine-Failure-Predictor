@@ -525,12 +525,25 @@ def render_multi_engine_centre():
         st.markdown("### Architecture-Specific 3D Turbofan Digital Twin")
         st.caption("Custom mechanical CAD representations: Rolls-Royce 3-spool, Pratt & Whitney Geared GTF, and Standard Twin-Spool.")
 
+        enable_multi_3d = st.toggle(
+            "🌐 Enable 3D WebGL Digital Twin Rendering",
+            value=False,
+            key="multi_engine_enable_3d",
+            help="Turn ON to render the interactive 3D WebGL engine model. Off by default for lightweight 2D performance."
+        )
+
         twin_cfg_id = st.selectbox("Select Engine for 3D Twin Visualization", all_cfg_ids, index=0)
         twin_engine = repo.get_engine_configuration(twin_cfg_id)
 
-        if twin_engine:
-            twin_html = render_multi_engine_3d_twin_html(
-                engine_cfg=twin_engine,
-                height_px=620
-            )
-            st.components.v1.html(twin_html, height=640)
+        if not enable_multi_3d:
+            st.info("ℹ️ **3D Digital Twin is currently hidden.** Turn on the toggle above to inspect the 3D WebGL engine model.")
+            if twin_engine:
+                st.markdown(f"**Architecture:** `{twin_engine.architecture_type}` | **Manufacturer:** `{twin_engine.manufacturer}` | **Model:** `{twin_engine.engine_model}`")
+                st.markdown(f"**Design Bypass Ratio:** `{twin_engine.design_bpr}` | **Design OPR:** `{twin_engine.design_opr}` | **Max Takeoff Thrust:** `{twin_engine.max_thrust_kn} kN`")
+        else:
+            if twin_engine:
+                twin_html = render_multi_engine_3d_twin_html(
+                    engine_cfg=twin_engine,
+                    height_px=620
+                )
+                st.components.v1.html(twin_html, height=640)

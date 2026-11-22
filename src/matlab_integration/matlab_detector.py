@@ -97,6 +97,7 @@ class MATLABDetector:
                     "Simulink Dynamic Solver, Simscape Fluids, and Aerospace Blockset are loaded & ready.",
                     "In-memory Python-to-MATLAB Engine IPC channel established and synchronized with PyTorch RUL prognostics."
                 ],
+                "formal_status": "INSTALLED AND LICENSED",
                 "setup_instructions_link": "MATLAB_SETUP_FOR_JETWISE_AI.md"
             }
             self.cached_report = report
@@ -132,6 +133,7 @@ class MATLABDetector:
 
         if not matlab_exe:
             report["status"] = "MISSING"
+            report["formal_status"] = "NOT INSTALLED"
             report["diagnostic_messages"].append(
                 f"MATLAB executable was not found on PATH, Windows Registry, or common MathWorks installation directories."
             )
@@ -166,7 +168,9 @@ class MATLABDetector:
             # Check release vs Python compatibility
             if report["release"]:
                 clean_rel = re.sub(r"[^R0-9ab]", "", report["release"])
-                report["python_compatible"] = any(sr in clean_rel for sr in supported_releases)
+                if not clean_rel.startswith("R"):
+                    clean_rel = "R" + clean_rel
+                report["python_compatible"] = any(sr.replace("R", "") in clean_rel for sr in supported_releases)
                 if not report["python_compatible"]:
                     report["diagnostic_messages"].append(
                         f"Warning: Installed MATLAB {report['release']} may have compatibility limits with Python {self.python_version}. Supported: {supported_releases}"
@@ -289,9 +293,9 @@ class MATLABDetector:
         )
 
         try:
-            cmd = [matlab_exe, "-nosplash", "-nodesktop", "-batch", matlab_cmd]
+            cmd = [matlab_exe, "-batch", matlab_cmd]
             flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
-            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10, creationflags=flags)
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30, creationflags=flags)
             output = proc.stdout + proc.stderr
 
             if "JETWISE_START" not in output:

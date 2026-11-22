@@ -583,3 +583,37 @@ def render_engineering_review(dataset: str):
             is_validated_ground_truth=True
         )
         st.success(f"Review #{rev_id} formally signed off and recorded into permanent engineering audit log!")
+
+
+def render_phase11_intelligence_centre(dataset: str = "FD001", engine_id: int = 1, current_cycle: int = 100):
+    """Render consolidated Phase 11 tab suite."""
+    p11_tabs = st.tabs([
+        "🌐 Intelligence Overview",
+        "🔍 Sensor FDIR (11.1)",
+        "⚙️ Physics Intelligence (11.2)",
+        "🛡️ Model Trust & OOD (11.3)",
+        "🎯 Uncertainty & Calibration (11.4)",
+        "🛠️ Maintenance Optimizer (11.5)",
+        "👥 Fleet Digital Twin (11.6)",
+        "📈 Model Health (11.7)",
+        "✍️ Engineering Review (11.8)"
+    ])
+    with p11_tabs[0]:
+        render_intelligence_overview(dataset, engine_id, current_cycle)
+    with p11_tabs[1]:
+        demo_traj = pd.DataFrame({"cycle": list(range(1, current_cycle + 1)), "sensor_2": [642.0] * current_cycle})
+        render_sensor_fdir(dataset, engine_id, current_cycle, demo_traj)
+    with p11_tabs[2]:
+        render_physics_intelligence(dataset, engine_id, current_cycle, {"sensor_2": 642.0, "sensor_3": 1585.0, "sensor_4": 1405.0})
+    with p11_tabs[3]:
+        render_model_trust(dataset, engine_id, current_cycle, np.zeros(21))
+    with p11_tabs[4]:
+        render_prediction_uncertainty(predicted_rul=105.0, unc_std=4.5)
+    with p11_tabs[5]:
+        render_maintenance_optimization(dataset)
+    with p11_tabs[6]:
+        render_fleet_simulation(dataset)
+    with p11_tabs[7]:
+        render_model_health()
+    with p11_tabs[8]:
+        render_engineering_review(dataset)

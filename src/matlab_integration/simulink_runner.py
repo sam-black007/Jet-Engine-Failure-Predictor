@@ -109,7 +109,7 @@ class SimulinkRunner:
                 script_path=str(MATLAB_SCRIPT),
                 input_json_path=str(in_file),
                 output_json_path=str(out_file),
-                timeout_seconds=45
+                timeout_seconds=75
             )
 
             if res.get("success"):
@@ -176,6 +176,7 @@ class SimulinkRunner:
             scenario_id=scenario_id,
             execution_engine="MATLAB / Simulink Engine",
             is_matlab_native=True,
+            matlab_figure_path=res_dict.get("matlab_figure_path"),
             duration_seconds=inputs.duration_seconds,
             time_step_seconds=inputs.time_step_seconds,
             t0_k=float(ss.get("t0_k", inputs.ambient_temp_k)),

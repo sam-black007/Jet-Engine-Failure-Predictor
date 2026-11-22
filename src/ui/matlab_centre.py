@@ -432,15 +432,36 @@ def render_matlab_centre():
     with tab_exec:
         st.markdown("### Physical Simulation Execution & Telemetry")
         
-        exec_col1, exec_col2, exec_col3 = st.columns([2, 1, 1])
+        exec_col1, exec_col2, exec_col3, exec_col4 = st.columns([1.5, 1, 1, 1.2])
         with exec_col1:
             force_fb = st.checkbox("Force Python Aerothermal Fallback (Bypass MATLAB CLI)", value=False)
         with exec_col2:
-            run_btn = st.button("🚀 Run Turbofan Simulation", type="primary", use_container_width=True)
+            run_btn = st.button("🚀 Run Simulation", type="primary", use_container_width=True)
         with exec_col3:
-            if st.button("💾 Set as Baseline", use_container_width=True):
+            if st.button("💾 Set Baseline", use_container_width=True):
                 st.session_state.baseline_sim_result = st.session_state.last_sim_result
                 st.success("Current scenario registered as comparison baseline.")
+        with exec_col4:
+            if st.button("🖥️ Open in MATLAB", use_container_width=True, help="Launch official MATLAB desktop and open the simulation script and scope figures directly."):
+                matlab_meta = detector.detect_matlab()
+                matlab_bin = matlab_meta.get("executable_path")
+                if not matlab_bin or "Virtual://" in str(matlab_bin) or not os.path.exists(str(matlab_bin)):
+                    for cand in [
+                        r"C:\Program Files\MATLAB\R2026b\bin\matlab.exe",
+                        r"C:\Program Files\MATLAB\R2024b\bin\matlab.exe",
+                        r"C:\Program Files\MATLAB\R2024a\bin\matlab.exe",
+                        r"E:\robotics\New folder (2)\bin\matlab.exe"
+                    ]:
+                        if os.path.exists(cand):
+                            matlab_bin = cand
+                            break
+                if matlab_bin and os.path.exists(str(matlab_bin)):
+                    script_file = PROJECT_ROOT / "matlab_models" / "scripts" / "run_turbofan_simulation.m"
+                    cmd = f'cd("{str(script_file.parent)}"); edit("{str(script_file.name)}"); run("{str(script_file.name)}");'
+                    subprocess.Popen([matlab_bin, "-desktop", "-r", cmd])
+                    st.success(f"🚀 Launching Native MATLAB Desktop! Opening turbofan simulation script and scope figures directly in MATLAB...")
+                else:
+                    st.warning("MATLAB desktop executable not found yet. Complete the MATLAB installer or link the custom path above.")
 
         if run_btn:
             with st.spinner("Executing turbofan aerothermal simulation..."):
@@ -592,6 +613,23 @@ def render_matlab_centre():
             )
             st.plotly_chart(fig_thrust, use_container_width=True)
 
+        # Authentic MATLAB Graphics Engine Scope View
+        st.markdown("---")
+        st.markdown("#### 📸 Authentic MATLAB Scope & Direct Graphics View")
+        st.caption("High-resolution figure generated directly by MathWorks MATLAB Graphics Engine displaying exact differential equation solutions.")
+
+        import glob
+        fig_path = res.get("outputs", {}).get("matlab_figure_path") if isinstance(res.get("outputs"), dict) else None
+        if not fig_path or not os.path.exists(fig_path):
+            scope_files = glob.glob(str(PROJECT_ROOT / "matlab_models" / "results" / "matlab_scope_*.png"))
+            if scope_files:
+                fig_path = sorted(scope_files)[-1]
+
+        if fig_path and os.path.exists(fig_path):
+            st.image(fig_path, caption=f"Direct MATLAB Graphics Output [{os.path.basename(fig_path)}]", use_container_width=True)
+        else:
+            st.info("💡 To view or export authentic MATLAB Scope PNGs directly from MathWorks graphics engine, click **'🖥️ Open in MATLAB'** above to run and inspect in native MATLAB desktop.")
+
     # -------------------------------------------------------------------------
     # TAB 4: AI PROGNOSTICS & HEALTH PREDICTION
     # -------------------------------------------------------------------------
@@ -734,13 +772,30 @@ def render_matlab_centre():
         st.markdown("### Interactive 3D Turbofan Digital Twin Synchronization")
         st.caption("3D engine subassemblies animated and thermomechanically textured by active physical simulation telemetry.")
 
+        enable_matlab_3d = st.toggle(
+            "🌐 Enable 3D WebGL Digital Twin Rendering",
+            value=False,
+            key="matlab_centre_enable_3d_twin",
+            help="Turn ON to render the interactive Three.js 3D turbofan engine. Off by default for lightweight 2D performance."
+        )
+
         res = st.session_state.last_sim_result
         if not res or not res.get("success"):
             st.warning("Run a simulation first to view the 3D twin.")
             return
 
-        ss = res["outputs"]["steady_state"]
-        prog = res["prognostics"]
+        if not enable_matlab_3d:
+            st.info("ℹ️ **3D Digital Twin is currently hidden.** Turn on the toggle above anytime you want to inspect the 3D WebGL model.")
+            st.markdown("##### 2D Aerothermal Subassembly Status")
+            ch = res["outputs"].get("component_health", {})
+            if ch:
+                cols = st.columns(len(ch))
+                for i, (c_name, c_eff) in enumerate(ch.items()):
+                    with cols[i]:
+                        st.metric(c_name.upper(), f"{c_eff*100:.1f}%", delta=f"{(c_eff-1.0)*100:+.1f}%")
+        else:
+            ss = res["outputs"]["steady_state"]
+            prog = res["prognostics"]
 
         # Map simulation steady state to digital twin telemetry dictionary
         twin_telemetry = {

@@ -517,3 +517,36 @@ def render_decision_intelligence(dataset: str, engine_id: int, current_cycle: in
             engineer_id=eng_id
         )
         st.success(f"Operational decision #{rec_id} permanently logged into engineering audit records!")
+
+
+def render_phase12_research_lab(dataset: str = "FD001", engine_id: int = 1, current_cycle: int = 100):
+    """Render consolidated Phase 12 tab suite."""
+    p12_tabs = st.tabs([
+        "🌐 Research Overview",
+        "🛫 Mission Intelligence (12.1)",
+        "🧩 Component Health (12.2)",
+        "📡 Multi-Modal Fusion (12.3)",
+        "📉 Reliability & Survival (12.4)",
+        "🎯 Active Learning (12.5)",
+        "🕸️ Knowledge Graph (12.6)",
+        "⚡ Edge Avionics (12.7)",
+        "⚖️ Decision Intelligence (12.8)"
+    ])
+    with p12_tabs[0]:
+        render_research_overview(dataset, engine_id)
+    with p12_tabs[1]:
+        render_mission_intelligence(dataset, engine_id, current_cycle, baseline_rul=105.0)
+    with p12_tabs[2]:
+        render_component_health(dataset, engine_id, current_cycle, predicted_rul=105.0, sensor_zscores={"sensor_2": 0.2, "sensor_3": 0.5, "sensor_4": 0.8})
+    with p12_tabs[3]:
+        render_multimodal_fusion(dataset, engine_id, current_cycle, anomaly_score=0.15)
+    with p12_tabs[4]:
+        render_reliability_analysis(dataset, current_cycle)
+    with p12_tabs[5]:
+        render_active_learning(dataset)
+    with p12_tabs[6]:
+        render_knowledge_graph()
+    with p12_tabs[7]:
+        render_edge_deployment()
+    with p12_tabs[8]:
+        render_decision_intelligence(dataset, engine_id, current_cycle, predicted_rul=105.0, mpi=55.0)

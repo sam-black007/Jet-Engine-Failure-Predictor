@@ -247,12 +247,12 @@ class MATLABEngineManager:
         import re
         cmd_str = "r = sqrt(16.0); a = sqrt(1.4 * 287.05 * 288.15); disp(sprintf('RESULT:%.4f:%.4f', r, a)); exit;"
         try:
-            cmd = [matlab_exe, "-nosplash", "-nodesktop", "-batch", cmd_str]
+            cmd = [matlab_exe, "-batch", cmd_str]
             proc = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=15,
+                timeout=30,
                 creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
             )
             elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)

@@ -131,7 +131,8 @@ thrust_series = thrust_kn * (1.0 + noise_sigma * randn(1, num_steps));
 
 %% 12. Structure Output Payload
 results = struct();
-results.scenario_id = ['MATLAB-' char(java.util.UUID.randomUUID.toString().substring(0,8)).upper()];
+raw_uuid = char(java.util.UUID.randomUUID.toString());
+results.scenario_id = ['MATLAB-' upper(raw_uuid(1:8))];
 results.execution_engine = 'MATLAB / Simulink Engine';
 results.is_matlab_native = true;
 results.duration_seconds = duration;
@@ -188,7 +189,62 @@ results.time_series.core_speed_rpm = nc_series;
 results.time_series.fuel_flow_kg_s = fuel_series;
 results.time_series.thrust_kn = thrust_series;
 
-%% 13. Write JSON Output File
+%% 13. Render and Export Authentic MATLAB Scope Figure
+try
+    hFig = figure('Visible', 'off', 'Position', [100, 100, 1200, 700], 'Color', [0.95, 0.96, 0.98]);
+    
+    % Panel 1: Total Temperatures
+    subplot(2, 2, 1);
+    plot(time_vec, t24_series, 'b-', 'LineWidth', 1.8); hold on;
+    plot(time_vec, t30_series, 'r-', 'LineWidth', 1.8);
+    plot(time_vec, t50_series, 'm-', 'LineWidth', 1.8);
+    grid on; xlabel('Time (s)', 'FontWeight', 'bold'); ylabel('Total Temperature (K)', 'FontWeight', 'bold');
+    title('Station Gas Path Temperatures (T24, T30, T50)', 'FontSize', 11, 'FontWeight', 'bold');
+    legend('T24 Booster Exit', 'T30 Compressor Discharge', 'T50 Exhaust Gas Temp (EGT)', 'Location', 'best');
+    
+    % Panel 2: Total Pressures
+    subplot(2, 2, 2);
+    plot(time_vec, p24_series, 'b-', 'LineWidth', 1.8); hold on;
+    plot(time_vec, p30_series, 'r-', 'LineWidth', 1.8);
+    plot(time_vec, p50_series, 'm-', 'LineWidth', 1.8);
+    grid on; xlabel('Time (s)', 'FontWeight', 'bold'); ylabel('Total Pressure (kPa)', 'FontWeight', 'bold');
+    title('Station Pressures & Compression Work (P24, P30, P50)', 'FontSize', 11, 'FontWeight', 'bold');
+    legend('P24 (LPC)', 'P30 (HPC)', 'P50 (LPT)', 'Location', 'best');
+    
+    % Panel 3: Spool Mechanics (RPM)
+    subplot(2, 2, 3);
+    plot(time_vec, nf_series, 'c-', 'LineWidth', 1.8); hold on;
+    plot(time_vec, nc_series, 'g-', 'LineWidth', 1.8);
+    grid on; xlabel('Time (s)', 'FontWeight', 'bold'); ylabel('Spool Speed (RPM)', 'FontWeight', 'bold');
+    title('Dual-Spool Rotational Dynamics (Nf Fan, Nc Core)', 'FontSize', 11, 'FontWeight', 'bold');
+    legend('Nf Fan Spool', 'Nc Core Spool', 'Location', 'best');
+    
+    % Panel 4: Net Thrust & Fuel Flow
+    subplot(2, 2, 4);
+    yyaxis left;
+    plot(time_vec, thrust_series, 'b-', 'LineWidth', 2.0);
+    ylabel('Gross Thrust (kN)', 'FontWeight', 'bold');
+    yyaxis right;
+    plot(time_vec, fuel_series, 'k--', 'LineWidth', 1.8);
+    ylabel('Fuel Flow Rate (kg/s)', 'FontWeight', 'bold');
+    grid on; xlabel('Time (s)', 'FontWeight', 'bold');
+    title('Net Engine Thrust & Specific Fuel Consumption', 'FontSize', 11, 'FontWeight', 'bold');
+    
+    fig_name = ['matlab_scope_' results.scenario_id '.png'];
+    [res_dir, ~, ~] = fileparts(results_file);
+    if isempty(res_dir)
+        res_dir = pwd;
+    end
+    fig_path = fullfile(res_dir, fig_name);
+    saveas(hFig, fig_path);
+    results.matlab_figure_path = fig_path;
+    close(hFig);
+    fprintf('Exported authentic MATLAB scope figure to: %s\n', fig_path);
+catch ME
+    fprintf('MATLAB figure export notice: %s\n', ME.message);
+end
+
+%% 14. Write JSON Output File
 json_str = jsonencode(results);
 fid = fopen(results_file, 'w');
 if fid ~= -1

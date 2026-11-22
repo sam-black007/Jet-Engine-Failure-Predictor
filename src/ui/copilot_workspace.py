@@ -426,23 +426,37 @@ def render_copilot_workspace():
         
         l1_col1, l1_col2 = st.columns([1.3, 1.0])
         with l1_col1:
-            st.markdown("##### Synchronized 3D Digital Twin (10 Turbofan Subassemblies)")
-            twin_html = render_threejs_digital_twin_html(
-                engine_id=active_s.engine_id,
-                cycle=active_s.cycle,
-                predicted_rul=active_r.modified_rul,
-                health_state="CRITICAL" if active_r.modified_rul < 15 else ("WARNING" if active_r.modified_rul < 30 else "HEALTHY"),
-                mpi=max(0.0, min(100.0, (125.0 - active_r.modified_rul) * 0.7)),
-                telemetry=active_r.modified_telemetry,
-                highlight_components=active_r.affected_components,
-                component_visual_states=active_r.component_states,
-                scenario_info={
-                    "name": active_s.scenario_name,
-                    "mode": getattr(active_s.simulation_mode, "value", str(active_s.simulation_mode)),
-                    "rul_delta": active_r.rul_delta
-                }
+            st.markdown("##### Synchronized 3D Digital Twin")
+            enable_copilot_3d = st.toggle(
+                "🌐 Enable 3D WebGL Digital Twin Rendering",
+                value=False,
+                key="copilot_enable_3d_twin",
+                help="Turn ON to load the interactive 3D WebGL model. Off by default for lightweight 2D performance."
             )
-            st.components.v1.html(twin_html, height=520, scrolling=False)
+            if enable_copilot_3d:
+                twin_html = render_threejs_digital_twin_html(
+                    engine_id=active_s.engine_id,
+                    cycle=active_s.cycle,
+                    predicted_rul=active_r.modified_rul,
+                    health_state="CRITICAL" if active_r.modified_rul < 15 else ("WARNING" if active_r.modified_rul < 30 else "HEALTHY"),
+                    mpi=max(0.0, min(100.0, (125.0 - active_r.modified_rul) * 0.7)),
+                    telemetry=active_r.modified_telemetry,
+                    highlight_components=active_r.affected_components,
+                    component_visual_states=active_r.component_states,
+                    scenario_info={
+                        "name": active_s.scenario_name,
+                        "mode": getattr(active_s.simulation_mode, "value", str(active_s.simulation_mode)),
+                        "rul_delta": active_r.rul_delta
+                    }
+                )
+                st.components.v1.html(twin_html, height=520, scrolling=False)
+            else:
+                st.info("ℹ️ **3D Digital Twin is hidden.** Turn on the toggle above to inspect the 3D WebGL engine model.")
+                t_cols = st.columns(2)
+                t_cols[0].metric("Station 30 Temp (T30)", f"{active_r.modified_telemetry.get('sensor_3', 0.0):.1f} °R")
+                t_cols[1].metric("Station 50 EGT (T50)", f"{active_r.modified_telemetry.get('sensor_4', 0.0):.1f} °R")
+                t_cols[0].metric("Station 30 Press (P30)", f"{active_r.modified_telemetry.get('sensor_7', 0.0):.1f} psia")
+                t_cols[1].metric("Core Speed (Nc)", f"{active_r.modified_telemetry.get('sensor_9', 0.0):.1f} rpm")
 
         with l1_col2:
             st.markdown("##### Component-Level Health Matrix")

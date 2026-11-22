@@ -35,6 +35,7 @@ class SimulationOutputs:
     time_step_seconds: float = 0.1
     validation_status: str = "NOT_VERIFIED"  # PASS, WARNING, FAIL, NOT_VERIFIED
     validation_messages: List[str] = field(default_factory=list)
+    matlab_figure_path: Optional[str] = None
 
     # Steady-State Thermodynamic Stations (Brayton Cycle)
     # Station 0: Ambient Freestream
@@ -135,6 +136,7 @@ class SimulationOutputs:
             "time_step_seconds": self.time_step_seconds,
             "validation_status": self.validation_status,
             "validation_messages": self.validation_messages,
+            "matlab_figure_path": self.matlab_figure_path,
             "steady_state": {
                 "t0_k": round(self.t0_k, 2),
                 "p0_kpa": round(self.p0_kpa, 2),

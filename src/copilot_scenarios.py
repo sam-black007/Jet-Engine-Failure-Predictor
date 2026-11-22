@@ -90,6 +90,18 @@ class ScenarioParameterChange:
     target_value: Optional[float] = None
     unit: str = ""
 
+    @property
+    def delta_percentage(self) -> float:
+        return self.change_value if self.change_type == "percentage" else 0.0
+
+    @property
+    def delta_absolute(self) -> float:
+        return self.change_value if self.change_type != "percentage" else 0.0
+
+    @property
+    def target_component(self) -> str:
+        return self.target_subsystem
+
 
 @dataclass
 class EngineeringScenario:
@@ -108,6 +120,14 @@ class EngineeringScenario:
     parent_scenario_id: Optional[str] = None
     is_healthy_baseline: bool = False
     selected_engine_config_id: str = "NASA-CMAPSS-FD001"
+
+    @property
+    def dataset_id(self) -> str:
+        return self.dataset
+
+    @property
+    def parameter_changes(self) -> List[ScenarioParameterChange]:
+        return self.parameters
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
@@ -217,10 +237,10 @@ def save_scenario_to_db(scenario: EngineeringScenario, result: ScenarioResult):
         scenario.dataset,
         scenario.engine_id,
         scenario.cycle,
-        scenario.simulation_mode.value,
+        scenario.simulation_mode.value if hasattr(scenario.simulation_mode, "value") else str(scenario.simulation_mode),
         json.dumps([asdict(p) for p in scenario.parameters]),
         json.dumps(result.to_dict()),
-        result.verification_status.value,
+        result.verification_status.value if hasattr(result.verification_status, "value") else str(result.verification_status),
         scenario.created_at
     ))
 

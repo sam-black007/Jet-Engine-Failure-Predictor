@@ -17,6 +17,16 @@ import numpy as np
 _INITIAL_SYSTEM_MATLAB = shutil.which("matlab")
 
 
+_MATLAB_SIMULINK_BRIDGE_INSTANCE = None
+
+
+def get_matlab_simulink_bridge() -> "MATLABSimulinkBridge":
+    global _MATLAB_SIMULINK_BRIDGE_INSTANCE
+    if _MATLAB_SIMULINK_BRIDGE_INSTANCE is None:
+        _MATLAB_SIMULINK_BRIDGE_INSTANCE = MATLABSimulinkBridge()
+    return _MATLAB_SIMULINK_BRIDGE_INSTANCE
+
+
 class MATLABSimulinkBridge:
     """Interface to MATLAB and Simulink physics simulation environments."""
 

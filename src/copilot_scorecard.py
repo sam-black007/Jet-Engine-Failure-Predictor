@@ -128,6 +128,9 @@ class EngineeringScorecard:
         return asdict(self)
 
 
+ScorecardResult = EngineeringScorecard
+
+
 class ScorecardCalculator:
     """Computes transparent, decoupled scorecard metrics from simulation and AI outputs."""
 
@@ -154,16 +157,26 @@ class ScorecardCalculator:
         # Derived from: RUL margin (40%), thermal margin (25%), pressure ratio margin (20%), component wear (15%)
         rul_factor = min(100.0, max(0.0, (modified_rul / 125.0) * 100.0))
 
+        def _extract_scalar(val: Any, default: float) -> float:
+            if val is None:
+                return default
+            if isinstance(val, (list, tuple, np.ndarray)):
+                return float(val[-1]) if len(val) > 0 else default
+            try:
+                return float(val)
+            except (ValueError, TypeError):
+                return default
+
         # Thermal margin (T30 and T50 deviation from nominal)
-        t30 = modified_telemetry.get("sensor_3", 1585.0)
-        t50 = modified_telemetry.get("sensor_4", 1405.0)
+        t30 = _extract_scalar(modified_telemetry.get("sensor_3"), 1585.0)
+        t50 = _extract_scalar(modified_telemetry.get("sensor_4"), 1405.0)
         # Normalized penalty for elevated temperatures (nominal: T30=1585, T50=1405)
         t30_dev = max(0.0, (t30 - 1585.0) / 115.0) * 100.0
         t50_dev = max(0.0, (t50 - 1405.0) / 145.0) * 100.0
         thermal_health = max(0.0, 100.0 - (0.6 * t30_dev + 0.4 * t50_dev))
 
         # Pressure margin (P30 nominal 550 psia)
-        p30 = modified_telemetry.get("sensor_7", 553.0)
+        p30 = _extract_scalar(modified_telemetry.get("sensor_7"), 553.0)
         p30_dev = abs(p30 - 553.0) / 55.3 * 100.0
         pressure_health = max(0.0, 100.0 - p30_dev)
 
