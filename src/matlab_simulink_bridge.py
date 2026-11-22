@@ -161,7 +161,11 @@ class AerothermalPhysicsSimulator:
 
         # Combustor (Station 4)
         m_dot_air = 180.0 * (p2 / 14.696) * (throttle_pct / 100.0)
-        m_dot_fuel = (fuel_flow_pps / 521.66) * 3.8 * (throttle_pct / 100.0)
+        # Handle both raw mass flow (lbm/s, ~1.0-4.0) and C-MAPSS scaled channel (~500)
+        if fuel_flow_pps > 50.0:
+            m_dot_fuel = (fuel_flow_pps / 521.66) * 3.8 * (throttle_pct / 100.0)
+        else:
+            m_dot_fuel = fuel_flow_pps * (throttle_pct / 100.0)
         q_added = m_dot_fuel * self.lhv_fuel * self.combustor_eff
         t40 = t30 + (q_added / (m_dot_air * self.cp_gas))
         p40 = p30 * 0.96  # Combustor total pressure drop (4%)

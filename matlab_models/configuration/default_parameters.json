@@ -1,0 +1,70 @@
+{
+  "model_name": "NASA C-MAPSS Aerothermal Twin-Spool Turbofan Model",
+  "version": "2.4.0",
+  "engine_type": "High-Bypass Turbofan (Dual Spool)",
+  "subsystems": [
+    "Fan Assembly",
+    "Low-Pressure Compressor (LPC)",
+    "High-Pressure Compressor (HPC)",
+    "Combustion Chamber (Burner)",
+    "High-Pressure Turbine (HPT)",
+    "Low-Pressure Turbine (LPT)",
+    "Exhaust Nozzle",
+    "Low-Pressure Shaft (Spool N1)",
+    "High-Pressure Shaft (Spool N2)"
+  ],
+  "thermodynamic_constants": {
+    "gamma_cold": 1.40,
+    "gamma_hot": 1.33,
+    "cp_cold_j_kg_k": 1005.0,
+    "cp_hot_j_kg_k": 1150.0,
+    "r_gas_j_kg_k": 287.05,
+    "lhv_fuel_mj_kg": 43.1,
+    "sea_level_temp_k": 288.15,
+    "sea_level_press_kpa": 101.325
+  },
+  "operating_presets": {
+    "Takeoff": {
+      "altitude_m": 0.0,
+      "mach_number": 0.0,
+      "ambient_temp_k": 288.15,
+      "ambient_press_kpa": 101.325,
+      "throttle_pct": 100.0,
+      "fuel_flow_kg_s": 1.05
+    },
+    "Climb": {
+      "altitude_m": 4572.0,
+      "mach_number": 0.55,
+      "ambient_temp_k": 258.4,
+      "ambient_press_kpa": 57.2,
+      "throttle_pct": 92.0,
+      "fuel_flow_kg_s": 0.78
+    },
+    "Cruise": {
+      "altitude_m": 10668.0,
+      "mach_number": 0.82,
+      "ambient_temp_k": 218.8,
+      "ambient_press_kpa": 23.8,
+      "throttle_pct": 85.0,
+      "fuel_flow_kg_s": 0.52
+    },
+    "Idle": {
+      "altitude_m": 6000.0,
+      "mach_number": 0.40,
+      "ambient_temp_k": 249.2,
+      "ambient_press_kpa": 47.2,
+      "throttle_pct": 25.0,
+      "fuel_flow_kg_s": 0.22
+    }
+  },
+  "parameter_limits": {
+    "ambient_temp_k": [200.0, 340.0],
+    "ambient_press_kpa": [15.0, 115.0],
+    "altitude_m": [0.0, 15000.0],
+    "mach_number": [0.0, 0.95],
+    "throttle_pct": [10.0, 105.0],
+    "fuel_flow_kg_s": [0.1, 3.5],
+    "duration_seconds": [1.0, 300.0],
+    "time_step_seconds": [0.01, 1.0]
+  }
+}

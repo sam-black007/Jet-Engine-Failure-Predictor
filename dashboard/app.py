@@ -70,6 +70,7 @@ from src.ui.phase12_workspaces import (
 )
 from src.ui.configuration_centre import render_global_configuration_centre
 from src.ui.copilot_workspace import render_copilot_workspace
+from src.ui.matlab_centre import render_matlab_centre
 
 # ---------------------------------------------------------------------------
 # Page Configuration & SCADA Dark Industrial Styling
@@ -253,13 +254,14 @@ nav_workspace = st.sidebar.selectbox(
     "Active Workspace",
     [
         "✈️ Operations & 3D Digital Twin",
+        "🎛️ MATLAB & Simulink Simulation Centre",
         "🧑‍✈️ Aerospace Engineering Copilot",
         "🚀 Advanced Aerospace Intelligence (Phase 11)",
         "🔬 Next-Generation Research Lab (Phase 12)",
         "⚙️ Global Configuration Centre"
     ],
     index=0,
-    help="Switch between Core Operations, Conversational Copilot, Phase 11 Intelligence, Phase 12 Research, and Global Configuration."
+    help="Switch between Core Operations, MATLAB Simulation Centre, Conversational Copilot, Phase 11 Intelligence, Phase 12 Research, and Global Configuration."
 )
 
 # 1. Multi-Dataset Dynamic Selector
@@ -415,7 +417,10 @@ else:
 
 st.markdown("---")
 
-if nav_workspace == "🧑‍✈️ Aerospace Engineering Copilot":
+if nav_workspace == "🎛️ MATLAB & Simulink Simulation Centre":
+    render_matlab_centre()
+
+elif nav_workspace == "🧑‍✈️ Aerospace Engineering Copilot":
     render_copilot_workspace()
 
 elif nav_workspace == "🚀 Advanced Aerospace Intelligence (Phase 11)":
