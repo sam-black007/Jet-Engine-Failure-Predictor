@@ -1,4 +1,4 @@
-"""Unit and validation tests for Centralized Configuration Manager (JETWISE AI Phase 2)."""
+"""Unit and validation tests for Centralized Configuration Manager (THRUSTLAB Phase 2)."""
 
 import pytest
 from pathlib import Path

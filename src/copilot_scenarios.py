@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerospace Engineering Copilot Scenario Definitions & Persistence.
+"""THRUSTLAB — Aerospace Engineering Copilot Scenario Definitions & Persistence.
 
 Data structures, contracts, and SQLite storage for conversational engineering scenarios.
 """
@@ -16,9 +16,18 @@ from src.database_migrations import get_db_connection
 
 
 class SimulationMode(str, Enum):
+    # Primary Simulation Modes
     MODE_A_AI_SENSOR_WHAT_IF = "MODE_A_AI_SENSOR_WHAT_IF"
     MODE_B_DYNAMIC_ENGINE_WHAT_IF = "MODE_B_DYNAMIC_ENGINE_WHAT_IF"
     MODE_C_MATLAB_SIMULINK_PHYSICS = "MODE_C_MATLAB_SIMULINK_PHYSICS"
+
+    # Extended / Command Centre Aliases
+    MODE_A_DATASET_REPLAY = "MODE_A_DATASET_REPLAY"
+    MODE_B_PHYSICAL_PARAMETRIC = "MODE_B_PHYSICAL_PARAMETRIC"
+    MODE_C_MATLAB_SIMULINK = "MODE_C_MATLAB_SIMULINK"
+    MODE_D_BRAYTON_FALLBACK = "MODE_D_BRAYTON_FALLBACK"
+    MODE_C_HYBRID_CROSS_DATASET = "MODE_C_HYBRID_CROSS_DATASET"
+    MODE_D_MATLAB_SIMULINK = "MODE_D_MATLAB_SIMULINK"
 
 
 class ComponentVisualState(str, Enum):
@@ -161,8 +170,8 @@ class ScenarioResult:
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
-        d["simulation_mode"] = self.simulation_mode.value
-        d["verification_status"] = self.verification_status.value
+        d["simulation_mode"] = self.simulation_mode.value if hasattr(self.simulation_mode, "value") else str(self.simulation_mode)
+        d["verification_status"] = self.verification_status.value if hasattr(self.verification_status, "value") else str(self.verification_status)
         return d
 
 

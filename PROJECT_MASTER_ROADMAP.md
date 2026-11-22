@@ -1,6 +1,6 @@
-# JETWISE AI — Master Autonomous Development & Project Completion Roadmap
+# THRUSTLAB — Master Autonomous Development & Project Completion Roadmap
 
-**Project:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Project:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
 **Current Branch:** `main`  
 **Overall Completion Status:** **100% Complete (Phases 0–10 Fully Certified & Hardened)**  
@@ -21,7 +21,7 @@
 | **Phase 7** | Advanced Predictive Intelligence Engine | MC Dropout uncertainty $[q_{10}, q_{90}]$, Isolation Forest anomaly detection, Integrated Gradients XAI, MPI scoring (0-100), SQLite database (`database/maintenance_records.db`). | **COMPLETED** | 84/84 Passing |
 | **Phase 8** | Complete SCADA Dark Dashboard & 3D Twin | Aerospace dark CSS (`#0B0F14`, `#101720`, `#00B8D9`), WebGL Three.js 3D turbofan digital twin, Plotly 3D thermodynamic surface mesh, 12 modules. | **COMPLETED** | Live on 8501 |
 | **Phase 9** | FastAPI Backend & Telemetry Streaming | REST endpoints (`/api/datasets`, `/api/models`, `/api/fleet`, `/api/predict`, `/api/maintenance`) + Server-Sent Events (SSE) telemetry stream (`/api/stream/telemetry`). | **COMPLETED** | 93/93 Passing |
-| **Phase 10** | Production Hardening & Handoff Certification | Full 101-test Pytest suite, Playwright browser E2E tests across 5 viewports, `FINAL_JETWISE_AI_VALIDATION_REPORT.md`, `JETWISE_AI_COMPLETE_HANDOFF.md`. | **COMPLETED** | 101/101 Passing |
+| **Phase 10** | Production Hardening & Handoff Certification | Full 101-test Pytest suite, Playwright browser E2E tests across 5 viewports, `FINAL_THRUSTLAB_AI_VALIDATION_REPORT.md`, `THRUSTLAB_AI_COMPLETE_HANDOFF.md`. | **COMPLETED** | 101/101 Passing |
 | **Mandatory Core Feature 1** | Interactive 3D Turbofan Digital Twin | 9 distinct subassemblies, Three.js WebGL 60 FPS canvas, OrbitControls, exploded view separation, raycasting click & HUD, Plotly 3D aerothermal mesh, degradation playback. Detailed in `DIGITAL_TWIN_IMPLEMENTATION_REPORT.md`. | **COMPLETED** | Verified (3/3 Tests + E2E) |
 | **Mandatory Core Feature 2** | Advanced Predictive Maintenance Intelligence Engine | 5-tier risk taxonomy (`CRITICAL`, `HIGH_RISK`, `WARNING`, `MONITOR`, `HEALTHY`), explainable MPI scoring breakdown (0-100), evidence-traceable recommendations, SQLite work orders & alert lifecycles, fleet prioritization matrix. Detailed in `PREDICTIVE_MAINTENANCE_IMPLEMENTATION_REPORT.md`. | **COMPLETED** | Verified (7/7 Tests + E2E) |
 | **Phase 11** | Advanced Aerospace Intelligence Centre | 8 Enterprise Intelligence Workspaces: Sensor FDIR, Aerothermal Physics Engine ($\eta_{\text{poly}}, \hat{T}_{40}$), Model Trust & Mahalanobis OOD, Split Conformal Prediction Intervals ($\ge 90\%$), Maintenance Scheduling Optimizer (Gantt, bay & tech constraints), Fleet Digital Twin What-If Simulator (CBM vs Throttle Derate), Continuous MLOps & Model Health (KS-test, PSI), Human-in-the-Loop Certified Review with FAA/EASA sign-offs and SQLite audit trail. | **COMPLETED** | 114/114 Passing (8/8 backend, 9/9 UI tabs) |
@@ -33,7 +33,7 @@
 
 ```
                         ┌────────────────────────────────────────────────────────┐
-                        │             JETWISE AI PLATFORM ARCHITECTURE           │
+                        │             THRUSTLAB PLATFORM ARCHITECTURE           │
                         └───────────────────────────┬────────────────────────────┘
                                                     │
          ┌──────────────────────────────────────────┴──────────────────────────────────────────┐

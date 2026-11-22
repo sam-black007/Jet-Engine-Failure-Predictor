@@ -1,4 +1,4 @@
-"""JETWISE AI — Multi-Manufacturer Engine Configuration Data Models.
+"""THRUSTLAB — Multi-Manufacturer Engine Configuration Data Models.
 
 Defines schemas, domain models, provenance metadata, validation states,
 and architectural specifications for multi-engine aerospace configurations.

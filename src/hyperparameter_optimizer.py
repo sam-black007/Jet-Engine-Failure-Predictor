@@ -1,4 +1,4 @@
-"""Automated Hyperparameter Optimization Engine for Jet Engine Failure Predictor (JETWISE AI Phase 2).
+"""Automated Hyperparameter Optimization Engine for Jet Engine Failure Predictor (THRUSTLAB Phase 2).
 
 Leverages Optuna with:
 - Tree-structured Parzen Estimator (TPE) or Random Search
@@ -34,7 +34,7 @@ class HyperparameterOptimizer:
     def __init__(
         self,
         base_config: Optional[MasterConfig] = None,
-        study_name: str = "jetwise_hpo",
+        study_name: str = "thrustlab_hpo",
         storage_dir: Optional[Union[str, Path]] = None
     ):
         self.base_config = base_config or MasterConfig()

@@ -1,4 +1,4 @@
-"""JETWISE AI — MATLAB & Simulink Environment Detector.
+"""THRUSTLAB — MATLAB & Simulink Environment Detector.
 
 Conducts exhaustive probing of the host operating system to discover MATLAB installations,
 verify Simulink & Simscape toolboxes, inspect licensing status, evaluate MATLAB Engine API
@@ -98,7 +98,7 @@ class MATLABDetector:
                     "In-memory Python-to-MATLAB Engine IPC channel established and synchronized with PyTorch RUL prognostics."
                 ],
                 "formal_status": "INSTALLED AND LICENSED",
-                "setup_instructions_link": "MATLAB_SETUP_FOR_JETWISE_AI.md"
+                "setup_instructions_link": "MATLAB_SETUP_FOR_THRUSTLAB_AI.md"
             }
             self.cached_report = report
             return report
@@ -125,7 +125,7 @@ class MATLABDetector:
             "toolboxes": {},
             "can_execute": False,
             "diagnostic_messages": [],
-            "setup_instructions_link": "MATLAB_SETUP_FOR_JETWISE_AI.md"
+            "setup_instructions_link": "MATLAB_SETUP_FOR_THRUSTLAB_AI.md"
         }
 
         # Python Engine Compatibility Check
@@ -280,7 +280,7 @@ class MATLABDetector:
     def _probe_via_cli(self, matlab_exe: str) -> Dict[str, Any]:
         """Execute non-interactive batch commands in MATLAB to inspect release and toolboxes."""
         matlab_cmd = (
-            "disp('JETWISE_START'); "
+            "disp('THRUSTLAB_START'); "
             "v = ver; "
             "disp(['REL:' version('-release')]); "
             "disp(['VER:' version]); "
@@ -288,7 +288,7 @@ class MATLABDetector:
             "for i = 1:length(v), disp(['TBX:' v(i).Name '||' v(i).Version]); end; "
             "lic = license('inuse'); "
             "for i = 1:length(lic), disp(['LIC:' lic(i).feature]); end; "
-            "disp('JETWISE_END'); "
+            "disp('THRUSTLAB_END'); "
             "exit;"
         )
 
@@ -298,7 +298,7 @@ class MATLABDetector:
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30, creationflags=flags)
             output = proc.stdout + proc.stderr
 
-            if "JETWISE_START" not in output:
+            if "THRUSTLAB_START" not in output:
                 return {
                     "success": False,
                     "error": f"MATLAB exited without expected banner. Exit code: {proc.returncode}. Output: {output[:300]}"

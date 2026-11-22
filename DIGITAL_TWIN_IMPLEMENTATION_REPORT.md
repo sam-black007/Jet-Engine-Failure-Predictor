@@ -1,23 +1,23 @@
-# JETWISE AI — 3D TURBOFAN ENGINE DIGITAL TWIN
+# THRUSTLAB — 3D TURBOFAN ENGINE DIGITAL TWIN
 ## IMPLEMENTATION & VERIFICATION REPORT
 
 **Feature:** Mandatory Intelligence Feature 1 — Interactive 3D Aircraft Engine Digital Twin  
 **Repository:** `Jet-Engine-Failure-Predictor`  
 **Status:** FULLY IMPLEMENTED, INTEGRATED & VERIFIED  
-**Authors:** JETWISE AI Architecture & Engineering Team  
+**Authors:** THRUSTLAB Architecture & Engineering Team  
 **Date:** November 22, 2026  
 
 ---
 
 ## 1. EXECUTIVE SUMMARY
 
-The **Interactive 3D Aircraft Engine Digital Twin** has been developed as an integrated, real-time spatial intelligence component within the **JETWISE AI** platform. It provides maintenance engineers, fleet operators, and reliability analysts with an interactive, geometrically accurate 3D visualization of a dual-spool high-bypass commercial turbofan engine.
+The **Interactive 3D Aircraft Engine Digital Twin** has been developed as an integrated, real-time spatial intelligence component within the **THRUSTLAB** platform. It provides maintenance engineers, fleet operators, and reliability analysts with an interactive, geometrically accurate 3D visualization of a dual-spool high-bypass commercial turbofan engine.
 
 The Digital Twin translates multi-dimensional sensor telemetry, deep learning Remaining Useful Life (RUL) predictions, unsupervised anomaly scores, and feature attributions into physical engine subsystems.
 
 ```
 +-----------------------------------------------------------------------------------------+
-|                               JETWISE AI DIGITAL TWIN ARCHITECTURE                      |
+|                               THRUSTLAB DIGITAL TWIN ARCHITECTURE                      |
 +-----------------------------------------------------------------------------------------+
 |  [NASA C-MAPSS / N-CMAPSS Telemetry]  -->  [Deep Neural Predictor (Pinball LSTM / TCN)] |
 |                                                    |                                    |

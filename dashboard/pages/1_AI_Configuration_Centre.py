@@ -1,4 +1,4 @@
-"""JETWISE AI — AI Configuration Centre (Streamlit Dashboard).
+"""THRUSTLAB — AI Configuration Centre (Streamlit Dashboard).
 
 Comprehensive 10-section configuration and research console:
 1. Dataset Configuration
@@ -37,7 +37,7 @@ from src.prediction_engine import PredictionEngine
 from src.model_factory import count_parameters, is_deep_learning_model
 
 st.set_page_config(
-    page_title="JETWISE AI — AI Configuration Centre",
+    page_title="THRUSTLAB — AI Configuration Centre",
     page_icon="⚙️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -95,7 +95,7 @@ registry = ModelRegistry()
 # ---------------------------------------------------------------------------
 # Header & Profile Quick Load
 # ---------------------------------------------------------------------------
-st.markdown("<h1 class='main-title'>✈️ JETWISE AI — AI CONFIGURATION CENTRE</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-title'>✈️ THRUSTLAB — AI CONFIGURATION CENTRE</h1>", unsafe_allow_html=True)
 st.markdown("<p class='sub-title'>Centralized Prognostics Configuration, Architecture Laboratory & MLOps Control</p>", unsafe_allow_html=True)
 
 col_top1, col_top2, col_top3 = st.columns([2, 2, 2])
@@ -462,7 +462,7 @@ with tabs[8]:
         st.download_button(
             "📥 Export Experiment History to CSV",
             csv_bytes,
-            "jetwise_experiments.csv",
+            "thrustlab_experiments.csv",
             "text/csv"
         )
     else:

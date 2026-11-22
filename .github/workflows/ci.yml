@@ -1,4 +1,4 @@
-name: JETWISE AI Continuous Integration & Quality Assurance
+name: THRUSTLAB Continuous Integration & Quality Assurance
 
 on:
   push:
@@ -91,6 +91,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
-          tags: jetwise-ai:test
+          tags: thrustlab-ai:test
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -1,9 +1,9 @@
-"""JETWISE AI — Global Enterprise Configuration Centre (Part 3 Multipage Dashboard)."""
+"""THRUSTLAB — Global Enterprise Configuration Centre (Part 3 Multipage Dashboard)."""
 
 import streamlit as st
 from src.ui.configuration_centre import render_global_configuration_centre
 
-st.set_page_config(page_title="JETWISE AI - Global Configuration Centre", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="THRUSTLAB - Global Configuration Centre", page_icon="⚙️", layout="wide")
 
 # Theme styling
 st.markdown("""

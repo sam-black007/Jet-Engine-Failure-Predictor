@@ -1,4 +1,4 @@
-"""JETWISE AI — Central Secure API & Integration Credential Management Centre.
+"""THRUSTLAB — Central Secure API & Integration Credential Management Centre.
 
 Enforces zero-leakage security directives:
 1. Credentials accessed backend-only through environment variables or local .env.

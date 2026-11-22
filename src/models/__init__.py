@@ -1,4 +1,4 @@
-"""Model architectures package for Jet Engine Failure Predictor (JETWISE AI Phase 2)."""
+"""Model architectures package for Jet Engine Failure Predictor (THRUSTLAB Phase 2)."""
 
 from src.models.attention_lstm import AttentionLSTMPredictor
 from src.models.tcn import TemporalConvNetPredictor

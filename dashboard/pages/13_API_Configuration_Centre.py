@@ -7,7 +7,7 @@ st.set_page_page_config = getattr(st, "set_page_config", None)
 if st.set_page_page_config:
     try:
         st.set_page_config(
-            page_title="API Configuration Centre | JETWISE AI",
+            page_title="API Configuration Centre | THRUSTLAB",
             page_icon="🔐",
             layout="wide"
         )

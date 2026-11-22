@@ -1,8 +1,8 @@
-# JETWISE AI — MATLAB & Simulink Aerospace Simulation Integration Report
+# THRUSTLAB — MATLAB & Simulink Aerospace Simulation Integration Report
 ## Final Engineering Verification & Handover Dossier
 
 **Date:** 2026-11-22  
-**Platform:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Platform:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **System Environment:** Windows 11 x64, Python 3.11.9  
 **Repository Branch:** `main`  
 **Git Status:** All tests passing (141/141 green)
@@ -10,7 +10,7 @@
 ---
 
 ## 1. Pre-Implementation Architecture Baseline
-Prior to this implementation, JETWISE AI had completed Phases 0 through 13:
+Prior to this implementation, THRUSTLAB had completed Phases 0 through 13:
 - Multi-dataset ingestion (NASA C-MAPSS FD001–FD004, N-CMAPSS) with regime normalization.
 - PyTorch prognostic models (LSTM, Asymmetric Pinball LSTM, Temporal Transformer, TCN) with trained checkpoints.
 - Conformal prediction intervals and Monte Carlo epistemic uncertainty quantification.
@@ -53,8 +53,8 @@ To establish native MATLAB & Simulink simulation capabilities with scientific in
 
 ## 3. Files Created
 1. `MATLAB_INTEGRATION_GAP_ANALYSIS.md`
-2. `MATLAB_SETUP_FOR_JETWISE_AI.md`
-3. `JETWISE_AI_MATLAB_SIMULINK_INTEGRATION_REPORT.md`
+2. `MATLAB_SETUP_FOR_THRUSTLAB_AI.md`
+3. `THRUSTLAB_AI_MATLAB_SIMULINK_INTEGRATION_REPORT.md`
 4. `matlab_models/configuration/default_parameters.json`
 5. `matlab_models/scripts/run_turbofan_simulation.m`
 6. `matlab_models/models/create_turbofan_slx.m`
@@ -129,13 +129,13 @@ To establish native MATLAB & Simulink simulation capabilities with scientific in
         cd "C:\Program Files\MATLAB\R2024a\extern\engines\python"
         python -m pip install .
         ```
-     3. Full instructions are provided in `MATLAB_SETUP_FOR_JETWISE_AI.md`.
+     3. Full instructions are provided in `MATLAB_SETUP_FOR_THRUSTLAB_AI.md`.
 2. **Current Execution Mode:**
-   - Until the user completes the two steps above, JETWISE AI runs with the certified internal Python Aerothermal Gas Path Physics Engine, providing authentic thermodynamic outputs and zero disruptions.
+   - Until the user completes the two steps above, THRUSTLAB runs with the certified internal Python Aerothermal Gas Path Physics Engine, providing authentic thermodynamic outputs and zero disruptions.
 
 ---
 
-## 9. Exact Commands to Run JETWISE AI
+## 9. Exact Commands to Run THRUSTLAB
 
 ### Launch Dashboard:
 ```powershell

@@ -20,7 +20,7 @@ BASE_URL = "http://localhost:8501"
 
 def run_phase11_12_playwright():
     print("=====================================================================")
-    print("STARTING JETWISE AI PHASE 11 & 12 PLAYWRIGHT VERIFICATION SUITE")
+    print("STARTING THRUSTLAB PHASE 11 & 12 PLAYWRIGHT VERIFICATION SUITE")
     print(f"Base URL: {BASE_URL}")
     print(f"Screenshots Destination: {SCREENSHOT_DIR}")
     print("=====================================================================")

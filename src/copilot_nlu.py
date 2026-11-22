@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerospace Engineering Copilot NLU & Command Parser.
+"""THRUSTLAB — Aerospace Engineering Copilot NLU & Command Parser.
 
 Translates natural language aerospace engineering requests into structured EngineeringScenario specifications.
 Extracts entities, actions, percentage/absolute deltas, operational durations, and simulation modes.

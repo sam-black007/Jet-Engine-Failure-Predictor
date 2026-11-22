@@ -1,4 +1,4 @@
-"""JETWISE AI — MATLAB & Simulink Aerospace Simulation Centre Workspace.
+"""THRUSTLAB — MATLAB & Simulink Aerospace Simulation Centre Workspace.
 
 Comprehensive interactive user interface for configuring, running, validating,
 and analyzing physical turbofan engine simulations in MATLAB/Simulink or certified
@@ -119,7 +119,7 @@ def render_matlab_centre():
             <div style="background: rgba(33, 199, 122, 0.1); border-left: 4px solid #21C77A; padding: 12px 18px; border-radius: 6px; margin: 4px 0 16px 0;">
                 <strong style="color: #21C77A; font-size: 0.95rem;">✅ Physical Simulation Engine: 100% OPERATIONAL (NASA Brayton Cycle Active)</strong>
                 <div style="color: #CBD5E1; font-size: 0.85rem; margin-top: 3px;">
-                    Local MATLAB desktop executable is offline, but <strong>no action is required to run simulations</strong>. JETWISE AI's certified aerothermal physics engine is actively executing all 9 engine subsystems, sensor faults, PyTorch RUL prognostics, and 3D digital twins.
+                    Local MATLAB desktop executable is offline, but <strong>no action is required to run simulations</strong>. THRUSTLAB's certified aerothermal physics engine is actively executing all 9 engine subsystems, sensor faults, PyTorch RUL prognostics, and 3D digital twins.
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -631,7 +631,7 @@ def render_matlab_centre():
                 fig_path = sorted(scope_files)[-1]
 
         if fig_path and os.path.exists(fig_path):
-            st.image(fig_path, caption=f"Direct MATLAB Graphics Output [{os.path.basename(fig_path)}]", use_container_width=True)
+            st.image(fig_path, caption=f"Direct MATLAB Graphics Output [{os.path.basename(fig_path)}]", use_column_width=True)
         else:
             st.info("💡 To view or export authentic MATLAB Scope PNGs directly from MathWorks graphics engine, click **'🖥️ Open in MATLAB'** above to run and inspect in native MATLAB desktop.")
 

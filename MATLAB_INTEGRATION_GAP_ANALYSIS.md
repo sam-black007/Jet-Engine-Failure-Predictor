@@ -1,8 +1,8 @@
-# JETWISE AI — MATLAB & Simulink Aerospace Simulation Integration
+# THRUSTLAB — MATLAB & Simulink Aerospace Simulation Integration
 ## Architecture Audit & Gap Analysis
 
 **Date:** 2026-11-22  
-**Platform:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Platform:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **System Environment:** Windows 11 x64, Python 3.11.9  
 **Repository Branch:** `main` (clean working tree)
 
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-This document establishes the architecture audit and gap analysis for integrating MATLAB and Simulink into the **JETWISE AI** platform. The objective is to allocate responsibilities with scientific rigor:
+This document establishes the architecture audit and gap analysis for integrating MATLAB and Simulink into the **THRUSTLAB** platform. The objective is to allocate responsibilities with scientific rigor:
 - **MATLAB/Simulink:** Dynamic physical aerothermodynamic gas path simulation of two-spool turbofan engines, transient mechanics, and multi-station sensor generation.
 - **Python Backend:** High-speed AI inference (LSTM, Attention-LSTM, BiLSTM, 1D-CNN, Transformer), conformal uncertainty calibration, Remaining Useful Life (RUL) estimation, and predictive maintenance scheduling.
 - **Interactive 3D Digital Twin:** Dynamic physical state visualization, component thermomechanical mapping, and structural inspection.
@@ -116,6 +116,6 @@ In strict adherence to the project's **Scientific Integrity Directive**, the pla
 4. **Step 4:** Construct `src/ui/matlab_centre.py` and `dashboard/pages/11_MATLAB_Simulink_Centre.py`.
 5. **Step 5:** Connect 3D Digital Twin and Conversational Copilot to the new integration layer.
 6. **Step 6:** Author automated test suite in `tests/test_matlab_integration.py`.
-7. **Step 7:** Create documentation: `MATLAB_SETUP_FOR_JETWISE_AI.md` and `JETWISE_AI_MATLAB_SIMULINK_INTEGRATION_REPORT.md`.
+7. **Step 7:** Create documentation: `MATLAB_SETUP_FOR_THRUSTLAB_AI.md` and `THRUSTLAB_AI_MATLAB_SIMULINK_INTEGRATION_REPORT.md`.
 8. **Step 8:** Run Playwright end-to-end verification and capture UI screenshots.
 9. **Step 9:** Stage, commit, and push clean code to GitHub repository.

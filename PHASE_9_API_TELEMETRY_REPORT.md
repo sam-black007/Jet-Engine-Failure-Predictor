@@ -1,4 +1,4 @@
-# JETWISE AI — Phase 9 FastAPI Backend & Telemetry Streaming Report
+# THRUSTLAB — Phase 9 FastAPI Backend & Telemetry Streaming Report
 
 **Author:** Antigravity Senior ML & Full-Stack AI Architect  
 **Date:** November 22, 2026  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-Phase 9 establishes the production API backend for the JETWISE AI platform, enabling programmatic access to fleet discovery, model inference, uncertainty estimation, predictive maintenance work order creation, and cycle-by-cycle telemetry streaming.
+Phase 9 establishes the production API backend for the THRUSTLAB platform, enabling programmatic access to fleet discovery, model inference, uncertainty estimation, predictive maintenance work order creation, and cycle-by-cycle telemetry streaming.
 
 ---
 

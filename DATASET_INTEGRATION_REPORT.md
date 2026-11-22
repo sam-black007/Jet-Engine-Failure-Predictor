@@ -1,8 +1,8 @@
-# JETWISE AI: MULTI-DATASET INTEGRATION & DOMAIN GENERALIZATION REPORT
+# THRUSTLAB: MULTI-DATASET INTEGRATION & DOMAIN GENERALIZATION REPORT
 
 **Document ID:** JW-DIR-2026-V3  
 **Status:** COMPLETED & VERIFIED  
-**Author:** JETWISE AI Architecture & ML Engineering Team  
+**Author:** THRUSTLAB Architecture & ML Engineering Team  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
 **Target Environment:** NASA C-MAPSS (FD001–FD004), NASA N-CMAPSS (Next Gen Fleet), NASA PHM 2008  
 
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-JETWISE AI has been expanded from a single-dataset prototype into an industrial-grade, multi-dataset predictive maintenance and prognostics platform. 
+THRUSTLAB has been expanded from a single-dataset prototype into an industrial-grade, multi-dataset predictive maintenance and prognostics platform. 
 
 This report documents the architectural design, implementation, and rigorous experimental validation of the dynamic dataset subsystem, encompassing:
 1. **Unified Dataset Adapters (`src/dataset_adapters/`):** Standardized ingestion layer supporting NASA C-MAPSS subsets (FD001, FD002, FD003, FD004) and NASA N-CMAPSS.
@@ -48,7 +48,7 @@ This report documents the architectural design, implementation, and rigorous exp
                         └──────────────────┬─────────────────────┘
                                            │
                         ┌──────────────────▼─────────────────────┐
-                        │      Streamlit JETWISE AI Dashboard    │
+                        │      Streamlit THRUSTLAB Dashboard    │
                         │ (app.py & 6_Multi_Dataset_Research.py) │
                         └────────────────────────────────────────┘
 ```

@@ -1,8 +1,8 @@
-# JETWISE AI — Master Aerospace Simulation & Multi-AI Integration Report
+# THRUSTLAB — Master Aerospace Simulation & Multi-AI Integration Report
 
 ## 1. Executive Summary
 
-**JETWISE AI** is a technical, physics-informed, and AI-driven aerospace propulsion health monitoring, digital twin, and predictive maintenance platform. This release integrates:
+**THRUSTLAB** is a technical, physics-informed, and AI-driven aerospace propulsion health monitoring, digital twin, and predictive maintenance platform. This release integrates:
 
 1. **Central Secure API & Integration Configuration Centre** with zero-credential leakage, hardware/token protection, and automated connection health diagnostics.
 2. **Formal MATLAB & Simulink Environment Integration** supporting student and campus installations, 6 formal host statuses, and live mathematical calculation benchmarks.

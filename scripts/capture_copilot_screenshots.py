@@ -1,4 +1,4 @@
-"""JETWISE AI — Playwright Verification and Screenshot Capture Script.
+"""THRUSTLAB — Playwright Verification and Screenshot Capture Script.
 
 Captures full-fidelity screenshots of:
 1. Prompt-Driven Aerospace Engineering Intelligence Console Overview

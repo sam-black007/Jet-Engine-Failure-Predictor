@@ -1,4 +1,4 @@
-"""JETWISE AI — Phase 17 Automated Comprehensive Test Suite.
+"""THRUSTLAB — Phase 17 Automated Comprehensive Test Suite.
 
 Validates:
 1. Plain-Language & Glossary mapping for Simple vs Advanced modes.

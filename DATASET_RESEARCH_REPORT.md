@@ -1,10 +1,10 @@
-# JETWISE AI: COMPREHENSIVE DATASET RESEARCH & SOURCE VERIFICATION REPORT
+# THRUSTLAB: COMPREHENSIVE DATASET RESEARCH & SOURCE VERIFICATION REPORT
 ## Aircraft Engine Degradation, Turbofan Telemetry & Predictive Maintenance Benchmarks
 
 **Document Version:** 1.0.0  
 **Research Date:** 2026-11-21  
 **Lead Researcher:** Senior Data Engineering Architect & ML Research Specialist  
-**Project:** Jet Engine Failure Predictor (JETWISE AI)  
+**Project:** Jet Engine Failure Predictor (THRUSTLAB)  
 
 ---
 

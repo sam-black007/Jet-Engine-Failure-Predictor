@@ -1,8 +1,8 @@
-# JETWISE AI — Multi-Manufacturer Engine Configuration & Simulation Centre
+# THRUSTLAB — Multi-Manufacturer Engine Configuration & Simulation Centre
 ## Comprehensive Architecture, Implementation & Verification Report
 
 **Date:** 2026-11-22  
-**Platform:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Platform:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
 **Current Branch:** `main`  
 **Automated Tests:** **152 / 152 Passing (100% Green)**  
@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary
 
-JETWISE AI has been extended from a single-dataset NASA C-MAPSS research prototype into a **comprehensive, multi-manufacturer aerospace engine configuration and simulation platform**.
+THRUSTLAB has been extended from a single-dataset NASA C-MAPSS research prototype into a **comprehensive, multi-manufacturer aerospace engine configuration and simulation platform**.
 
 The system now supports:
 - **Multiple Global Aerospace Engine Manufacturers** (Rolls-Royce, Honeywell, GE Aerospace, Pratt & Whitney, CFM International, Safran, NASA, and custom OEMs).

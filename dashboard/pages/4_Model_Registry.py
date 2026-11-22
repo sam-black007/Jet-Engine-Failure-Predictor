@@ -1,4 +1,4 @@
-"""JETWISE AI — Model Registry (Streamlit Dashboard).
+"""THRUSTLAB — Model Registry (Streamlit Dashboard).
 
 Manage production deployments, active checkpoints, and model tags.
 """
@@ -12,12 +12,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 from src.model_registry import ModelRegistry
 
 st.set_page_config(
-    page_title="JETWISE AI — Model Registry",
+    page_title="THRUSTLAB — Model Registry",
     page_icon="📦",
     layout="wide"
 )
 
-st.title("📦 JETWISE AI — Model Registry")
+st.title("📦 THRUSTLAB — Model Registry")
 st.markdown("Audited catalog of production and candidate prognostic models.")
 
 registry = ModelRegistry()

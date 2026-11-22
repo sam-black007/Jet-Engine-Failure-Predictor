@@ -1,4 +1,4 @@
-# JETWISE AI — PHASE 12 BACKEND TEST REPORT
+# THRUSTLAB — PHASE 12 BACKEND TEST REPORT
 ## Next-Generation Aerospace Research Intelligence: Algorithmic Verification & Unit Test Suite
 
 **Document Version:** 1.0.0  
@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary
 
-This report certifies the backend mathematical, statistical, and engineering verification of all eight advanced research modules comprising **Phase 12 (Next-Generation Aerospace Research Intelligence)** in JETWISE AI. Every module was implemented from first principles with zero placeholder code, connected directly to SQLite database tables, and validated against physical, statistical, and computational benchmarks.
+This report certifies the backend mathematical, statistical, and engineering verification of all eight advanced research modules comprising **Phase 12 (Next-Generation Aerospace Research Intelligence)** in THRUSTLAB. Every module was implemented from first principles with zero placeholder code, connected directly to SQLite database tables, and validated against physical, statistical, and computational benchmarks.
 
 ---
 

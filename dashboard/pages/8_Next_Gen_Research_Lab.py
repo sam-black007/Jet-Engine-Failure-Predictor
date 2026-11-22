@@ -1,4 +1,4 @@
-"""JETWISE AI — Next-Generation Research Laboratory (Phase 12 Multipage Dashboard)."""
+"""THRUSTLAB — Next-Generation Research Laboratory (Phase 12 Multipage Dashboard)."""
 
 import streamlit as st
 import pandas as pd
@@ -17,7 +17,7 @@ from src.ui.phase12_workspaces import (
     render_decision_intelligence
 )
 
-st.set_page_config(page_title="JETWISE AI - Next-Gen Research Lab", page_icon="🔬", layout="wide")
+st.set_page_config(page_title="THRUSTLAB - Next-Gen Research Lab", page_icon="🔬", layout="wide")
 
 # Theme styling
 st.markdown("""

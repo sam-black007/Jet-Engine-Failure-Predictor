@@ -1,4 +1,4 @@
-"""JETWISE AI — Engine Configuration Scientific Validation & Compatibility Rules.
+"""THRUSTLAB — Engine Configuration Scientific Validation & Compatibility Rules.
 
 Enforces physical boundaries, evaluates metadata completeness, assigns formal validation statuses,
 and assesses compatibility between engine architectures, simulation models, datasets, and AI prognostics.

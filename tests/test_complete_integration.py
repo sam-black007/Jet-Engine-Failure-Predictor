@@ -1,4 +1,4 @@
-"""JETWISE AI — Comprehensive Master Integration Test Suite.
+"""THRUSTLAB — Comprehensive Master Integration Test Suite.
 
 Verifies end-to-end functionality across all 11 phases:
 1. Phase 0: Security & Credential Configuration (Zero leakage, masking, safe offline fallback)

@@ -1,4 +1,4 @@
-"""Streamlit Multi-Dataset Research and Physical Sensor Intelligence (JETWISE AI).
+"""Streamlit Multi-Dataset Research and Physical Sensor Intelligence (THRUSTLAB).
 
 Presents multi-dataset comparative architectures, physical sensor ontologies,
 automated data quality validation, and cross-dataset generalization benchmarks.
@@ -24,7 +24,7 @@ from src.dataset_registry import DatasetRegistry
 from src.dataset_validator import DatasetValidator
 
 st.set_page_config(
-    page_title="Multi-Dataset Research & Domain Transfer - JETWISE AI",
+    page_title="Multi-Dataset Research & Domain Transfer - THRUSTLAB",
     page_icon="🔬",
     layout="wide"
 )
@@ -47,7 +47,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 with tab1:
     st.subheader("1. Comprehensive Predictive Maintenance Dataset Catalog")
     st.markdown(
-        "JETWISE AI incorporates multi-dataset ingestion supporting single/multi-condition flight profiles, "
+        "THRUSTLAB incorporates multi-dataset ingestion supporting single/multi-condition flight profiles, "
         "single/compound fault modes, and next-generation continuous 1 Hz commercial turbofan telemetry."
     )
 

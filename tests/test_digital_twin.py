@@ -1,4 +1,4 @@
-"""Unit Tests for 3D Turbofan Digital Twin (JETWISE AI Feature 1).
+"""Unit Tests for 3D Turbofan Digital Twin (THRUSTLAB Feature 1).
 
 Verifies:
 1. Definition of all 9 core turbofan subassemblies

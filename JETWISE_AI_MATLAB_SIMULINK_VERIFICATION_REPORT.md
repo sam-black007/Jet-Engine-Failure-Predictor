@@ -1,6 +1,6 @@
-# JETWISE AI — MATLAB / Simulink Real-Environment Verification Report
+# THRUSTLAB — MATLAB / Simulink Real-Environment Verification Report
 
-**Document Reference:** `JETWISE-AI-REP-PHASE17-MATLAB-01`  
+**Document Reference:** `THRUSTLAB-REP-PHASE17-MATLAB-01`  
 **Classification:** Aerospace Simulation & Software Verification Standard  
 **Date:** November 22, 2026  
 **Auditor:** Principal Aerospace Propulsion & Systems Architecture Group  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-This formal engineering audit verifies the integration, detection, IPC communication, and operational fallbacks between **JETWISE AI** and the local MathWorks MATLAB / Simulink installation.
+This formal engineering audit verifies the integration, detection, IPC communication, and operational fallbacks between **THRUSTLAB** and the local MathWorks MATLAB / Simulink installation.
 
 In strict adherence to the non-negotiable prompt mandate for **honest engineering disclosure without fabrication**, this document records the exact physical state of the host workstation, the Python-to-MATLAB Engine API transport layer, and the verified behavior of the dual-engine simulation architecture.
 
@@ -72,7 +72,7 @@ Cannot find transport factory that makes LayeredTransport
 
 ## 3. Dual-Engine Architecture & Failover Verification
 
-JETWISE AI was specifically architected with aerospace-grade fault tolerance. At no point does a failure in MATLAB IPC transport cause application crashes, UI unresponsiveness, or synthetic data fabrication.
+THRUSTLAB was specifically architected with aerospace-grade fault tolerance. At no point does a failure in MATLAB IPC transport cause application crashes, UI unresponsiveness, or synthetic data fabrication.
 
 ```mermaid
 flowchart TD
@@ -112,6 +112,6 @@ Automated regression testing confirms that both native MATLAB mock bridges and f
 
 ## 5. Engineering Conclusion & Recommendations
 
-1. **Platform Integrity:** The simulation architecture satisfies all airworthiness-grade transparency criteria. When MATLAB desktop binaries are present and licensed, JETWISE AI connects automatically; when absent or constrained by IPC transport layers, the platform seamlessly and honestly executes using the calibrated NASA C-MAPSS Brayton cycle solver.
+1. **Platform Integrity:** The simulation architecture satisfies all airworthiness-grade transparency criteria. When MATLAB desktop binaries are present and licensed, THRUSTLAB connects automatically; when absent or constrained by IPC transport layers, the platform seamlessly and honestly executes using the calibrated NASA C-MAPSS Brayton cycle solver.
 2. **Operator Guidance:** New operators can execute any of the 14 standardized presets or custom prompt scenarios immediately without configuring third-party toolboxes.
-3. **Future Hardware Provisioning:** Should the host environment be provisioned with a full MathWorks desktop installation containing `matlab.exe` in `bin\win64`, no code changes or re-compilation are required—JETWISE AI's automated detector will promote the connection to `ONLINE` upon the next simulation trigger.
+3. **Future Hardware Provisioning:** Should the host environment be provisioned with a full MathWorks desktop installation containing `matlab.exe` in `bin\win64`, no code changes or re-compilation are required—THRUSTLAB's automated detector will promote the connection to `ONLINE` upon the next simulation trigger.

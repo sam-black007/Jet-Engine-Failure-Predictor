@@ -1,7 +1,7 @@
-# JETWISE AI — PHASE 11 & PHASE 12 MASTER COMPLETION & HANDOFF CERTIFICATION
+# THRUSTLAB — PHASE 11 & PHASE 12 MASTER COMPLETION & HANDOFF CERTIFICATION
 ## Advanced Aerospace Intelligence, Physics-Informed Prognostics, Intelligent Maintenance, Multi-Modal Data Fusion & Engineering Decision Support
 
-**Platform:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Platform:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **Document ID:** JW-P11-P12-MASTER-HANDOFF-2026  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
 **Local Workspace:** `c:\Users\samjo\Downloads\simulation\Jet-Engine-Failure-Predictor`  
@@ -13,7 +13,7 @@
 
 ## 1. Executive Master Summary
 
-JETWISE AI is an enterprise-grade aerospace predictive maintenance and digital twin intelligence platform. Built on NASA C-MAPSS and N-CMAPSS turbofan benchmarks, it forecasts Remaining Useful Life (RUL) with asymmetric risk penalty minimization, models aerothermodynamic gas path physics, executes real-time sensor fault detection, computes split conformal prediction bounds, optimizes multi-bay hangar schedules, fuses high-frequency vibration harmonics with borescope inspection logs, and optimizes deep learning inference for ARINC-653 avionics computers.
+THRUSTLAB is an enterprise-grade aerospace predictive maintenance and digital twin intelligence platform. Built on NASA C-MAPSS and N-CMAPSS turbofan benchmarks, it forecasts Remaining Useful Life (RUL) with asymmetric risk penalty minimization, models aerothermodynamic gas path physics, executes real-time sensor fault detection, computes split conformal prediction bounds, optimizes multi-bay hangar schedules, fuses high-frequency vibration harmonics with borescope inspection logs, and optimizes deep learning inference for ARINC-653 avionics computers.
 
 All requirements for **Part 3 (Global Enterprise Configuration Centre)**, **Phase 11 (Advanced Aerospace Intelligence Centre: 8 Modules + Overview)**, and **Phase 12 (Next-Generation Aerospace Research Intelligence: 8 Modules + Overview)** have been implemented from first principles, integrated into the UI and SQLite database, verified across **114/114 Pytest tests**, and validated via **19/19 Playwright browser automation screenshots** with zero exceptions.
 
@@ -22,7 +22,7 @@ All requirements for **Part 3 (Global Enterprise Configuration Centre)**, **Phas
 ## 2. Platform Architecture Overview
 
 ```
-                                 JETWISE AI ENTERPRISE SUITE
+                                 THRUSTLAB ENTERPRISE SUITE
                                  
   ┌────────────────────────────────────────────────────────────────────────────────────────┐
   │                           ENTERPRISE MULTIPAGE STREAMLIT UI                            │
@@ -270,9 +270,9 @@ python run_phase11_12_playwright.py
 When passing this repository to ChatGPT, Claude, or another engineering AI assistant, provide the following verbatim transfer prompt:
 
 ```markdown
-# JETWISE AI — TRANSFER & CONTINUATION BRIEF
+# THRUSTLAB — TRANSFER & CONTINUATION BRIEF
 
-You are taking ownership of JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform.
+You are taking ownership of THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform.
 
 Repository: https://github.com/sam-black007/Jet-Engine-Failure-Predictor
 Local Workspace: c:\Users\samjo\Downloads\simulation\Jet-Engine-Failure-Predictor
@@ -297,7 +297,7 @@ CURRENT PROJECT STATUS:
   - PHASE_12_BACKEND_TEST_REPORT.md
   - PHASE_12_PLAYWRIGHT_REPORT.md
   - FINAL_PROJECT_STATUS.md
-  - JETWISE_AI_PHASE_11_12_COMPLETE_HANDOFF.md
+  - THRUSTLAB_AI_PHASE_11_12_COMPLETE_HANDOFF.md
 
 YOUR INSTRUCTIONS:
 1. Maintain zero regressions across all 114 tests.

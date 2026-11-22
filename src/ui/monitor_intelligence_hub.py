@@ -1,4 +1,4 @@
-"""JETWISE AI — Engine Intelligence (Monitor Hub).
+"""THRUSTLAB — Engine Intelligence (Monitor Hub).
 
 Implements Section 2.2 Hub 3 requirements:
 Consolidates Fleet Overview, Engine Health Monitoring, Component Health,

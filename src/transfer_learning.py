@@ -1,4 +1,4 @@
-"""Transfer Learning and Domain Adaptation Engine (JETWISE AI Phase 6).
+"""Transfer Learning and Domain Adaptation Engine (THRUSTLAB Phase 6).
 
 Implements transfer learning strategies across turbofan operating environments:
 1. Zero-Shot Transfer (Source Model evaluated directly on Target Domain).

@@ -1,5 +1,5 @@
 # ===========================================================================
-# JETWISE AI: Comprehensive Pinned Dependencies
+# THRUSTLAB: Comprehensive Pinned Dependencies
 # Python Runtime: 3.11+
 # ===========================================================================
 

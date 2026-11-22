@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: jetwise_ai_dashboard
+    container_name: thrustlab_ai_dashboard
     restart: unless-stopped
     ports:
       - "8501:8501"
@@ -29,7 +29,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: jetwise_ai_api
+    container_name: thrustlab_ai_api
     restart: unless-stopped
     ports:
       - "8000:8000"

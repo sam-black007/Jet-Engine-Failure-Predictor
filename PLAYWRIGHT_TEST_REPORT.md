@@ -1,4 +1,4 @@
-# JETWISE AI: PLAYWRIGHT END-TO-END BROWSER AUTOMATION REPORT
+# THRUSTLAB: PLAYWRIGHT END-TO-END BROWSER AUTOMATION REPORT
 
 **Document ID:** JW-PTR-2026-V3  
 **Status:** 100% PASSED (ALL 6 SCENARIOS GREEN, 0 CONSOLE ERRORS, 0 FAILED REQUESTS)  
@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary
 
-A real Chromium browser automated test suite was executed against the live running JETWISE AI Streamlit dashboard. The testing protocol verified DOM structural integrity, metric card numerical rendering, tab switching, interactive model swapping, engine unit selection, dynamic multi-dataset switching, historical telemetry replay controls, and responsive layouts across 5 screen resolutions.
+A real Chromium browser automated test suite was executed against the live running THRUSTLAB Streamlit dashboard. The testing protocol verified DOM structural integrity, metric card numerical rendering, tab switching, interactive model swapping, engine unit selection, dynamic multi-dataset switching, historical telemetry replay controls, and responsive layouts across 5 screen resolutions.
 
 - **Total Browser Test Scenarios:** 6
 - **Passed Scenarios:** 6 (100%)

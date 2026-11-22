@@ -1,7 +1,7 @@
-# JETWISE AI — PROMPT-DRIVEN AEROSPACE ENGINEERING INTELLIGENCE
+# THRUSTLAB — PROMPT-DRIVEN AEROSPACE ENGINEERING INTELLIGENCE
 ## Architectural Design, Physical Foundations, Simulation Engine & Verification Report
 
-**Project:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Project:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **System Module:** Prompt-Driven Aerospace Engineering Copilot, Transparent 6-Dimension Scorecard, Synchronized 3D Digital Twin & Dual-Level Inspection Workspaces  
 **Version:** v3.4.0 Production Ready  
 **Date:** November 22, 2026  
@@ -11,7 +11,7 @@
 
 ## EXECUTIVE SUMMARY
 
-The **JETWISE AI Prompt-Driven Aerospace Engineering Intelligence** platform transforms high-bypass turbofan health monitoring and prognostic simulation into an intuitive, voice-and-prompt responsive engineering environment. By bridging natural-language conversational queries with rigorous aerothermal gas-path physics, MATLAB/Simulink co-simulation, dual-branch deep neural prognostics, and real-time WebGL/Three.js 3D digital twin rendering, JETWISE AI provides commercial fleet operators, propulsion test engineers, and airline maintenance teams with instant, explainable, and certified engineering insights.
+The **THRUSTLAB Prompt-Driven Aerospace Engineering Intelligence** platform transforms high-bypass turbofan health monitoring and prognostic simulation into an intuitive, voice-and-prompt responsive engineering environment. By bridging natural-language conversational queries with rigorous aerothermal gas-path physics, MATLAB/Simulink co-simulation, dual-branch deep neural prognostics, and real-time WebGL/Three.js 3D digital twin rendering, THRUSTLAB provides commercial fleet operators, propulsion test engineers, and airline maintenance teams with instant, explainable, and certified engineering insights.
 
 ### Core Achievements in this Phase:
 1. **Deterministic & Multi-Provider NLU Command Interpreter:** Translates multi-clause natural language prompts into structured `EngineeringScenario` parameters with compounding multi-turn memory (`"Now reduce compressor efficiency by another 3%"`).
@@ -103,7 +103,7 @@ The end-to-end prompt processing pipeline routes unstructured natural-language i
 
 ## 3. TRANSPARENT 6-DIMENSION SCORECARD METHODOLOGY
 
-Rather than opaque single-number scores, JETWISE AI introduces a transparent, multi-axial scorecard with clear formulas and deterministic limits:
+Rather than opaque single-number scores, THRUSTLAB introduces a transparent, multi-axial scorecard with clear formulas and deterministic limits:
 
 ### 1. Engine Health Score ($S_{\text{health}} \in [0, 100]$)
 Measures the overall physical condition of the engine by combining predicted remaining useful life with thermodynamic state deviations:
@@ -194,7 +194,7 @@ The synchronized 3D turbofan digital twin represents all 10 physical subassembli
 
 ## 5. DUAL PRESENTATION LEVELS (LEVEL 1 vs LEVEL 2)
 
-JETWISE AI resolves the tension between clean executive monitoring and deep aerospace engineering rigor by providing two presentation tiers:
+THRUSTLAB resolves the tension between clean executive monitoring and deep aerospace engineering rigor by providing two presentation tiers:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -393,6 +393,6 @@ tests/test_prompt_driven_intelligence.py::TestZeroCredentialLeakage::test_scrubb
 
 ## 10. CONCLUSION & FUTURE READINESS
 
-The **JETWISE AI Prompt-Driven Aerospace Engineering Intelligence** platform is fully implemented, verified, and operational. Users can issue natural-language instructions, explore degradation scenarios across 200+ cycles, observe instant 3D digital twin color changes across all 10 engine subassemblies, evaluate 6-dimension transparent scorecards with 7-point physical validity checks, inspect deep MATLAB/Simulink and mathematical derivations in Level 2 Advanced Mode, and export boardroom-ready engineering reports.
+The **THRUSTLAB Prompt-Driven Aerospace Engineering Intelligence** platform is fully implemented, verified, and operational. Users can issue natural-language instructions, explore degradation scenarios across 200+ cycles, observe instant 3D digital twin color changes across all 10 engine subassemblies, evaluate 6-dimension transparent scorecards with 7-point physical validity checks, inspect deep MATLAB/Simulink and mathematical derivations in Level 2 Advanced Mode, and export boardroom-ready engineering reports.
 
 The implementation preserves 100% backward compatibility with all prior phases (Phases 0–12, Multi-Engine Configuration Centre, MATLAB Integration, and API Configuration Centre), ensures zero credential leakage, and guarantees resilient offline simulation across any operating environment.

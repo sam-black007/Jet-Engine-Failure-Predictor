@@ -1,4 +1,4 @@
-"""JETWISE AI — Multi-Manufacturer Engine Configuration Package."""
+"""THRUSTLAB — Multi-Manufacturer Engine Configuration Package."""
 
 from src.engine_configuration.models import (
     Manufacturer,

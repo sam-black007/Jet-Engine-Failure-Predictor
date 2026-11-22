@@ -1,10 +1,10 @@
-"""JETWISE AI — Multi-Manufacturer Engine Configuration Centre (Multipage Dashboard)."""
+"""THRUSTLAB — Multi-Manufacturer Engine Configuration Centre (Multipage Dashboard)."""
 
 import streamlit as st
 from src.ui.multi_engine_centre import render_multi_engine_centre
 
 st.set_page_config(
-    page_title="JETWISE AI - Multi-Engine Configuration Centre",
+    page_title="THRUSTLAB - Multi-Engine Configuration Centre",
     page_icon="🌐",
     layout="wide"
 )

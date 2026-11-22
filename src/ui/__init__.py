@@ -1,1 +1,1 @@
-"""UI Workspaces package for JETWISE AI."""
+"""UI Workspaces package for THRUSTLAB."""

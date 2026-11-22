@@ -1,4 +1,4 @@
-# JETWISE AI: BACKEND TEST SUITE & SYSTEM AUDIT REPORT
+# THRUSTLAB: BACKEND TEST SUITE & SYSTEM AUDIT REPORT
 
 **Document ID:** JW-BTR-2026-V3  
 **Status:** 100% PASSED (79/79 PYTEST TESTS GREEN + 3 PLAYWRIGHT INTEGRATION TESTS)  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Test Summary
 
-Every core backend module, mathematical scoring function, loss criterion, deep neural network architecture, data adapter, and automated validator in the JETWISE AI platform has been verified with automated tests.
+Every core backend module, mathematical scoring function, loss criterion, deep neural network architecture, data adapter, and automated validator in the THRUSTLAB platform has been verified with automated tests.
 
 - **Total Test Cases Executed:** 79 tests
 - **Passed:** 79 (100.0%)

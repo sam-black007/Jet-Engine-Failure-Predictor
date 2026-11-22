@@ -1,4 +1,4 @@
-"""JETWISE AI — Turbofan Jet Engine Degradation & RUL Prediction System.
+"""THRUSTLAB — Turbofan Jet Engine Degradation & RUL Prediction System.
 
 Phase 8 Complete Industrial SCADA Dark-Mode Dashboard & 3D Digital Twin.
 Integrates:
@@ -90,7 +90,7 @@ from src.ui.scada_overview import render_operations_scada_view
 # Page Configuration & SCADA Dark Industrial Styling
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="JETWISE AI - Turbofan Jet Engine Health Monitor",
+    page_title="THRUSTLAB - Turbofan Jet Engine Health Monitor",
     page_icon="✈️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -262,7 +262,7 @@ FEATURE_COLS = [
 # Sidebar Navigation & Selection
 # ---------------------------------------------------------------------------
 init_navigation_state()
-st.sidebar.title("✈️ JETWISE AI OS")
+st.sidebar.title("✈️ THRUSTLAB OS")
 
 # Simplified 5-Hub Primary Navigation
 hub_options = [
@@ -623,4 +623,4 @@ elif active_hub == NavigationHub.MONITOR:
         render_operations_scada_view(scada_ctx)
     
 st.markdown("---")
-st.caption("JETWISE AI | Turbofan Jet Engine Prognostic & Health Management Platform | NASA C-MAPSS & N-CMAPSS")
+st.caption("THRUSTLAB | Turbofan Jet Engine Prognostic & Health Management Platform | NASA C-MAPSS & N-CMAPSS")

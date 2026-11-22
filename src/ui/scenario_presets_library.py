@@ -1,4 +1,4 @@
-"""JETWISE AI — Scenario Presets and Test Library.
+"""THRUSTLAB — Scenario Presets and Test Library.
 
 Implements Section 9 requirements:
 14 Standardized Aerospace Simulation Templates with full parameter bounds,

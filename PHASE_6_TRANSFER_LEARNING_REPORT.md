@@ -1,4 +1,4 @@
-# JETWISE AI — Phase 6 Transfer Learning & Domain Adaptation Report
+# THRUSTLAB — Phase 6 Transfer Learning & Domain Adaptation Report
 
 **Author:** Antigravity Senior ML & Aerospace Prognostics Architect  
 **Date:** November 22, 2026  

@@ -1,4 +1,4 @@
-"""JETWISE AI — Multi-Manufacturer Engine Configuration & Simulation Centre Workspace.
+"""THRUSTLAB — Multi-Manufacturer Engine Configuration & Simulation Centre Workspace.
 
 Comprehensive interactive user interface for browsing manufacturers, building engine configurations,
 inspecting imported engineering models, running cross-engine comparative analytics, validating AI compatibility,

@@ -1,8 +1,8 @@
-# JETWISE AI — PHASE 11 & PHASE 12 DATASET INTEGRATION REPORT
+# THRUSTLAB — PHASE 11 & PHASE 12 DATASET INTEGRATION REPORT
 ## Multi-Dataset Adapter Architecture, Schema Harmonization & Cross-Domain Generalization
 
 **Document Version:** 1.0.0  
-**Author:** JETWISE AI Autonomous Engineering & Research Swarm  
+**Author:** THRUSTLAB Autonomous Engineering & Research Swarm  
 **Platform Architecture:** Universal Turbomachinery Feature Ingestion & Normalization  
 **Date:** November 2026  
 **Status:** Certified Engineering Deliverable  
@@ -11,7 +11,7 @@
 
 ## 1. Architectural Overview
 
-To eliminate siloed dataset silos and enable dynamic switching across distinct aeropropulsion benchmarks without code refactoring, JETWISE AI provides an extensible, contract-driven dataset adapter framework located in `src/dataset_adapters/`.
+To eliminate siloed dataset silos and enable dynamic switching across distinct aeropropulsion benchmarks without code refactoring, THRUSTLAB provides an extensible, contract-driven dataset adapter framework located in `src/dataset_adapters/`.
 
 ```
                     ┌────────────────────────────────────────┐
@@ -54,7 +54,7 @@ Every dataset processed through the adapter pipeline adheres to the following st
 | `rul` | `float64` | Ground-truth Remaining Useful Life (if known) | Cycles / Hours remaining |
 
 ### 2.2 Thermodynamic Telemetry Mapping Across Datasets
-Different benchmarks assign varying physical meanings to sensor index channels. JETWISE AI standardizes these into physical turbomachinery gas-path stations ($T_{2}, T_{24}, T_{30}, T_{50}, P_{2}, P_{15}, P_{30}, N_f, N_c, W_{31}, W_{32}$):
+Different benchmarks assign varying physical meanings to sensor index channels. THRUSTLAB standardizes these into physical turbomachinery gas-path stations ($T_{2}, T_{24}, T_{30}, T_{50}, P_{2}, P_{15}, P_{30}, N_f, N_c, W_{31}, W_{32}$):
 
 | Station ID | Physical Description | Classical C-MAPSS Sensor | N-CMAPSS Channel | Gas Turbine Physics Station |
 | :--- | :--- | :--- | :--- | :--- |
@@ -107,5 +107,5 @@ Empirical validation was performed across the benchmark suite using the trained 
 
 ### Key Findings:
 1. **In-Domain Superiority:** In-domain training achieves an official NASA score of 318.4 with a tight RMSE of 14.82 cycles.
-2. **Conformal Recalibration Mitigation:** When evaluating on FD002 with severe operational shifts, uncalibrated coverage collapsed to 68.2%. Activating JETWISE AI's Split Conformal Calibrator (Phase 11.4) restored empirical test coverage to 89.8%, proving the effectiveness of distribution-free uncertainty intervals under covariate shift.
+2. **Conformal Recalibration Mitigation:** When evaluating on FD002 with severe operational shifts, uncalibrated coverage collapsed to 68.2%. Activating THRUSTLAB's Split Conformal Calibrator (Phase 11.4) restored empirical test coverage to 89.8%, proving the effectiveness of distribution-free uncertainty intervals under covariate shift.
 3. **Fault Transferability:** Transferring from single-fault (FD001, HPC only) to dual-fault (FD003, HPC + Fan) resulted in only a minor degradation in RMSE (14.82 $\rightarrow$ 16.95), showing that aerothermal gas path relationships generalize strongly across blade deterioration modes.

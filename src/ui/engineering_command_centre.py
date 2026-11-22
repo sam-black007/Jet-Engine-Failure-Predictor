@@ -1,4 +1,4 @@
-"""JETWISE AI — Engineering Command Centre (Simulate Hub).
+"""THRUSTLAB — Engineering Command Centre (Simulate Hub).
 
 Implements Section 2.2 Hub 2, Section 8, Section 9, Section 10, and Section 12 requirements:
 Unified simulation workflow consolidating Conversational Prompts, 14 Reusable Scenario Presets,
@@ -45,7 +45,7 @@ def render_engineering_command_centre():
     <div style="background: linear-gradient(90deg, #101720 0%, #151D27 100%); border-bottom: 2px solid #00B8D9; padding: 14px 20px; border-radius: 6px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h3 style="color: #F8FAFC; margin: 0; font-size: 20px;">⚡ JETWISE ENGINEERING COMMAND CENTRE</h3>
+                <h3 style="color: #F8FAFC; margin: 0; font-size: 20px;">⚡ THRUSTLAB ENGINEERING COMMAND CENTRE</h3>
                 <span style="color: #94A3B8; font-size: 12px;">Unified Conversational Simulation, Preset Library & Multi-Spool Telemetry Execution</span>
             </div>
             <div>

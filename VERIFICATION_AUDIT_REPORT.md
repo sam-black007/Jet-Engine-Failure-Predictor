@@ -1,4 +1,4 @@
-# JETWISE AI: COMPREHENSIVE REPOSITORY & PHASE 2 VERIFICATION AUDIT
+# THRUSTLAB: COMPREHENSIVE REPOSITORY & PHASE 2 VERIFICATION AUDIT
 **Document Version:** 1.0.0  
 **Audit Timestamp:** 2026-11-21  
 **Project Workspace:** `c:\Users\samjo\Downloads\simulation\Jet-Engine-Failure-Predictor`  
@@ -9,7 +9,7 @@
 
 ## 1. AUDIT OBJECTIVE & SCOPE
 
-This technical verification audit evaluates the operational readiness, code integrity, data pipeline validity, and architectural rigor of the **Jet Engine Failure Predictor (JETWISE AI)** platform. Every module, pipeline stage, and interface has been inspected by actual execution rather than static assumption.
+This technical verification audit evaluates the operational readiness, code integrity, data pipeline validity, and architectural rigor of the **Jet Engine Failure Predictor (THRUSTLAB)** platform. Every module, pipeline stage, and interface has been inspected by actual execution rather than static assumption.
 
 ---
 

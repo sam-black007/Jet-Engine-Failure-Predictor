@@ -1,4 +1,4 @@
-"""Centralized Configuration Manager for Jet Engine Failure Predictor (JETWISE AI).
+"""Centralized Configuration Manager for Jet Engine Failure Predictor (THRUSTLAB).
 
 Provides robust, schema-validated configuration management across:
 1. Datasets (FD001 - FD004)
@@ -313,14 +313,14 @@ class VisualizationConfig(BaseModel):
 
 
 class MasterConfig(BaseModel):
-    """Unified master configuration for JETWISE AI experiments and operational modules."""
+    """Unified master configuration for THRUSTLAB experiments and operational modules."""
     model_config = {"protected_namespaces": ()}
     version: str = Field(default="2.0.0", description="Configuration schema version")
     experiment_id: str = Field(
         default_factory=lambda: f"exp_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
     )
     profile_name: str = Field(default="default", description="Named configuration profile")
-    description: str = Field(default="JETWISE AI experiment configuration")
+    description: str = Field(default="THRUSTLAB experiment configuration")
     created_at: str = Field(
         default_factory=lambda: datetime.utcnow().isoformat()
     )

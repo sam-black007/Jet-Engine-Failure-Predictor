@@ -32,21 +32,21 @@ BASE_URL = "http://localhost:8501"
 def test_dashboard_title_and_metrics(page):
     """Test dashboard page load, title, and Phase 17 Mission Control rendering."""
     page.goto(BASE_URL, wait_until="networkidle", timeout=30000)
-    page.wait_for_selector('text=JETWISE AI', timeout=20000)
+    page.wait_for_selector('text=THRUSTLAB', timeout=20000)
 
     # Validate page title
-    assert "JETWISE AI" in page.title()
+    assert "THRUSTLAB" in page.title()
 
     # Validate mission control banner
     content = page.content()
-    assert "MISSION CONTROL" in content or "Mission Control" in content or "JETWISE" in content
+    assert "MISSION CONTROL" in content or "Mission Control" in content or "THRUSTLAB" in content
     assert "ENGINE HEALTH" in content or "Health" in content or "Readiness" in content
 
 
 def test_dashboard_tab_interaction(page):
     """Test interaction with Phase 17 Navigation Hubs."""
     page.goto(BASE_URL, wait_until="networkidle", timeout=30000)
-    page.wait_for_selector('text=JETWISE AI', timeout=20000)
+    page.wait_for_selector('text=THRUSTLAB', timeout=20000)
 
     # Validate buttons exist
     buttons = page.locator('button').all()
@@ -60,4 +60,4 @@ def test_dashboard_sidebar_controls(page):
 
     sidebar = page.locator('[data-testid="stSidebar"]')
     sidebar_text = sidebar.inner_text()
-    assert "Dataset" in sidebar_text or "Engine" in sidebar_text or "Mode" in sidebar_text or "JETWISE" in sidebar_text
+    assert "Dataset" in sidebar_text or "Engine" in sidebar_text or "Mode" in sidebar_text or "THRUSTLAB" in sidebar_text

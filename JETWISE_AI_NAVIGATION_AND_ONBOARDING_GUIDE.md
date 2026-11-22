@@ -1,6 +1,6 @@
-# JETWISE AI — Navigation & Onboarding Guide
+# THRUSTLAB — Navigation & Onboarding Guide
 
-**Document Reference:** `JETWISE-AI-GUIDE-PHASE17-ONBOARDING-01`  
+**Document Reference:** `THRUSTLAB-GUIDE-PHASE17-ONBOARDING-01`  
 **Classification:** Operator Onboarding & User Manual  
 **Date:** November 22, 2026  
 **Auditor:** Principal Aerospace UI/UX Architect & Training Group  
@@ -8,9 +8,9 @@
 
 ---
 
-## 1. Welcome to JETWISE AI
+## 1. Welcome to THRUSTLAB
 
-**JETWISE AI** is an advanced AI-powered aircraft engine health monitoring, 3D digital twin, and predictive maintenance intelligence platform. Whether you are an aerospace engineering student, an airline fleet maintenance manager, or a propulsion research scientist, JETWISE AI provides an intuitive yet mathematically rigorous interface to inspect, simulate, and forecast engine life.
+**THRUSTLAB** is an advanced AI-powered aircraft engine health monitoring, 3D digital twin, and predictive maintenance intelligence platform. Whether you are an aerospace engineering student, an airline fleet maintenance manager, or a propulsion research scientist, THRUSTLAB provides an intuitive yet mathematically rigorous interface to inspect, simulate, and forecast engine life.
 
 ---
 
@@ -31,7 +31,7 @@ flowchart LR
 ```
 
 ### Step 1: Welcome & Mission Overview
-- **Objective:** Understand the role of JETWISE AI in modern aviation safety and predictive maintenance.
+- **Objective:** Understand the role of THRUSTLAB in modern aviation safety and predictive maintenance.
 - **Action:** Read the executive mission statement and observe the live System Readiness health bar.
 
 ### Step 2: Presentation Mode Selection
@@ -82,7 +82,7 @@ For experienced operators seeking immediate access, Hub 1 provides 5 direct-acti
 
 ## 4. Safe Interactive Demonstration
 
-Located directly in Hub 1, the **Safe Interactive Demo** allows new users to test the full end-to-end capabilities of JETWISE AI with zero configuration:
+Located directly in Hub 1, the **Safe Interactive Demo** allows new users to test the full end-to-end capabilities of THRUSTLAB with zero configuration:
 1. Click **▶️ Run Safe Interactive Demo**.
 2. The system executes a simulated 50-cycle high-pressure turbine degradation scenario.
 3. Watch the progress bar step through prompt ingestion, Brayton solver calculations, AI inference, and digital twin synchronization.

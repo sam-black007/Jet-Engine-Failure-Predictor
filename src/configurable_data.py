@@ -1,4 +1,4 @@
-"""Configurable Dataset Loading and Preprocessing Pipeline (JETWISE AI Phase 2).
+"""Configurable Dataset Loading and Preprocessing Pipeline (THRUSTLAB Phase 2).
 
 Provides an end-to-end, zero-leakage, configurable pipeline supporting:
 1. Datasets: FD001, FD002, FD003, FD004.

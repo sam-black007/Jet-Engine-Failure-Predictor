@@ -1,4 +1,4 @@
-"""JETWISE AI — Technical Inspector & Level 2 Advanced Engineering Mode Workspace.
+"""THRUSTLAB — Technical Inspector & Level 2 Advanced Engineering Mode Workspace.
 
 Provides complete, transparent, unvarnished engineering and mathematical data:
 - Tab A: MATLAB Execution Details (Version, engine session vs certified fallback, raw output, execution time, memory)
@@ -378,7 +378,7 @@ class TechnicalInspector:
 
         all_logs = [
             {"timestamp": t_str(0.0), "level": "INFO", "source": "ConversationalNLU", "message": f"Prompt received: '{scenario.user_query}'"},
-            {"timestamp": t_str(12.0), "level": "INFO", "source": "ConversationalNLU", "message": f"Intent parsed: '{scenario.scenario_name}' | Confidence: 0.96 | Target mode: {scenario.simulation_mode.value}"},
+            {"timestamp": t_str(12.0), "level": "INFO", "source": "ConversationalNLU", "message": f"Intent parsed: '{scenario.scenario_name}' | Confidence: 0.96 | Target mode: {getattr(scenario.simulation_mode, 'value', str(scenario.simulation_mode))}"},
             {"timestamp": t_str(25.0), "level": "DEBUG", "source": "Validator", "message": f"Parameter validation started for {len(scenario.parameters)} modified channels."},
             {"timestamp": t_str(38.0), "level": "INFO", "source": "Validator", "message": "Input validation PASSED. All values within aerodynamic bounds (Mach 0.0-0.85, Temp 400-2400 °R)."},
             {"timestamp": t_str(46.0), "level": "INFO", "source": "EngineModelRegistry", "message": f"Target engine model verified: NASA C-MAPSS {scenario.dataset} (Unit {scenario.engine_id})."},

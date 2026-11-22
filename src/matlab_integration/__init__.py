@@ -1,4 +1,4 @@
-"""JETWISE AI — MATLAB & Simulink Integration Package.
+"""THRUSTLAB — MATLAB & Simulink Integration Package.
 
 Provides high-fidelity physics-based turbofan engine simulation, MATLAB/Simulink
 environment probing, telemetry bridging, thermodynamic validation, and AI prognostics linkage.

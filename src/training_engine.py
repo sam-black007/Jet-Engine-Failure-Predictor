@@ -1,4 +1,4 @@
-"""Unified Training Engine for Jet Engine Failure Predictor (JETWISE AI Phase 2).
+"""Unified Training Engine for Jet Engine Failure Predictor (THRUSTLAB Phase 2).
 
 Provides an enterprise-grade, reproducible training harness for both PyTorch deep
 architectures (LSTM, Attention-LSTM, TCN, Transformer) and Scikit-Learn baselines.
@@ -82,7 +82,7 @@ class EarlyStopping:
 
 
 class TrainingEngine:
-    """Configurable training coordinator for JETWISE AI models."""
+    """Configurable training coordinator for THRUSTLAB models."""
 
     def __init__(
         self,

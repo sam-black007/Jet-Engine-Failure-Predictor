@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerospace Copilot Dynamic Graphical Visualizations.
+"""THRUSTLAB — Aerospace Copilot Dynamic Graphical Visualizations.
 
 Generates relevant engineering graphics and component analysis tables after each simulation:
 1. Top-Level KPI metrics with baseline deltas

@@ -1,4 +1,4 @@
-"""FastAPI Backend and Real-Time Telemetry Streaming Server (JETWISE AI Phase 9).
+"""FastAPI Backend and Real-Time Telemetry Streaming Server (THRUSTLAB Phase 9).
 
 Provides:
 - REST API for fleet management, engine telemetry, and deep prognostic RUL inference
@@ -41,7 +41,7 @@ from src.predictive_intelligence import (
 # FastAPI App Initialization
 # ---------------------------------------------------------------------------
 app = FastAPI(
-    title="JETWISE AI — Aerospace Prognostics & Digital Twin API",
+    title="THRUSTLAB — Aerospace Prognostics & Digital Twin API",
     description="Production REST & Telemetry Streaming API for Turbofan Jet Engine RUL Prognosis and Predictive Maintenance.",
     version="1.0.0"
 )
@@ -126,7 +126,8 @@ class WorkOrderCreate(BaseModel):
 @app.get("/", tags=["General"])
 def root():
     return {
-        "platform": "JETWISE AI",
+        "platform": "THRUSTLAB",
+        "title": "THRUSTLAB: An Integrated AI-Driven and Physics-Informed Digital Twin Framework for Turbofan Engine Prognostics and Health Management",
         "description": "Aerospace Turbofan Digital Twin & Prognostics API",
         "version": "1.0.0",
         "documentation": "/docs"
@@ -339,5 +340,5 @@ async def stream_telemetry(dataset: str, engine_id: int, speed: float = Query(0.
 
 if __name__ == "__main__":
     import uvicorn
-    print("[x] Starting JETWISE AI FastAPI Server on port 8000...")
+    print("[x] Starting THRUSTLAB FastAPI Server on port 8000...")
     uvicorn.run("api.main:app", host="0.0.0.0", port=8000, reload=False)

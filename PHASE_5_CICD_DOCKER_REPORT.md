@@ -2,7 +2,7 @@
 
 **Document ID:** JW-P5-CICD-2026  
 **Status:** COMPLETED & VERIFIED  
-**Author:** JETWISE AI Architecture & DevOps Engineering Team  
+**Author:** THRUSTLAB Architecture & DevOps Engineering Team  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
 **Date:** 2026-11-22  
 
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-Phase 5 establishes a containerized, reproducible deployment and automated continuous integration pipeline for JETWISE AI:
+Phase 5 establishes a containerized, reproducible deployment and automated continuous integration pipeline for THRUSTLAB:
 1. **Production Dockerfile:** Multi-stage image based on `python:3.11-slim` with bundled system rendering dependencies, pinned dependencies from `requirements.txt`, headless Chromium for browser automation, persistent data volume mount points, and automated health checks.
 2. **Docker Compose (`docker-compose.yml`):** Multi-service orchestration managing the Streamlit industrial dashboard (Port 8501) and the FastAPI streaming telemetry backend (Port 8000) with volume persistence for `./models`, `./experiments`, `./results`, and `./dataset`.
 3. **GitHub Actions CI/CD Pipeline (`.github/workflows/ci.yml`):** Multi-job matrix pipeline automating code syntax verification, full 79-test backend pytest execution, live background Streamlit startup, Playwright Chromium browser automation across multiple resolutions, artifact archiving, and automated Docker image build caching.
@@ -25,7 +25,7 @@ Phase 5 establishes a containerized, reproducible deployment and automated conti
 │                        DOCKER COMPOSE TOPOLOGY                         │
 │                                                                        │
 │  ┌───────────────────────────────┐   ┌───────────────────────────────┐ │
-│  │     jetwise_ai_dashboard      │   │        jetwise_ai_api         │ │
+│  │     thrustlab_ai_dashboard      │   │        thrustlab_ai_api         │ │
 │  │   Streamlit Industrial UI     │   │      FastAPI Telemetry        │ │
 │  │       Port: 8501:8501         │   │       Port: 8000:8000         │ │
 │  │   Healthcheck: /_stcore/health│   │    WebSockets & REST APIs     │ │

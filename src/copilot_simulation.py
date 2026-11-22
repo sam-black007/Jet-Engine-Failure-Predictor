@@ -1,4 +1,4 @@
-"""JETWISE AI — Conversational Simulation Orchestrator.
+"""THRUSTLAB — Conversational Simulation Orchestrator.
 
 Executes:
 - Mode A: AI Sensor Sensitivity What-If Simulation
@@ -102,9 +102,9 @@ class CopilotSimulationEngine:
         if scenario.is_healthy_baseline:
             return self._build_baseline_result(scenario, base_rul, base_unc, baseline_telemetry, t0)
 
-        if scenario.simulation_mode == SimulationMode.MODE_A_AI_SENSOR_WHAT_IF:
+        if scenario.simulation_mode in (SimulationMode.MODE_A_AI_SENSOR_WHAT_IF, SimulationMode.MODE_A_DATASET_REPLAY, "MODE_A_AI_SENSOR_WHAT_IF", "MODE_A_DATASET_REPLAY"):
             return self._execute_mode_a(scenario, base_window, base_rul, base_unc, baseline_telemetry, available_sensors, t0)
-        elif scenario.simulation_mode == SimulationMode.MODE_B_DYNAMIC_ENGINE_WHAT_IF:
+        elif scenario.simulation_mode in (SimulationMode.MODE_B_DYNAMIC_ENGINE_WHAT_IF, SimulationMode.MODE_B_PHYSICAL_PARAMETRIC, SimulationMode.MODE_D_BRAYTON_FALLBACK, "MODE_B_DYNAMIC_ENGINE_WHAT_IF", "MODE_B_PHYSICAL_PARAMETRIC", "MODE_D_BRAYTON_FALLBACK"):
             return self._execute_mode_b(scenario, engine_df, base_window, base_rul, base_unc, baseline_telemetry, available_sensors, t0)
         else:
             return self._execute_mode_c(scenario, base_window, base_rul, base_unc, baseline_telemetry, available_sensors, t0)

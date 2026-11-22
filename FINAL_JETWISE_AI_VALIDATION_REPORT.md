@@ -1,6 +1,6 @@
-# JETWISE AI — Final Master Production Validation & Certification Report
+# THRUSTLAB — Final Master Production Validation & Certification Report
 
-**Platform:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Platform:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **Lead ML Architect & Senior QA Lead:** Antigravity Autonomous Agent  
 **Date of Certification:** November 22, 2026  
 **Git Branch:** `main`  
@@ -13,7 +13,7 @@
 
 ## 1. Executive Summary & Delivery Overview
 
-The **JETWISE AI** platform has been taken from a baseline linear regression / basic LSTM model on single-condition NASA C-MAPSS FD001 data into an **enterprise-grade, dark-mode, multi-dataset aerospace prognostics and predictive maintenance intelligence platform**.
+The **THRUSTLAB** platform has been taken from a baseline linear regression / basic LSTM model on single-condition NASA C-MAPSS FD001 data into an **enterprise-grade, dark-mode, multi-dataset aerospace prognostics and predictive maintenance intelligence platform**.
 
 Across Phases 0 through 10, every objective in the autonomous development roadmap was fully achieved, validated, and hardened:
 
@@ -127,4 +127,4 @@ tests/test_scoring.py (4 items): PASSED [100%]
 
 ## 4. Verification Checkpoint Sign-Off
 
-The JETWISE AI repository is fully certified, self-contained, mathematically rigorous, and ready for deployment or demonstration.
+The THRUSTLAB repository is fully certified, self-contained, mathematically rigorous, and ready for deployment or demonstration.

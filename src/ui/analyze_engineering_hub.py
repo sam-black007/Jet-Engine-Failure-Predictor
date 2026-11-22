@@ -1,4 +1,4 @@
-"""JETWISE AI — Engineering Analysis (Analyze Hub).
+"""THRUSTLAB — Engineering Analysis (Analyze Hub).
 
 Implements Section 2.2 Hub 4 requirements:
 Consolidates Model Comparison, RUL Analysis, Uncertainty Analysis, OOD Detection,

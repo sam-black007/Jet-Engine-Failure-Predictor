@@ -1,4 +1,4 @@
-# JETWISE AI — PHASE 11 PLAYWRIGHT E2E TEST REPORT
+# THRUSTLAB — PHASE 11 PLAYWRIGHT E2E TEST REPORT
 ## Advanced Aerospace Intelligence Centre: Browser Automation & UI Visual Verification
 
 **Document Version:** 1.0.0  

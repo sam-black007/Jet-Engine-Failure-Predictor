@@ -1,4 +1,4 @@
-"""JETWISE AI — Advanced Aerospace Intelligence Centre (Phase 11 Multipage Dashboard)."""
+"""THRUSTLAB — Advanced Aerospace Intelligence Centre (Phase 11 Multipage Dashboard)."""
 
 import streamlit as st
 import pandas as pd
@@ -17,7 +17,7 @@ from src.ui.phase11_workspaces import (
     render_engineering_review
 )
 
-st.set_page_config(page_title="JETWISE AI - Advanced Aerospace Intelligence", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="THRUSTLAB - Advanced Aerospace Intelligence", page_icon="🚀", layout="wide")
 
 # Theme styling
 st.markdown("""

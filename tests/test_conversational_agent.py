@@ -1,4 +1,4 @@
-"""JETWISE AI — Comprehensive Test Suite for Conversational Aerospace Engineering Copilot.
+"""THRUSTLAB — Comprehensive Test Suite for Conversational Aerospace Engineering Copilot.
 
 Verifies all 12 required conversational engineering workflows:
 1. Increase turbine temperature by 5%

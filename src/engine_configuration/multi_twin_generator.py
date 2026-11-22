@@ -1,4 +1,4 @@
-"""JETWISE AI — Multi-Engine 3D Digital Twin Generator.
+"""THRUSTLAB — Multi-Engine 3D Digital Twin Generator.
 
 Generates custom WebGL Three.js 3D Digital Twins reflecting specific mechanical architectures:
 - Three-Spool Turbofan (Rolls-Royce Trent with LP, IP, HP concentric shafts and IPC/IPT)

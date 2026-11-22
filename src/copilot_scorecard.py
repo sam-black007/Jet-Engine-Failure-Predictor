@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerospace Engineering Results Scorecard.
+"""THRUSTLAB — Aerospace Engineering Results Scorecard.
 
 Calculates transparent, model-supported engineering metrics and scores:
 1. Engine Health Score (0–100, research classification with contributing factors)

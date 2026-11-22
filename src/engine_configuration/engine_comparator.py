@@ -1,4 +1,4 @@
-"""JETWISE AI — Multi-Engine Comparison Laboratory Engine.
+"""THRUSTLAB — Multi-Engine Comparison Laboratory Engine.
 
 Computes architectural, aerothermodynamic, sensor, performance, and prognostic
 comparisons across multiple aircraft engine configurations with provenance preservation.

@@ -1,4 +1,4 @@
-"""JETWISE AI — Simulation Outputs Specification.
+"""THRUSTLAB — Simulation Outputs Specification.
 
 Defines the structured output data container for turbofan physical simulations,
 including multi-station gas path state variables, mechanical shaft dynamics,

@@ -1,6 +1,6 @@
-# JETWISE AI — Conversational Aerospace Simulation User Guide
+# THRUSTLAB — Conversational Aerospace Simulation User Guide
 
-**Document Reference:** `JETWISE-AI-USERGUIDE-PHASE17-COPILOT-01`  
+**Document Reference:** `THRUSTLAB-USERGUIDE-PHASE17-COPILOT-01`  
 **Classification:** Aerospace Engineering User Guide & Operational Manual  
 **Date:** November 22, 2026  
 **Auditor:** Principal Aerospace Propulsion & Human-Machine Interface Group  
@@ -10,7 +10,7 @@
 
 ## 1. Introduction to Conversational Aerospace Engineering
 
-The **Engineering Command Centre (Hub 2)** transforms complex numerical and thermodynamic turbofan simulation into an intuitive, prompt-driven workflow. Instead of navigating through multi-dimensional configuration files or manual GUI matrices, flight engineers, propulsion researchers, and maintenance leads can interact with JETWISE AI naturally.
+The **Engineering Command Centre (Hub 2)** transforms complex numerical and thermodynamic turbofan simulation into an intuitive, prompt-driven workflow. Instead of navigating through multi-dimensional configuration files or manual GUI matrices, flight engineers, propulsion researchers, and maintenance leads can interact with THRUSTLAB naturally.
 
 You can issue commands in plain English:
 > *"Increase turbine temperature by 5% and reduce compressor pressure by 3%. Show me what happens."*  
@@ -104,7 +104,7 @@ Every simulation triggered in Hub 2 executes through an authentic, transparent 1
 
 ## 5. Interpreting Simulation Results
 
-Upon completion, JETWISE AI displays an immediate, integrated diagnostic package:
+Upon completion, THRUSTLAB displays an immediate, integrated diagnostic package:
 
 1. **Synchronized 3D Turbofan Twin:** The 10 subassemblies light up according to their simulated mechanical state (`NORMAL` = Blue/Emerald, `WARNING` = Amber, `CRITICAL` = Red, `MODIFIED` = Cyan).
 2. **6-Dimension Scorecard:**

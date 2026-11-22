@@ -1,4 +1,4 @@
-"""JETWISE AI — Live Simulation Monitor & Execution Controller.
+"""THRUSTLAB — Live Simulation Monitor & Execution Controller.
 
 Implements Sections 10 and 12 requirements:
 Live 17-Stage Simulation Pipeline tracking with authentic elapsed time,

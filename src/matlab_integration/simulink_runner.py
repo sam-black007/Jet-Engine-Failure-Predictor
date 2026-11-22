@@ -1,4 +1,4 @@
-"""JETWISE AI — Simulink & Aerothermal Simulation Orchestration Runner.
+"""THRUSTLAB — Simulink & Aerothermal Simulation Orchestration Runner.
 
 Coordinates inputs, dispatches simulations to either native MATLAB/Simulink or certified
 Python aerothermal physics fallback (with strict provenance tagging), enforces validation,

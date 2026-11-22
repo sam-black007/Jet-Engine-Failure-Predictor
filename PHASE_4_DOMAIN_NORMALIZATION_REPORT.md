@@ -2,7 +2,7 @@
 
 **Document ID:** JW-P4-NORM-2026  
 **Status:** COMPLETED & EMPIRICALLY VERIFIED  
-**Author:** JETWISE AI Architecture & ML Engineering Team  
+**Author:** THRUSTLAB Architecture & ML Engineering Team  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
 **Datasets Evaluated:** NASA C-MAPSS FD001, FD002, FD003, FD004  
 **Date:** 2026-11-22  

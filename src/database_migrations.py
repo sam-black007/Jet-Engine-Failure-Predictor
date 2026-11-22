@@ -1,4 +1,4 @@
-"""Database Migrations & Persistence Layer for JETWISE AI Phases 11 & 12.
+"""Database Migrations & Persistence Layer for THRUSTLAB Phases 11 & 12.
 
 Extends SQLite database (database/maintenance_records.db) with 19 comprehensive schemas:
 1.  sensor_fdir_events (Sensor FDIR fault detections)

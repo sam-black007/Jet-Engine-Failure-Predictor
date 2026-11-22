@@ -1,4 +1,4 @@
-"""Model Registry for Jet Engine Failure Predictor (JETWISE AI Phase 2).
+"""Model Registry for Jet Engine Failure Predictor (THRUSTLAB Phase 2).
 
 Manages model versions, deployment tags (e.g. 'production', 'challenger', 'baseline'),
 checkpoint metadata, input signatures, and verified official test performance.

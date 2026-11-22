@@ -1,4 +1,4 @@
-"""JETWISE AI — Simulation Inputs Specification.
+"""THRUSTLAB — Simulation Inputs Specification.
 
 Defines strongly-typed, physically-bounded parameters for turbofan engine simulations
 supporting both SI (Kelvin, kPa, m, kg/s) and Imperial (Rankine, psia, ft, pps) engineering units.

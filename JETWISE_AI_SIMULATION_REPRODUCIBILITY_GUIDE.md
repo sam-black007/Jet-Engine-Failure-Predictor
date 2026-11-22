@@ -1,6 +1,6 @@
-# JETWISE AI — Simulation Reproducibility & Provenance Standard Guide
+# THRUSTLAB — Simulation Reproducibility & Provenance Standard Guide
 
-**Document Reference:** `JETWISE-AI-GUIDE-PHASE17-REPRODUCIBILITY-01`  
+**Document Reference:** `THRUSTLAB-GUIDE-PHASE17-REPRODUCIBILITY-01`  
 **Classification:** Aerospace Simulation Provenance & Regulatory Compliance Standard  
 **Date:** November 22, 2026  
 **Auditor:** Principal Aerospace Software Reliability & MLOps Architect  
@@ -12,13 +12,13 @@
 
 In certified aerospace prognostics, a predictive maintenance forecast or physical simulation result cannot be accepted for fleet dispatch unless it is **100% reproducible**. An engineer inspecting an engine failure prediction six months after an alert must be able to recreate the exact analytical pipeline, telemetry inputs, solver settings, and AI weights.
 
-JETWISE AI implements a strict provenance architecture that captures every simulation run, configuration flag, solver state, and environment variable into a deterministic SQLite registry.
+THRUSTLAB implements a strict provenance architecture that captures every simulation run, configuration flag, solver state, and environment variable into a deterministic SQLite registry.
 
 ---
 
 ## 2. Provenance Metadata Architecture
 
-Every simulation executed in JETWISE AI automatically records a comprehensive reproducibility bundle:
+Every simulation executed in THRUSTLAB automatically records a comprehensive reproducibility bundle:
 
 ```mermaid
 flowchart TD
@@ -100,7 +100,7 @@ To support cross-disciplinary aerospace teams, every completed simulation can be
 - Serialized natively via `scipy.io.savemat` with binary compression.
 - Allows flight dynamics teams to immediately load the entire simulated gas-path state directly into MathWorks MATLAB / Simulink without data translation:
   ```matlab
-  load('JETWISE_Simulation_Export.mat');
+  load('THRUSTLAB_Simulation_Export.mat');
   plot(telem_cycle, telem_sensor_4); % Plot EGT trajectory
   ```
 

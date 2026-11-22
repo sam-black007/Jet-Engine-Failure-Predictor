@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerospace Engineering Copilot Interactive UI Workspace.
+"""THRUSTLAB — Aerospace Engineering Copilot Interactive UI Workspace.
 
 Prompt-Driven Aerospace Engineering Intelligence Platform:
 - Prominent natural language prompt interface with status badges and follow-up command pills.
@@ -53,7 +53,7 @@ def init_copilot_session():
             {
                 "sender": "AGENT",
                 "text": (
-                    "👋 **Welcome to JETWISE AI — Prompt-Driven Aerospace Engineering Intelligence Console.**\n\n"
+                    "👋 **Welcome to THRUSTLAB — Prompt-Driven Aerospace Engineering Intelligence Console.**\n\n"
                     "Communicate with me in natural English to simulate physical scenarios, evaluate multi-cycle degradation, "
                     "analyze aerodynamic gas-path telemetry, or execute MATLAB/Simulink physics runs.\n\n"
                     "**Click any suggested command on the left or type your instruction below to begin.**"
@@ -100,7 +100,7 @@ def render_copilot_workspace():
     <div style="background: #111827; border: 1px solid #1F2937; border-left: 4px solid #00B8D9; padding: 14px 20px; border-radius: 6px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div>
-                <h3 style="color: #F8FAFC; margin: 0; font-size: 20px;">🧑‍✈️ JETWISE AI — Prompt-Driven Aerospace Engineering Intelligence</h3>
+                <h3 style="color: #F8FAFC; margin: 0; font-size: 20px;">🧑‍✈️ THRUSTLAB — Prompt-Driven Aerospace Engineering Intelligence</h3>
                 <p style="color: #94A3B8; margin: 4px 0 0 0; font-size: 13px;">
                     Natural-Language Aerothermal Simulation, Multi-Spool Prognostics & Advanced 3D Digital Twin Synchronization
                 </p>
@@ -268,7 +268,7 @@ def render_copilot_workspace():
                     st.markdown(f"""
                     <div style="display: flex; justify-content: flex-start; margin-bottom: 8px;">
                         <div style="background: #111827; border: 1px solid #1F2937; border-left: 3px solid #00B8D9; padding: 10px 14px; border-radius: 8px; max-width: 88%; font-size: 13px;">
-                            <b style="color: #10B981;">🤖 JETWISE AI Intelligence</b> <span style="font-size: 10px; color: #94A3B8;">[{msg.get('timestamp', '')}]</span>
+                            <b style="color: #10B981;">🤖 THRUSTLAB Intelligence</b> <span style="font-size: 10px; color: #94A3B8;">[{msg.get('timestamp', '')}]</span>
                             <div style="color: #CBD5E1; margin-top: 4px;">{msg['text']}</div>
                         </div>
                     </div>

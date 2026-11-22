@@ -1,8 +1,8 @@
-# JETWISE AI: PHASE 2 IMPLEMENTATION & BENCHMARK REPORT
+# THRUSTLAB: PHASE 2 IMPLEMENTATION & BENCHMARK REPORT
 ## Configurable AI Architecture, Advanced Prediction & Experiment Management Platform
 
 **Document Version:** 2.0.0  
-**Project:** Jet Engine Failure Predictor (JETWISE AI)  
+**Project:** Jet Engine Failure Predictor (THRUSTLAB)  
 **Date:** 2026-11-21  
 **Lead Architect:** Senior Machine Learning Engineer & MLOps Architect  
 **Branch:** `main` | **Git Commit:** Head synchronized with `origin/main` (Commits: `975aead`, `b675a59`)  

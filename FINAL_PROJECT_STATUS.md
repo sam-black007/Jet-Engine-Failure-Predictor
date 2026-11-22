@@ -1,6 +1,6 @@
-# JETWISE AI: MASTER FINAL PROJECT STATUS & COMPREHENSIVE CERTIFICATION
+# THRUSTLAB: MASTER FINAL PROJECT STATUS & COMPREHENSIVE CERTIFICATION
 
-**Platform Name:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Platform Name:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **Document ID:** JW-FPS-2026-PHASE-11-12-FINAL  
 **Status:** FULLY IMPLEMENTED, INTEGRATED, VERIFIED, BENCHMARKED & CERTIFIED  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
@@ -13,10 +13,10 @@
 
 ## 1. Executive Master Overview
 
-JETWISE AI is an enterprise-grade, research-oriented aircraft engine Remaining Useful Life (RUL) prediction, digital twin, and predictive maintenance platform. Developed across 12 rigorous phases, it integrates deep sequence modeling, asymmetric prognostic loss functions, aerothermodynamic physics consistency, sensor fault detection, split conformal uncertainty calibration, multi-modal data fusion, Weibull survival analysis, embedded edge optimization, and human-in-the-loop certified workflows.
+THRUSTLAB is an enterprise-grade, research-oriented aircraft engine Remaining Useful Life (RUL) prediction, digital twin, and predictive maintenance platform. Developed across 12 rigorous phases, it integrates deep sequence modeling, asymmetric prognostic loss functions, aerothermodynamic physics consistency, sensor fault detection, split conformal uncertainty calibration, multi-modal data fusion, Weibull survival analysis, embedded edge optimization, and human-in-the-loop certified workflows.
 
 ```
-                               JETWISE AI COMPLETE SYSTEM ARCHITECTURE
+                               THRUSTLAB COMPLETE SYSTEM ARCHITECTURE
                                
   ┌────────────────────────────────────────────────────────────────────────────────────────┐
   │                           ENTERPRISE STREAMLIT USER INTERFACE                          │
@@ -92,4 +92,4 @@ JETWISE AI is an enterprise-grade, research-oriented aircraft engine Remaining U
 
 ## 4. Platform Certification Sign-Off
 
-The JETWISE AI platform has fulfilled all mandatory technical, mathematical, architectural, and visual requirements specified for Phases 0 through 12. The codebase is clean, fully documented, decoupled, and production-ready.
+The THRUSTLAB platform has fulfilled all mandatory technical, mathematical, architectural, and visual requirements specified for Phases 0 through 12. The codebase is clean, fully documented, decoupled, and production-ready.

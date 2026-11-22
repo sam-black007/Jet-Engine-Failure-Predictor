@@ -1,4 +1,4 @@
-# JETWISE AI — PHASE 11 BACKEND TEST REPORT
+# THRUSTLAB — PHASE 11 BACKEND TEST REPORT
 ## Advanced Aerospace Intelligence Centre: Algorithmic Verification & Unit Test Suite
 
 **Document Version:** 1.0.0  
@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary
 
-This report documents the rigorous backend verification of all eight core intelligence modules comprising **Phase 11 (Advanced Aerospace Intelligence Centre)** in JETWISE AI. Every module was implemented from first principles with zero placeholder code, connected directly to SQLite database tables, and validated against mathematical, physical, and probabilistic invariant properties.
+This report documents the rigorous backend verification of all eight core intelligence modules comprising **Phase 11 (Advanced Aerospace Intelligence Centre)** in THRUSTLAB. Every module was implemented from first principles with zero placeholder code, connected directly to SQLite database tables, and validated against mathematical, physical, and probabilistic invariant properties.
 
 ---
 

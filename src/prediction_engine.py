@@ -1,4 +1,4 @@
-"""Advanced Prediction Engine and Uncertainty Estimation (JETWISE AI Phase 2).
+"""Advanced Prediction Engine and Uncertainty Estimation (THRUSTLAB Phase 2).
 
 Provides comprehensive inference strategies:
 1. Standard Point Prediction: Deterministic single-pass inference.

@@ -1,4 +1,4 @@
-"""JETWISE AI — Contextual Help, Glossary, and Guided Setup Wizard.
+"""THRUSTLAB — Contextual Help, Glossary, and Guided Setup Wizard.
 
 Provides plain-language translations, aerospace engineering glossaries,
 and step-by-step onboarding walkthroughs for beginner and advanced users.

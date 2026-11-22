@@ -1,4 +1,4 @@
-"""JETWISE AI — Engine Configuration SQLite Persistence & Catalogue Repository.
+"""THRUSTLAB — Engine Configuration SQLite Persistence & Catalogue Repository.
 
 Stores, manages, queries, and exports multi-manufacturer aircraft engine configurations,
 provenance metadata, imported models, and cross-engine comparison sessions.

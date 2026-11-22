@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "experiment_id": "exp_p2_tcn",
   "profile_name": "tcn_experiment",
-  "description": "JETWISE AI experiment configuration",
+  "description": "THRUSTLAB experiment configuration",
   "created_at": "2026-11-21T17:31:35.577919",
   "git_commit": "b675a59b5fc1bb481e425b0944a89b79913dee69",
   "dataset": {

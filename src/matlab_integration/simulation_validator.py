@@ -1,4 +1,4 @@
-"""JETWISE AI — Simulation Scientific Integrity & Validation Engine.
+"""THRUSTLAB — Simulation Scientific Integrity & Validation Engine.
 
 Enforces strict thermodynamic laws, physical conservation rules, boundary validity,
 and numerical stability on all inputs and outputs of turbofan engine simulations.

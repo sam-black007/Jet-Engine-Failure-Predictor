@@ -1,6 +1,6 @@
-# JETWISE AI — Standardized Scenario Library & Test Preset Guide
+# THRUSTLAB — Standardized Scenario Library & Test Preset Guide
 
-**Document Reference:** `JETWISE-AI-GUIDE-PHASE17-PRESETS-01`  
+**Document Reference:** `THRUSTLAB-GUIDE-PHASE17-PRESETS-01`  
 **Classification:** Aerospace Simulation Benchmark Standard & Preset Catalog  
 **Date:** November 22, 2026  
 **Auditor:** Principal Aerospace Prognostics Architect & Propulsion Test Group  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Overview
 
-To ensure rigorous repeatability across aerospace test campaigns, JETWISE AI provides **14 standardized simulation templates** covering baseline operations, gas-path thermal stresses, component mechanical degradation, instrumentation failures, and environmental extremes.
+To ensure rigorous repeatability across aerospace test campaigns, THRUSTLAB provides **14 standardized simulation templates** covering baseline operations, gas-path thermal stresses, component mechanical degradation, instrumentation failures, and environmental extremes.
 
 Every template defines strict parameter boundaries, affected turbofan subassemblies, supported simulation modes, and aerothermal validation criteria.
 

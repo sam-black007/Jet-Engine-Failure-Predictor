@@ -1,4 +1,4 @@
-"""Integration and Unit Tests for JETWISE AI FastAPI Server (Phase 9).
+"""Integration and Unit Tests for THRUSTLAB FastAPI Server (Phase 9).
 
 Verifies:
 1. Root & Health Endpoints
@@ -22,7 +22,7 @@ def test_root_endpoint():
     res = client.get("/")
     assert res.status_code == 200
     data = res.json()
-    assert data["platform"] == "JETWISE AI"
+    assert data["platform"] == "THRUSTLAB"
     assert "version" in data
 
 

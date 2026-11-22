@@ -1,4 +1,4 @@
-"""Tests for Predictive Maintenance Intelligence Engine (JETWISE AI Feature 2).
+"""Tests for Predictive Maintenance Intelligence Engine (THRUSTLAB Feature 2).
 
 Verifies:
 1. Monte Carlo Dropout Uncertainty Estimation & Quantiles

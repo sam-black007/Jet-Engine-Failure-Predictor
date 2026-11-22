@@ -46,7 +46,7 @@
           "subset": "FD001",
           "train_val_split": 0.8
         },
-        "description": "JETWISE AI experiment configuration",
+        "description": "THRUSTLAB experiment configuration",
         "evaluation": {
           "metrics": [
             "MAE",
@@ -167,7 +167,7 @@
           "subset": "FD001",
           "train_val_split": 0.8
         },
-        "description": "JETWISE AI experiment configuration",
+        "description": "THRUSTLAB experiment configuration",
         "evaluation": {
           "metrics": [
             "MAE",
@@ -288,7 +288,7 @@
           "subset": "FD001",
           "train_val_split": 0.8
         },
-        "description": "JETWISE AI experiment configuration",
+        "description": "THRUSTLAB experiment configuration",
         "evaluation": {
           "metrics": [
             "MAE",

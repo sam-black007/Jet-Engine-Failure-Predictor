@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerospace Intelligence & API Configuration Centre Workspace.
+"""THRUSTLAB — Aerospace Intelligence & API Configuration Centre Workspace.
 
 Comprehensive interactive dashboard interface for managing external AI credentials (Google Gemini,
 Hugging Face, OpenAI) and local MATLAB/Simulink engine connectivity with zero-leakage security safeguards.
@@ -49,7 +49,7 @@ def render_api_configuration_centre():
     # Security & Offline Policy Notice
     st.info(
         "🛡️ **Security Policy & Air-Gapped Operation:** All credentials are processed backend-only and masked before UI rendering. "
-        "JETWISE AI does **NOT** require external APIs to operate: when APIs are unconfigured or unavailable, the platform automatically "
+        "THRUSTLAB does **NOT** require external APIs to operate: when APIs are unconfigured or unavailable, the platform automatically "
         "falls back to internal PyTorch sequence models (Pinball LSTM, Transformer), deterministic aerospace NLU, and NASA Brayton-cycle thermodynamic physics."
     )
 

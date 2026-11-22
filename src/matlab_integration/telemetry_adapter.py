@@ -1,4 +1,4 @@
-"""JETWISE AI — Simulation Telemetry to AI Feature Adapter.
+"""THRUSTLAB — Simulation Telemetry to AI Feature Adapter.
 
 Bridges raw physical aerothermal simulation telemetry (Kelvin, kPa, RPM, kg/s) to
 the 17 active sensor channels of the NASA C-MAPSS FD001 feature space.

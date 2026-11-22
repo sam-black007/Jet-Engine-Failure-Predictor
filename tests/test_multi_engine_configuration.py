@@ -1,4 +1,4 @@
-"""JETWISE AI — Automated Test Suite for Multi-Manufacturer Engine Configuration & Simulation.
+"""THRUSTLAB — Automated Test Suite for Multi-Manufacturer Engine Configuration & Simulation.
 
 Tests:
 1. Adding a manufacturer to the repository.

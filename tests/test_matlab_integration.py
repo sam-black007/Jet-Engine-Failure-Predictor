@@ -1,4 +1,4 @@
-"""JETWISE AI — Automated Test Suite for MATLAB & Simulink Aerospace Simulation Integration.
+"""THRUSTLAB — Automated Test Suite for MATLAB & Simulink Aerospace Simulation Integration.
 
 Tests:
 1. Environment detector (probing, releases, toolboxes, offline status handling).

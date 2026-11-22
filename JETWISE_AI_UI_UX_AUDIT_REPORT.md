@@ -1,6 +1,6 @@
-# JETWISE AI — UI/UX Usability Audit & Interface Architecture Report
+# THRUSTLAB — UI/UX Usability Audit & Interface Architecture Report
 
-**Document Reference:** `JETWISE-AI-REP-PHASE17-UIUX-01`  
+**Document Reference:** `THRUSTLAB-REP-PHASE17-UIUX-01`  
 **Classification:** Human Factors & Aerospace Interface Design Standard  
 **Date:** November 22, 2026  
 **Auditor:** Principal Aerospace UI/UX Architect & Systems Reliability Group  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-Prior to Phase 17, JETWISE AI featured a powerful but sprawling multi-page dashboard. The user was presented with over 15 separate tabs, dense multi-dimensional heatmaps, and complex aerospace acronyms (`EGT`, `T30`, `P50`, `Pinball Loss`, `Mahalanobis Residuals`, `FDIR`) without progressive disclosure or onboarding guidance.
+Prior to Phase 17, THRUSTLAB featured a powerful but sprawling multi-page dashboard. The user was presented with over 15 separate tabs, dense multi-dimensional heatmaps, and complex aerospace acronyms (`EGT`, `T30`, `P50`, `Pinball Loss`, `Mahalanobis Residuals`, `FDIR`) without progressive disclosure or onboarding guidance.
 
 **Phase 17 delivers a complete human-factors transformation.**
 The interface has been consolidated into **5 primary navigation hubs**, complemented by a dynamic **Presentation Mode Switch** (`Simple Mode` vs `Advanced View`), a **9-Step Guided Setup Wizard**, and **14 Standardized Scenario Presets**.
@@ -132,4 +132,4 @@ The system maintains a real-time translation layer dynamically toggled via the p
 
 ## 5. Usability Audit Sign-Off
 
-The Phase 17 user experience redesign has been thoroughly audited across all 5 hubs. The navigation is stable, response times are sub-second, and cognitive overload has been effectively eliminated. JETWISE AI successfully unifies industrial aerospace rigor with modern, frictionless interaction.
+The Phase 17 user experience redesign has been thoroughly audited across all 5 hubs. The navigation is stable, response times are sub-second, and cognitive overload has been effectively eliminated. THRUSTLAB successfully unifies industrial aerospace rigor with modern, frictionless interaction.

@@ -1,4 +1,4 @@
-"""JETWISE AI Security & Credential Management Package."""
+"""THRUSTLAB Security & Credential Management Package."""
 
 from src.security.credential_manager import (
     CredentialManager,

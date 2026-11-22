@@ -1,4 +1,4 @@
-"""JETWISE AI — MATLAB & Simulink Simulation Bridge & Aerothermal Physics Simulator.
+"""THRUSTLAB — MATLAB & Simulink Simulation Bridge & Aerothermal Physics Simulator.
 
 Provides:
 1. Host environment probing for MATLAB CLI, Simulink toolboxes, and MATLAB Engine API.
@@ -101,7 +101,7 @@ class MATLABSimulinkBridge:
                 time_step=time_step
             )
             res["matlab_status"] = "OFFLINE_NOT_INSTALLED"
-            res["matlab_message"] = "MATLAB executable not found on system PATH. Executed via JETWISE AI Aerothermal Gas Path Physics Engine."
+            res["matlab_message"] = "MATLAB executable not found on system PATH. Executed via THRUSTLAB Aerothermal Gas Path Physics Engine."
             res["simulation_source"] = "Python Aerothermal Gas Path Physics Engine (MATLAB Offline)"
             return res
 

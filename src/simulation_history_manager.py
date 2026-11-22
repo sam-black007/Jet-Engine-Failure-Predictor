@@ -1,4 +1,4 @@
-"""JETWISE AI — Simulation Reproducibility and History Manager.
+"""THRUSTLAB — Simulation Reproducibility and History Manager.
 
 Implements Section 11 and Section 20 requirements:
 Complete metadata persistence for reproducibility across environments,

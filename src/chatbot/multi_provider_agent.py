@@ -1,4 +1,4 @@
-"""JETWISE AI — Multi-Provider Conversational Aerospace Engineering Agent.
+"""THRUSTLAB — Multi-Provider Conversational Aerospace Engineering Agent.
 
 Translates natural language engineering commands into validated physical simulation
 specifications and deep thermodynamic rationales using selectable LLM providers:
@@ -50,7 +50,7 @@ class AgentResponse(BaseModel):
     raw_response: Optional[str] = None
 
 
-AEROSPACE_SYSTEM_PROMPT = """You are JETWISE AI, the Chief Aerospace Propulsion Simulation Architect and Predictive Maintenance Prognostics Agent.
+AEROSPACE_SYSTEM_PROMPT = """You are THRUSTLAB, the Chief Aerospace Propulsion Simulation Architect and Predictive Maintenance Prognostics Agent.
 Your role is to interpret natural language aerospace engineering instructions and translate them into structured simulation parameter adjustments for a dual-spool high-bypass commercial turbofan engine (NASA C-MAPSS and advanced commercial turbofans).
 
 Key Physical Stations & Parameters:

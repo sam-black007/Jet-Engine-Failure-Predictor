@@ -1,4 +1,4 @@
-# JETWISE AI — PHASE 12 PLAYWRIGHT E2E TEST REPORT
+# THRUSTLAB — PHASE 12 PLAYWRIGHT E2E TEST REPORT
 ## Next-Generation Aerospace Research Laboratory: Browser Automation & UI Visual Verification
 
 **Document Version:** 1.0.0  

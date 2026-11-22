@@ -33,7 +33,7 @@ from src.model_registry import ModelRegistry
 
 def train_and_evaluate_phase2():
     print("=" * 78)
-    print(" JETWISE AI — PHASE 2: ADVANCED ARCHITECTURES TRAINING & OFFICIAL BENCHMARK ")
+    print(" THRUSTLAB — PHASE 2: ADVANCED ARCHITECTURES TRAINING & OFFICIAL BENCHMARK ")
     print("=" * 78)
 
     cm = ConfigManager()

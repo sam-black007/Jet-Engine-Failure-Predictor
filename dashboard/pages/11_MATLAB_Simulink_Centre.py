@@ -1,10 +1,10 @@
-"""JETWISE AI — MATLAB & Simulink Aerospace Simulation Centre (Multipage Dashboard)."""
+"""THRUSTLAB — MATLAB & Simulink Aerospace Simulation Centre (Multipage Dashboard)."""
 
 import streamlit as st
 from src.ui.matlab_centre import render_matlab_centre
 
 st.set_page_config(
-    page_title="JETWISE AI - MATLAB & Simulink Simulation Centre",
+    page_title="THRUSTLAB - MATLAB & Simulink Simulation Centre",
     page_icon="🎛️",
     layout="wide"
 )

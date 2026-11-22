@@ -1,10 +1,10 @@
-"""JETWISE AI — Aerospace Engineering Copilot (Multipage Dashboard)."""
+"""THRUSTLAB — Aerospace Engineering Copilot (Multipage Dashboard)."""
 
 import streamlit as st
 from src.ui.copilot_workspace import render_copilot_workspace
 
 st.set_page_config(
-    page_title="JETWISE AI - Aerospace Engineering Copilot",
+    page_title="THRUSTLAB - Aerospace Engineering Copilot",
     page_icon="🧑‍✈️",
     layout="wide"
 )

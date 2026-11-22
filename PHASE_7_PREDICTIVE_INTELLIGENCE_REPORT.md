@@ -1,4 +1,4 @@
-# JETWISE AI — Phase 7 Predictive Maintenance Intelligence Report
+# THRUSTLAB — Phase 7 Predictive Maintenance Intelligence Report
 
 **Author:** Antigravity Senior ML & Aerospace Prognostics Architect  
 **Date:** November 22, 2026  
@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary
 
-Phase 7 delivers the core intelligence layer for the JETWISE AI platform, bridging pure deep learning prognostic outputs (numerical RUL predictions) with operational aerospace engineering maintenance decision systems.
+Phase 7 delivers the core intelligence layer for the THRUSTLAB platform, bridging pure deep learning prognostic outputs (numerical RUL predictions) with operational aerospace engineering maintenance decision systems.
 
 The intelligence framework integrates five interconnected modules:
 1. **Uncertainty Estimation Engine (`UncertaintyEstimator`)**:

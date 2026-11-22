@@ -1,7 +1,7 @@
 version: 2.0.0
 experiment_id: exp_p2_transformer
 profile_name: transformer_experiment
-description: JETWISE AI experiment configuration
+description: THRUSTLAB experiment configuration
 created_at: '2026-11-21T17:34:05.493847'
 git_commit: b675a59b5fc1bb481e425b0944a89b79913dee69
 dataset:

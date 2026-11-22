@@ -1,6 +1,6 @@
-# JETWISE AI — Central API Security & Integration Configuration Guide
+# THRUSTLAB — Central API Security & Integration Configuration Guide
 
-**Document Reference:** `JETWISE-AI-GUIDE-PHASE17-API-01`  
+**Document Reference:** `THRUSTLAB-GUIDE-PHASE17-API-01`  
 **Classification:** Enterprise AI Security & Credential Governance Standard  
 **Date:** November 22, 2026  
 **Auditor:** Principal Aerospace Systems Reliability & Security Architect  
@@ -10,13 +10,13 @@
 
 ## 1. Executive Security Overview
 
-JETWISE AI integrates external frontier large language models (LLMs) with local deterministic aerospace engineering kernels. Because aircraft propulsion data, telemetry logs, and maintenance work orders carry critical intellectual property and flight safety implications, the platform enforces strict **Zero Credential Exposure** protocols.
+THRUSTLAB integrates external frontier large language models (LLMs) with local deterministic aerospace engineering kernels. Because aircraft propulsion data, telemetry logs, and maintenance work orders carry critical intellectual property and flight safety implications, the platform enforces strict **Zero Credential Exposure** protocols.
 
 ### 1.1 Core Security Tenets
 1. **Zero Raw Key Display:** All API keys entered in the dashboard are masked using visual bullet characters (`•••••••••••••••••••••`) with length obfuscation.
 2. **Sanitized Diagnostics:** Error messages originating from failed HTTP calls or invalid authorization tokens are intercepted and scrubbed to prevent key leakage in stack traces.
 3. **Multi-Tier Persistence:** Credentials may be supplied via local system environment variables, protected `.env` files (excluded from version control via `.gitignore`), or persisted into a local SQLite database (`database/credentials.db`).
-4. **Deterministic Local Fallback:** The platform never halts if an API key is missing, expired, or rate-limited. JETWISE AI automatically falls back to an embedded local rule-based aerospace NLU parser.
+4. **Deterministic Local Fallback:** The platform never halts if an API key is missing, expired, or rate-limited. THRUSTLAB automatically falls back to an embedded local rule-based aerospace NLU parser.
 
 ---
 
@@ -58,7 +58,7 @@ flowchart TD
 Operators can configure credentials through two approved channels:
 
 ### Method A: User Interface (Hub 5 — CONFIGURE)
-1. Launch JETWISE AI (`python -m streamlit run dashboard/app.py`).
+1. Launch THRUSTLAB (`python -m streamlit run dashboard/app.py`).
 2. Navigate to **Hub 5: CONFIGURE — System Setup** via the top navigation bar.
 3. Select **Tab 1: 🔐 API & Security Credentials Configuration**.
 4. In the target provider card, enter your API token into the masked input field.
@@ -68,7 +68,7 @@ Operators can configure credentials through two approved channels:
 ### Method B: Environment File (`.env`)
 For headless server environments or automated CI/CD runners, populate a `.env` file in the project root:
 ```ini
-# JETWISE AI — Environment Configuration
+# THRUSTLAB — Environment Configuration
 GEMINI_API_KEY=AIzaSyAExampleKeyForGeminiIntegration789
 HUGGINGFACE_API_TOKEN=hf_ExampleTokenForHuggingFaceModels123
 OPENAI_API_KEY=sk-proj-ExampleOpenAIKeyForAerospaceCopilot456
@@ -81,7 +81,7 @@ ACTIVE_AI_PROVIDER=gemini
 
 ## 4. Local Rule-Based Aerospace Fallback NLU
 
-When operating completely offline (e.g., inside secure flight-line maintenance hangars or test cells without external internet access), JETWISE AI activates its certified regex-based aerospace pattern recognizer.
+When operating completely offline (e.g., inside secure flight-line maintenance hangars or test cells without external internet access), THRUSTLAB activates its certified regex-based aerospace pattern recognizer.
 
 The local parser is calibrated against all 21 NASA C-MAPSS channels and 10 turbofan subassemblies, natively understanding complex engineering commands:
 - *"Increase turbine temperature by 5%"* $\rightarrow$ Maps to Channel `sensor_4` ($T_{50}$), Target `hpt`, $+5.0\%$ delta.

@@ -1,7 +1,7 @@
-# JETWISE AI — CONVERSATIONAL AEROSPACE SIMULATION & AUTONOMOUS ENGINEERING INTELLIGENCE REPORT
+# THRUSTLAB — CONVERSATIONAL AEROSPACE SIMULATION & AUTONOMOUS ENGINEERING INTELLIGENCE REPORT
 ## Aerospace Engineering Copilot: Natural Language What-If Simulation, MATLAB/Simulink Integration & Synchronized 3D Digital Twin
 
-**Platform:** JETWISE AI — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
+**Platform:** THRUSTLAB — AI-Powered Aircraft Engine Health Monitoring, Digital Twin & Predictive Maintenance Intelligence Platform  
 **Document ID:** JW-COPILOT-2026-FINAL  
 **Repository:** `https://github.com/sam-black007/Jet-Engine-Failure-Predictor`  
 **Local Workspace:** `c:\Users\samjo\Downloads\simulation\Jet-Engine-Failure-Predictor`  
@@ -13,7 +13,7 @@
 
 ## 1. Executive Summary & Initial Architecture Audit
 
-JETWISE AI has been extended with a fully integrated **Aerospace Engineering Copilot**. Aerospace engineers, propulsion analysts, and maintenance planners can now converse naturally with the platform in plain English to specify complex simulation scenarios, test prognostic model sensitivity, investigate engine anomalies, execute physical gas-path simulations, and view the results through synchronized engineering graphs, mathematical equations, and an interactive 3D turbofan digital twin.
+THRUSTLAB has been extended with a fully integrated **Aerospace Engineering Copilot**. Aerospace engineers, propulsion analysts, and maintenance planners can now converse naturally with the platform in plain English to specify complex simulation scenarios, test prognostic model sensitivity, investigate engine anomalies, execute physical gas-path simulations, and view the results through synchronized engineering graphs, mathematical equations, and an interactive 3D turbofan digital twin.
 
 This is not a decorative chatbot that merely generates text. It is an autonomous engineering control interface programmatically orchestrating the simulation engines, PyTorch deep learning models, Three.js WebGL digital twin, and SQLite databases.
 
@@ -75,7 +75,7 @@ Before implementation, an exhaustive audit was performed:
 | `tests/test_conversational_agent.py` | **Created** | Comprehensive test suite covering all 12 required workflows + deterministic reproducibility (13 tests). |
 | `run_copilot_playwright.py` | **Created** | Playwright E2E browser automation capturing 6 high-resolution screenshots. |
 | `PHASE_13_CONVERSATIONAL_COPILOT_GAP_ANALYSIS.md` | **Created** | Pre-implementation audit and architectural gap analysis. |
-| `JETWISE_AI_CONVERSATIONAL_ENGINEERING_AGENT_REPORT.md`| **Created** | Final comprehensive engineering report. |
+| `THRUSTLAB_AI_CONVERSATIONAL_ENGINEERING_AGENT_REPORT.md`| **Created** | Final comprehensive engineering report. |
 
 ---
 

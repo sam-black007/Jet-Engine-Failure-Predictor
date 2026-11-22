@@ -1,4 +1,4 @@
-"""JETWISE AI — Experiment Centre (Streamlit Dashboard).
+"""THRUSTLAB — Experiment Centre (Streamlit Dashboard).
 
 Direct interface to persistent SQLite experiment database:
 - Filter, sort, and inspect historical training runs
@@ -15,12 +15,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 from src.experiment_tracker import ExperimentTracker
 
 st.set_page_config(
-    page_title="JETWISE AI — Experiment Centre",
+    page_title="THRUSTLAB — Experiment Centre",
     page_icon="🔬",
     layout="wide"
 )
 
-st.title("🔬 JETWISE AI — Experiment Management Centre")
+st.title("🔬 THRUSTLAB — Experiment Management Centre")
 st.markdown("Centralized audit trail of all model training runs, hyperparameters, and benchmarks.")
 
 tracker = ExperimentTracker()

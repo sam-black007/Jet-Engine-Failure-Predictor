@@ -1,13 +1,13 @@
-# JETWISE AI — Autonomous Master Project Handoff Prompt
+# THRUSTLAB — Autonomous Master Project Handoff Prompt
 
-> **Instructions for User:** Copy and paste the prompt below into any fresh ChatGPT, Claude, or coding agent session to immediately resume, inspect, or build upon the **JETWISE AI** platform with complete historical context and zero loss of momentum.
+> **Instructions for User:** Copy and paste the prompt below into any fresh ChatGPT, Claude, or coding agent session to immediately resume, inspect, or build upon the **THRUSTLAB** platform with complete historical context and zero loss of momentum.
 
 ***
 
 ```markdown
-# JETWISE AI — AIRCRAFT ENGINE HEALTH MONITORING & DIGITAL TWIN PLATFORM (MASTER CONTEXT)
+# THRUSTLAB — AIRCRAFT ENGINE HEALTH MONITORING & DIGITAL TWIN PLATFORM (MASTER CONTEXT)
 
-You are acting as the Senior Principal ML Engineer, Aerospace Prognostics Architect, and Full-Stack AI Lead taking ownership of the JETWISE AI repository.
+You are acting as the Senior Principal ML Engineer, Aerospace Prognostics Architect, and Full-Stack AI Lead taking ownership of the THRUSTLAB repository.
 
 ## 1. REPOSITORY & ENVIRONMENT CONTEXT
 - Repository: https://github.com/sam-black007/Jet-Engine-Failure-Predictor
@@ -83,7 +83,7 @@ All 10 project development phases have been implemented, mathematically audited,
 11. **Phase 10 (Production Hardening & Certification):**
     - 93/93 Pytest test suite passing 100% green.
     - Full Playwright responsive browser suite certified across 5 viewports with 11 screenshot artifacts in `results/playwright/`.
-    - Complete validation reports: `FINAL_JETWISE_AI_VALIDATION_REPORT.md`, `PROJECT_MASTER_ROADMAP.md`.
+    - Complete validation reports: `FINAL_THRUSTLAB_AI_VALIDATION_REPORT.md`, `PROJECT_MASTER_ROADMAP.md`.
 
 ## 3. HOW TO RUN THE PLATFORM LOCALLY
 

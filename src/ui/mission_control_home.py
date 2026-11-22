@@ -1,4 +1,4 @@
-"""JETWISE AI — Mission Control (Home Hub).
+"""THRUSTLAB — Mission Control (Home Hub).
 
 Implements Section 2.2 Hub 1 and Section 4 requirements:
 Platform overview, active engine health summary, system readiness indicators (MATLAB, AI, DB),
@@ -30,7 +30,7 @@ def render_mission_control_home(switch_hub_callback):
                     Flight Prognostics & Digital Twin OS v3.4.0
                 </span>
                 <h2 style="color: #F8FAFC; margin: 8px 0 4px 0; font-size: 26px; font-weight: 800;">
-                    ✈️ JETWISE AI — Mission Control
+                    ✈️ THRUSTLAB — Mission Control
                 </h2>
                 <p style="color: #94A3B8; margin: 0; font-size: 14px; max-width: 820px; line-height: 1.5;">
                     Autonomous Aircraft Engine Health Monitoring, Conversational Aerothermal Simulation & Predictive Maintenance Platform.
@@ -174,7 +174,7 @@ def render_mission_control_home(switch_hub_callback):
 
     with wiz_col1:
         st.markdown("### 🧭 First-Time Guided Setup Wizard")
-        st.caption("New to JETWISE AI? Follow this 9-step guided walkthrough to verify your environment and launch your first simulation.")
+        st.caption("New to THRUSTLAB? Follow this 9-step guided walkthrough to verify your environment and launch your first simulation.")
 
         wizard_steps = [
             ("Step 1: Check Application Readiness", "Verifies Python 3.11, PyTorch 2.2, NumPy 1.26, and SQLite database connectivity.", True),

@@ -1,4 +1,4 @@
-"""Playwright E2E Browser Automation for JETWISE AI — Aerospace Engineering Copilot.
+"""Playwright E2E Browser Automation for THRUSTLAB — Aerospace Engineering Copilot.
 
 Visits the Copilot console, clicks engineering commands, executes simulation,
 and captures high-resolution screenshots into results/playwright/.

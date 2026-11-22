@@ -1,4 +1,4 @@
-"""Persistent Experiment Tracker for Jet Engine Failure Predictor (JETWISE AI Phase 2).
+"""Persistent Experiment Tracker for Jet Engine Failure Predictor (THRUSTLAB Phase 2).
 
 Provides an SQLite-backed experiment repository recording full reproducibility metadata,
 validation metrics, official test benchmarks, checkpoint paths, and configuration snapshots.

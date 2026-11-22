@@ -1,4 +1,4 @@
-"""JETWISE AI — Model Comparison & Benchmark Suite (Streamlit Dashboard).
+"""THRUSTLAB — Model Comparison & Benchmark Suite (Streamlit Dashboard).
 
 Interactive visual comparison of all evaluated architectures across:
 - Official NASA FD001 100-engine test benchmark
@@ -17,12 +17,12 @@ import plotly.graph_objects as go
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 st.set_page_config(
-    page_title="JETWISE AI — Model Comparison",
+    page_title="THRUSTLAB — Model Comparison",
     page_icon="📊",
     layout="wide"
 )
 
-st.title("📊 JETWISE AI — Architecture Benchmark & Comparison")
+st.title("📊 THRUSTLAB — Architecture Benchmark & Comparison")
 st.markdown("Rigorous empirical evaluation on the official **NASA C-MAPSS FD001 test set (100 engines)**.")
 
 # Load Phase 2 comparison CSV if available

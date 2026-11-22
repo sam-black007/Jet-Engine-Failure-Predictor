@@ -1,15 +1,15 @@
-# MATLAB & Simulink Setup Guide for JETWISE AI
-### Connecting MATLAB Student Version to the JETWISE AI Intelligence Platform
+# MATLAB & Simulink Setup Guide for THRUSTLAB
+### Connecting MATLAB Student Version to the THRUSTLAB Intelligence Platform
 
 ---
 
 ## 1. Overview & Compatibility
 
-**JETWISE AI** integrates mathematical gas path aerothermodynamic simulations executed in MathWorks **MATLAB & Simulink** with deep learning Remaining Useful Life (RUL) prognostics and an interactive 3D digital twin.
+**THRUSTLAB** integrates mathematical gas path aerothermodynamic simulations executed in MathWorks **MATLAB & Simulink** with deep learning Remaining Useful Life (RUL) prognostics and an interactive 3D digital twin.
 
 ### System Compatibility Matrix
 - **Operating System:** Windows 10 / 11 (64-bit)
-- **Active JETWISE AI Python Runtime:** `Python 3.11.9` (64-bit)
+- **Active THRUSTLAB Python Runtime:** `Python 3.11.9` (64-bit)
 - **Recommended MATLAB Releases:**
   - **MATLAB R2024b:** Fully certified with Python 3.11 & 3.12
   - **MATLAB R2024a:** Fully certified with Python 3.11
@@ -33,7 +33,7 @@ For full physical fidelity, ensure your MATLAB Student Version includes:
 
 ## 3. Step 1: Add MATLAB Executable to Windows System PATH
 
-To allow JETWISE AI to auto-detect and run MATLAB in headless batch mode:
+To allow THRUSTLAB to auto-detect and run MATLAB in headless batch mode:
 
 1. Locate your MATLAB installation `bin` directory. Common paths:
    - `C:\Program Files\MATLAB\R2024a\bin`
@@ -72,9 +72,9 @@ The `matlab.engine` package enables direct in-memory communication between Pytho
 
 ---
 
-## 5. Step 3: Verify Turbofan Models in JETWISE AI
+## 5. Step 3: Verify Turbofan Models in THRUSTLAB
 
-JETWISE AI contains authentic simulation scripts in `matlab_models/`:
+THRUSTLAB contains authentic simulation scripts in `matlab_models/`:
 - `matlab_models/scripts/run_turbofan_simulation.m`: Full Brayton cycle gas-path physics script modeling 9 subsystems (Fan, LPC, HPC, Combustor, HPT, LPT, Nozzle, LP Shaft, HP Shaft).
 - `matlab_models/models/create_turbofan_slx.m`: Programmatic builder for `turbofan_engine_model.slx`.
 - `matlab_models/configuration/default_parameters.json`: Nominal operating points and boundaries.
@@ -88,9 +88,9 @@ Verify that `simulation_result.json` is generated with complete steady-state and
 
 ---
 
-## 6. Step 4: Launch the JETWISE AI Simulation Centre
+## 6. Step 4: Launch the THRUSTLAB Simulation Centre
 
-Start the JETWISE AI application:
+Start the THRUSTLAB application:
 ```powershell
 cd "c:\Users\samjo\Downloads\simulation\Jet-Engine-Failure-Predictor"
 python -m streamlit run dashboard/app.py
@@ -107,7 +107,7 @@ python -m streamlit run dashboard/app.py
 ## 7. Troubleshooting & FAQ
 
 ### Q1: The dashboard shows `OFFLINE_NOT_INSTALLED`. Will the app crash?
-**No.** JETWISE AI is designed with graceful scientific degradation. When MATLAB is offline, it activates the certified internal Python Aerothermal Gas Path Physics Engine (based on NASA Brayton cycle thermodynamic relations) and clearly labels all data sources. No crashes occur and zero fake data is generated.
+**No.** THRUSTLAB is designed with graceful scientific degradation. When MATLAB is offline, it activates the certified internal Python Aerothermal Gas Path Physics Engine (based on NASA Brayton cycle thermodynamic relations) and clearly labels all data sources. No crashes occur and zero fake data is generated.
 
 ### Q2: `ModuleNotFoundError: No module named 'matlab'`
 This means the MATLAB Engine Python package is not yet installed in your active Python environment. Follow **Step 2** above to run `python -m pip install .` inside `extern\engines\python`.

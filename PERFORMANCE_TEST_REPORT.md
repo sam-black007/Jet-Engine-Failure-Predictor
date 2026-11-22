@@ -1,4 +1,4 @@
-# JETWISE AI: SYSTEM PERFORMANCE, LATENCY & RESOURCE PROFILING REPORT
+# THRUSTLAB: SYSTEM PERFORMANCE, LATENCY & RESOURCE PROFILING REPORT
 
 **Document ID:** JW-PRF-2026-V3  
 **Status:** VERIFIED & MEASURED  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-This report documents measured performance benchmarks for data loading, memory footprint, single-sequence inference latency, and batch throughput across all supported datasets and neural architectures in JETWISE AI.
+This report documents measured performance benchmarks for data loading, memory footprint, single-sequence inference latency, and batch throughput across all supported datasets and neural architectures in THRUSTLAB.
 
 All figures presented below are empirically measured using `src/benchmark_performance.py` over 200 consecutive inference runs and serialized to `results/performance_benchmark.json`.
 

@@ -1,4 +1,4 @@
-# JETWISE AI — Phase 8 Industrial Dark-Mode Dashboard & 3D Digital Twin Report
+# THRUSTLAB — Phase 8 Industrial Dark-Mode Dashboard & 3D Digital Twin Report
 
 **Author:** Antigravity Senior ML & Full-Stack AI Architect  
 **Date:** November 22, 2026  
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-Phase 8 elevates the JETWISE AI user experience into an industrial SCADA-grade dark-mode operations center.
+Phase 8 elevates the THRUSTLAB user experience into an industrial SCADA-grade dark-mode operations center.
 
 The interface incorporates high-contrast aerospace design tokens:
 - **Canvas / Root Background**: `#0B0F14`

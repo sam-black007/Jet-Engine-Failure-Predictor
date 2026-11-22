@@ -1,10 +1,10 @@
-# JETWISE AI — PREDICTIVE MAINTENANCE INTELLIGENCE ENGINE
+# THRUSTLAB — PREDICTIVE MAINTENANCE INTELLIGENCE ENGINE
 ## IMPLEMENTATION & VERIFICATION REPORT
 
 **Feature:** Mandatory Intelligence Feature 2 — Advanced Predictive Maintenance Intelligence Engine  
 **Repository:** `Jet-Engine-Failure-Predictor`  
 **Status:** FULLY IMPLEMENTED, INTEGRATED & VERIFIED  
-**Authors:** JETWISE AI Architecture & Engineering Team  
+**Authors:** THRUSTLAB Architecture & Engineering Team  
 **Date:** November 22, 2026  
 
 ---
@@ -24,7 +24,7 @@ Rather than providing isolated numerical RUL outputs, the engine integrates:
 
 ```
 +-----------------------------------------------------------------------------------------+
-|                    JETWISE AI PREDICTIVE MAINTENANCE PIPELINE                           |
+|                    THRUSTLAB PREDICTIVE MAINTENANCE PIPELINE                           |
 +-----------------------------------------------------------------------------------------+
 |                                                                                         |
 |  [Predicted RUL]       [Uncertainty Std]      [Anomaly Score]   [Degradation]  [Sensor] |
@@ -184,7 +184,7 @@ The dashboard Tab 7 Subtab 4 automatically aggregates and ranks all active fleet
 - Highlights highest-urgency units at the top of the queue.
 - Computes fleet-wide counts: Critical, Warning, Monitor, and Healthy.
 - Enables single-click work order dispatch and engineer assignment.
-- Exports full work order logs to CSV (`JETWISE_Work_Orders.csv`).
+- Exports full work order logs to CSV (`THRUSTLAB_Work_Orders.csv`).
 
 ---
 

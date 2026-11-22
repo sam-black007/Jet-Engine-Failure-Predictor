@@ -1,4 +1,4 @@
-# Project Status Tracker: Jet Engine Failure Predictor (JETWISE AI)
+# Project Status Tracker: Jet Engine Failure Predictor (THRUSTLAB)
 
 ## Phase 0: Baseline & Evaluation Audit
 - [x] Project directory created & structured

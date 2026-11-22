@@ -1,4 +1,4 @@
-# THRUSTLAB: An Integrated AI-Driven and Physics-Informed Digital Twin Framework for Turbofan Engine Prognostics and Health ManagementJETWISE AI: An Open-Architecture Cyber-Physical Digital Twin & Multi-Scale Prognostics Platform for Commercial Turbofan Engines
+# THRUSTLAB: An Integrated AI-Driven and Physics-Informed Digital Twin Framework for Turbofan Engine Prognostics and Health ManagementTHRUSTLAB: An Open-Architecture Cyber-Physical Digital Twin & Multi-Scale Prognostics Platform for Commercial Turbofan Engines
 
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![PyTorch 2.4](https://img.shields.io/badge/PyTorch-2.4-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
@@ -14,12 +14,12 @@
 
 Predictive maintenance (PdM) and Prognostics and Health Management (PHM) of commercial high-bypass turbofan engines demand a rigorous convergence of machine learning, physical domain modeling, and real-time supervisory control. Traditional data-driven approaches often operate as "black boxes," lacking thermodynamic explainability, while standalone aerothermal simulations fail to dynamically adapt to fleet degradation trajectories observed across operational flight cycles.
 
-**JETWISE AI** addresses this paradigm by establishing a modular, research-standard cyber-physical digital twin architecture. It bridges deep learning sequence regressors (Bidirectional LSTM, Temporal Multi-Head Transformers, 1D-CNNs) trained on NASA C-MAPSS benchmarks with high-fidelity physical aerothermodynamics executed via **MathWorks MATLAB R2026b / Simulink** and an internal certified NASA Brayton-cycle transient engine. The system incorporates an autonomous prompt-driven **Aerospace Engineering Copilot** with multi-provider NLU, split conformal prediction coverage guarantees ($1 - \alpha \ge 90\%$), sensor Fault Detection, Isolation, and Recovery (FDIR), non-parametric survival analysis, and multi-engine configuration libraries. This repository serves as an open, verifiable reference standard for international aerospace researchers and systems engineers.
+**THRUSTLAB** addresses this paradigm by establishing a modular, research-standard cyber-physical digital twin architecture. It bridges deep learning sequence regressors (Bidirectional LSTM, Temporal Multi-Head Transformers, 1D-CNNs) trained on NASA C-MAPSS benchmarks with high-fidelity physical aerothermodynamics executed via **MathWorks MATLAB R2026b / Simulink** and an internal certified NASA Brayton-cycle transient engine. The system incorporates an autonomous prompt-driven **Aerospace Engineering Copilot** with multi-provider NLU, split conformal prediction coverage guarantees ($1 - \alpha \ge 90\%$), sensor Fault Detection, Isolation, and Recovery (FDIR), non-parametric survival analysis, and multi-engine configuration libraries. This repository serves as an open, verifiable reference standard for international aerospace researchers and systems engineers.
 
 ---
 
 ![Dashboard Overview](assets/dashboard_main_overview.png)
-*Figure 1: JETWISE AI Enterprise SCADA Overview showing fleet health metrics, real-time RUL estimation, sensor telemetry streams, and degradation tracking.*
+*Figure 1: THRUSTLAB Enterprise SCADA Overview showing fleet health metrics, real-time RUL estimation, sensor telemetry streams, and degradation tracking.*
 
 ---
 
@@ -47,7 +47,7 @@ Predictive maintenance (PdM) and Prognostics and Health Management (PHM) of comm
 
 ## 1. Flow Orchestra Workflow & System Architecture
 
-The core of JETWISE AI is the **Flow Orchestra Engine**—an event-driven, closed-loop orchestrator that synchronizes natural-language engineering directives, physical aerothermal solvers, deep-learning sequence inference, and real-time visualization.
+The core of THRUSTLAB is the **Flow Orchestra Engine**—an event-driven, closed-loop orchestrator that synchronizes natural-language engineering directives, physical aerothermal solvers, deep-learning sequence inference, and real-time visualization.
 
 ```mermaid
 flowchart TD
@@ -175,7 +175,7 @@ Setting $q = 0.35$ enforces conservative lower-quantile trajectory estimation.
 
 ### 2.4. Split Conformal Uncertainty Calibration
 
-To provide finite-sample, distribution-free coverage guarantees without Gaussian assumptions, JETWISE AI applies **Inductive Split Conformal Prediction**:
+To provide finite-sample, distribution-free coverage guarantees without Gaussian assumptions, THRUSTLAB applies **Inductive Split Conformal Prediction**:
 
 1. Partition training data into proper train set $\mathcal{D}_{\text{train}}$ and calibration set $\mathcal{D}_{\text{cal}} = \{(\mathbf{x}_j, y_j)\}_{j=1}^{n}$.
 2. Train model $\hat{f}$ on $\mathcal{D}_{\text{train}}$. Compute non-conformity scores on calibration set:
@@ -202,7 +202,7 @@ $$R(t) = \exp\left[-\left(\frac{t}{\eta}\right)^\beta\right], \quad \lambda(t) =
 
 ## 3. MathWorks MATLAB & Simulink Cyber-Physical Integration
 
-JETWISE AI integrates directly with **MathWorks MATLAB R2026b** installed on the host system to execute differential gas-path equations natively.
+THRUSTLAB integrates directly with **MathWorks MATLAB R2026b** installed on the host system to execute differential gas-path equations natively.
 
 ![MATLAB Environment Audit](assets/matlab_audit_verified_green.png)
 *Figure 2: Verified MathWorks MATLAB R2026b host environment audit displaying 100% operational availability across 12 aerospace toolboxes, Python Engine API, and batch execution.*
@@ -213,7 +213,7 @@ JETWISE AI integrates directly with **MathWorks MATLAB R2026b** installed on the
 
 The platform features an automated static and dynamic audit engine (`src/matlab_integration/matlab_detector.py`) that probes host registry, toolboxes, and licenses in $< 0.05$ seconds:
 
-| MathWorks Toolbox | Verified Status | Subsystem Functionality in JETWISE AI |
+| MathWorks Toolbox | Verified Status | Subsystem Functionality in THRUSTLAB |
 | :--- | :---: | :--- |
 | **MATLAB Core Engine** | 🟢 **AVAILABLE** | Mathematical vectorization, matrix decomposition, ODE solvers |
 | **Simulink Engine** | 🟢 **AVAILABLE** | Non-linear transient block-diagram solver & state-space spools |
@@ -282,7 +282,7 @@ The copilot categorizes queries into 7 formal engineering intents:
 
 ## 5. Multi-Engine Architectural Library
 
-Turbofan engines vary substantially across commercial aviation. JETWISE AI provides a decoupled **Multi-Engine Configuration Centre** (`src/ui/multi_engine_centre.py`) supporting diverse architectural layouts:
+Turbofan engines vary substantially across commercial aviation. THRUSTLAB provides a decoupled **Multi-Engine Configuration Centre** (`src/ui/multi_engine_centre.py`) supporting diverse architectural layouts:
 
 ![Multi-Engine Library](assets/multi_engine_library.png)
 *Figure 7: Multi-Engine Fleet Library cataloging commercial turbofan profiles across CFM, General Electric, Rolls-Royce, and Pratt & Whitney.*
@@ -396,7 +396,7 @@ MATLAB_EXECUTABLE_PATH=C:\Program Files\MATLAB\R2026b\bin\matlab.exe
 ### Step 5: Launch Dashboard
 ```bash
 # Windows 1-Click Launcher:
-run_jetwise.bat
+run_thrustlab.bat
 
 # Or manual execution:
 python -m streamlit run dashboard/app.py
@@ -412,19 +412,19 @@ pytest tests/ -v --cov=src --cov-report=term-missing
 
 ## 9. Citation & Standard Reference
 
-If you utilize JETWISE AI, its aerothermal models, prognostic neural architectures, or benchmark datasets in your research, please cite our standard reference:
+If you utilize THRUSTLAB, its aerothermal models, prognostic neural architectures, or benchmark datasets in your research, please cite our standard reference:
 
 ```bibtex
-@article{jetwise_ai_2026,
+@article{thrustlab_ai_2026,
   author    = {Joseph, Samuel and Contributors},
-  title     = {JETWISE AI: An Open-Architecture Cyber-Physical Digital Twin and Multi-Scale Prognostics Platform for Commercial Turbofan Engines},
+  title     = {THRUSTLAB: An Open-Architecture Cyber-Physical Digital Twin and Multi-Scale Prognostics Platform for Commercial Turbofan Engines},
   journal   = {IEEE Transactions on Aerospace and Electronic Systems},
   volume    = {62},
   number    = {4},
   pages     = {1--18},
   year      = {2026},
   publisher = {IEEE},
-  doi       = {10.1109/TAES.2026.jetwise.ai}
+  doi       = {10.1109/TAES.2026.thrustlab.ai}
 }
 ```
 

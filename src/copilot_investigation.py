@@ -1,4 +1,4 @@
-"""JETWISE AI — Autonomous Engineering Investigation & Multi-Scenario Comparison Engine.
+"""THRUSTLAB — Autonomous Engineering Investigation & Multi-Scenario Comparison Engine.
 
 Provides:
 1. Autonomous diagnostic investigation ("Investigate why this engine is showing abnormal temperature readings").

@@ -1,4 +1,4 @@
-"""JETWISE AI — MATLAB Process & Engine Session Manager.
+"""THRUSTLAB — MATLAB Process & Engine Session Manager.
 
 Manages the lifecycle of MATLAB execution environments, supporting both direct in-memory
 Python MATLAB Engine API sessions and headless CLI batch subprocess execution with

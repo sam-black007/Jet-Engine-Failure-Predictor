@@ -1,4 +1,4 @@
-"""JETWISE AI — Industrial Operations SCADA & Replay View.
+"""THRUSTLAB — Industrial Operations SCADA & Replay View.
 
 Consolidates the industrial SCADA dashboard tabs:
 - Tab 1: Sensor Trajectories
@@ -362,7 +362,7 @@ def render_operations_scada_view(ctx: Dict[str, Any]):
                     st.download_button(
                         "📥 Export Work Orders (.csv)",
                         data=csv_bytes,
-                        file_name=f"JETWISE_Work_Orders_{selected_dataset}.csv",
+                        file_name=f"THRUSTLAB_Work_Orders_{selected_dataset}.csv",
                         mime="text/csv"
                     )
                 else:
@@ -448,7 +448,7 @@ def render_operations_scada_view(ctx: Dict[str, Any]):
         now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
         report_text = f"""
 ================================================================================
-JETWISE AI // AIRCRAFT ENGINE HEALTH & PROGNOSTIC DIAGNOSTIC REPORT
+THRUSTLAB // AIRCRAFT ENGINE HEALTH & PROGNOSTIC DIAGNOSTIC REPORT
 Generated: {now_str}
 ================================================================================
 
@@ -477,7 +477,7 @@ Generated: {now_str}
         st.download_button(
             "📥 Download Diagnostic Dossier (.txt)",
             data=report_text,
-            file_name=f"JETWISE_Engine_{selected_engine}_Diagnostic.txt",
+            file_name=f"THRUSTLAB_Engine_{selected_engine}_Diagnostic.txt",
             mime="text/plain"
         )
 

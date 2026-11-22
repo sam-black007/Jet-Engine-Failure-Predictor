@@ -1,15 +1,15 @@
-# JETWISE AI — CONVERSATIONAL AEROSPACE COPILOT GAP ANALYSIS & ARCHITECTURAL AUDIT
+# THRUSTLAB — CONVERSATIONAL AEROSPACE COPILOT GAP ANALYSIS & ARCHITECTURAL AUDIT
 
 **Document ID:** JW-AUDIT-COPILOT-2026  
 **Date:** November 2026  
 **Author:** Senior Aerospace Simulation & AI Agent Engineering Swarm  
-**Platform:** JETWISE AI Enterprise Turbofan Prognostics & Health Management  
+**Platform:** THRUSTLAB Enterprise Turbofan Prognostics & Health Management  
 
 ---
 
 ## 1. Executive Summary
 
-This audit evaluates the existing JETWISE AI architecture against the requirements for a fully integrated **Conversational Aerospace Engineering Agent ("Aerospace Engineering Copilot")**. 
+This audit evaluates the existing THRUSTLAB architecture against the requirements for a fully integrated **Conversational Aerospace Engineering Agent ("Aerospace Engineering Copilot")**. 
 
 The goal is to enable bidirectional natural language communication between aerospace engineers and the simulation/AI platform—translating instructions such as *"Increase turbine temperature by 5% and reduce compressor pressure by 3%"* into structured engineering scenarios, executing AI what-if simulations, physics simulations (MATLAB/Simulink or certified Python aerothermal gas path physics), updating the 3D Digital Twin, running verification diagnostics, and explaining findings.
 
@@ -42,7 +42,7 @@ The goal is to enable bidirectional natural language communication between aeros
 - **Architectural Policy:**
   In strict adherence to project instructions:
   > *"The core Python application must remain usable when MATLAB is unavailable. Provide an explicit unavailable/failed simulation status rather than fabricating results. Never fabricate MATLAB results if MATLAB is unavailable."*
-  JETWISE AI will explicitly report MATLAB simulation status as `OFFLINE_NOT_INSTALLED`, display clear instructions on how to link MATLAB once installed, and route physical simulation queries to the certified internal Python Brayton aerothermal physics engine with prominent labeling:
+  THRUSTLAB will explicitly report MATLAB simulation status as `OFFLINE_NOT_INSTALLED`, display clear instructions on how to link MATLAB once installed, and route physical simulation queries to the certified internal Python Brayton aerothermal physics engine with prominent labeling:
   `Source: Internal Aerothermal Gas Path Physics Model (MATLAB Engine Offline)`.
 
 ---
@@ -57,4 +57,4 @@ The goal is to enable bidirectional natural language communication between aeros
 6. **Phase 13.6:** `src/digital_twin.py` (Enhancement) — Dynamic Visual State Tagging (`MODIFIED`, `WARNING`, etc.) & Before/After Comparison.
 7. **Phase 13.7:** `src/ui/copilot_workspace.py` & `dashboard/pages/10_Aerospace_Engineering_Copilot.py` — Streamlit 3-Column Engineering Copilot Interface.
 8. **Phase 13.8:** Verification Test Suites: `tests/test_conversational_agent.py` & Playwright E2E automation.
-9. **Phase 13.9:** Final Certification Report: `JETWISE_AI_CONVERSATIONAL_ENGINEERING_AGENT_REPORT.md`.
+9. **Phase 13.9:** Final Certification Report: `THRUSTLAB_AI_CONVERSATIONAL_ENGINEERING_AGENT_REPORT.md`.

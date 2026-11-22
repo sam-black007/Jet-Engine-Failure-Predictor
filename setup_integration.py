@@ -1,4 +1,4 @@
-"""JETWISE AI — Automated Aerospace Simulation & Multi-AI Setup Wizard.
+"""THRUSTLAB — Automated Aerospace Simulation & Multi-AI Setup Wizard.
 
 Automates the configuration, verification, and diagnosis of:
 1. Python 3.11 environment and required machine learning packages
@@ -29,7 +29,7 @@ from src.matlab_integration.matlab_engine_manager import MATLABEngineManager
 
 def print_banner():
     print("=" * 75)
-    print("   ✈️  JETWISE AI — AEROSPACE SIMULATION & MULTI-AI SETUP WIZARD")
+    print("   ✈️  THRUSTLAB — AEROSPACE SIMULATION & MULTI-AI SETUP WIZARD")
     print("=" * 75)
     print("Autonomous Propulsion Health Monitoring, Digital Twin & Predictive Maintenance")
     print("-" * 75)
@@ -72,7 +72,7 @@ def audit_matlab_environment():
         print(f"      Simulink:      {report.get('simulink_status')}")
     else:
         print("      MATLAB desktop executable was not found on standard system PATH.")
-        print("      ℹ️  Note: JETWISE AI's certified aerothermal physics engine is active as default.")
+        print("      ℹ️  Note: THRUSTLAB's certified aerothermal physics engine is active as default.")
 
     return report
 
@@ -144,14 +144,14 @@ def main():
     twin_ok = verify_digital_twin_readiness()
 
     print("\n" + "=" * 75)
-    print("   🚀 JETWISE AI SETUP VERIFICATION SUMMARY")
+    print("   🚀 THRUSTLAB SETUP VERIFICATION SUMMARY")
     print("=" * 75)
     print(f"   Python Environment:         {'PASS ✅' if py_ok else 'WARNING ⚠️'}")
     print(f"   MATLAB Formal Status:       {matlab_report.get('formal_status')}")
     print(f"   Calculation Benchmark:      {'PASS ✅' if calc_ok else 'FAIL ❌'}")
     print(f"   Digital Twin Subassemblies: {'PASS ✅ (10/10)' if twin_ok else 'FAIL ❌'}")
     print("=" * 75)
-    print("\nTo start the JETWISE AI Dashboard:")
+    print("\nTo start the THRUSTLAB Dashboard:")
     print("   streamlit run dashboard/app.py\n")
 
 

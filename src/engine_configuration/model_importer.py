@@ -1,7 +1,7 @@
-"""JETWISE AI — Engine Model Import & Adapter Layer.
+"""THRUSTLAB — Engine Model Import & Adapter Layer.
 
 Validates and adapts imported aerospace models (MATLAB .m, Simulink .slx, FMU/FMI, Python .py,
-CSV telemetry, MAT files, and JSON configurations) into the unified JETWISE AI simulation interface.
+CSV telemetry, MAT files, and JSON configurations) into the unified THRUSTLAB simulation interface.
 """
 
 from typing import Dict, List, Any, Optional, Tuple

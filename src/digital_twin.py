@@ -1,4 +1,4 @@
-"""Interactive 3D Digital Twin Component for Turbofan Jet Engine (JETWISE AI).
+"""Interactive 3D Digital Twin Component for Turbofan Jet Engine (THRUSTLAB).
 
 Feature 1 Implementation:
 Represents all 9 core turbofan subassemblies:
@@ -325,7 +325,7 @@ def generate_turbofan_3d_figure(
     ))
 
     # Layout configuration
-    view_title = f"JETWISE AI Turbofan Twin // State: {health_state} | RUL: {predicted_rul:.1f} Cycles"
+    view_title = f"THRUSTLAB Turbofan Twin // State: {health_state} | RUL: {predicted_rul:.1f} Cycles"
     if exploded_fraction > 0.05:
         view_title += f" [Exploded View: {int(exploded_fraction*100)}%]"
 

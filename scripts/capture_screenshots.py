@@ -1,4 +1,4 @@
-"""Script to capture verification screenshots of the upgraded JETWISE AI platform."""
+"""Script to capture verification screenshots of the upgraded THRUSTLAB platform."""
 
 import os
 import pathlib

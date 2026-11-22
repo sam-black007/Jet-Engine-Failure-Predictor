@@ -1,4 +1,4 @@
-"""Unit and data leakage tests for Configurable Data Pipeline (JETWISE AI Phase 2)."""
+"""Unit and data leakage tests for Configurable Data Pipeline (THRUSTLAB Phase 2)."""
 
 import pytest
 import numpy as np

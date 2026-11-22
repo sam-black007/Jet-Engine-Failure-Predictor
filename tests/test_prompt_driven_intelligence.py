@@ -1,4 +1,4 @@
-"""JETWISE AI — Comprehensive Prompt-Driven Aerospace Engineering Intelligence Test Suite.
+"""THRUSTLAB — Comprehensive Prompt-Driven Aerospace Engineering Intelligence Test Suite.
 
 Validates the complete 16-point prompt-driven engineering intelligence requirements:
 1. Natural language command interpretation across all mandated prompts
@@ -312,7 +312,7 @@ class TestEngineeringReportGeneration:
         # 1. Markdown Report (17 sections)
         md = rep.generate_markdown_report()
         assert len(md) > 5000
-        assert "# JETWISE AI — AEROSPACE ENGINEERING SIMULATION REPORT" in md
+        assert "# THRUSTLAB — AEROSPACE ENGINEERING SIMULATION REPORT" in md
         assert "1. Executive Summary" in md
         assert "4. Key Aerothermal & Prognostic Metrics" in md
         assert "5. Health & Risk Scores Decomposition" in md
@@ -325,7 +325,7 @@ class TestEngineeringReportGeneration:
         # 2. HTML Printable Report
         html = rep.generate_html_report()
         assert "<!DOCTYPE html>" in html
-        assert "<title>JETWISE AI Engineering Report" in html
+        assert "<title>THRUSTLAB Engineering Report" in html
         assert "Subassembly Health & Prognostic Status" in html
         assert "AUTOMATED VERIFICATION SIGN-OFF" in html
 

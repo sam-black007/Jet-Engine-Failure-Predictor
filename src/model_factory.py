@@ -1,4 +1,4 @@
-"""Unified Model Factory for Jet Engine Failure Predictor (JETWISE AI Phase 2).
+"""Unified Model Factory for Jet Engine Failure Predictor (THRUSTLAB Phase 2).
 
 Provides a single factory interface to instantiate, configure, and inspect any
 supported prognostic model (Deep Learning or Classical ML) via ModelConfig.

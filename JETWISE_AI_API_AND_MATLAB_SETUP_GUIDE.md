@@ -1,18 +1,18 @@
-# JETWISE AI — API & MATLAB Environment Setup Guide
+# THRUSTLAB — API & MATLAB Environment Setup Guide
 
 ## Overview
 
-This guide details the procedure for configuring API providers (Google Gemini, Hugging Face, OpenAI) and linking MathWorks MATLAB / Simulink (Student Version or Campus License) to the **JETWISE AI — Propulsion Health Monitoring & Aerospace Simulation Platform**.
+This guide details the procedure for configuring API providers (Google Gemini, Hugging Face, OpenAI) and linking MathWorks MATLAB / Simulink (Student Version or Campus License) to the **THRUSTLAB — Propulsion Health Monitoring & Aerospace Simulation Platform**.
 
 ---
 
 ## 1. Zero-Credential Leakage Architecture
 
-JETWISE AI enforces strict aerospace security controls:
+THRUSTLAB enforces strict aerospace security controls:
 - **No Raw Secrets in Logs or UI**: Keys are always masked in UI representations (`AIzaSy••••••••1B7c`).
 - **Backend-Only Access**: Credentials are never dispatched to client-side browsers, web storage, or unencrypted cookies.
 - **Git Protection**: `.env`, `.env.*`, `credentials.json`, `*.pem`, `*.key` are guarded by `.gitignore`.
-- **Autonomous Fallback**: If an external AI provider is unreachable, exhausted, or missing credentials, JETWISE AI routes queries directly through the built-in deterministic Aerospace NLU engine.
+- **Autonomous Fallback**: If an external AI provider is unreachable, exhausted, or missing credentials, THRUSTLAB routes queries directly through the built-in deterministic Aerospace NLU engine.
 
 ---
 
@@ -20,7 +20,7 @@ JETWISE AI enforces strict aerospace security controls:
 
 ### A. Google Gemini (Recommended Primary NLU)
 1. Navigate to [Google AI Studio](https://aistudio.google.com/) and generate an API key.
-2. Open JETWISE AI Dashboard and navigate to **🔐 API Configuration Centre** (`pages/13_API_Configuration_Centre.py`).
+2. Open THRUSTLAB Dashboard and navigate to **🔐 API Configuration Centre** (`pages/13_API_Configuration_Centre.py`).
 3. Select the **🤖 Google Gemini** tab.
 4. Paste your API key and click **Save & Test Connection**.
 5. Alternatively, add the key directly to your local `.env` file:
@@ -50,7 +50,7 @@ JETWISE AI enforces strict aerospace security controls:
 
 ## 3. MATLAB & Simulink Student Version Setup
 
-JETWISE AI distinguishes six formal MATLAB operational states:
+THRUSTLAB distinguishes six formal MATLAB operational states:
 1. `INSTALLED AND LICENSED`: MATLAB executable found, licensed, and callable.
 2. `INSTALLED BUT NOT LICENSED`: Executable present, but MathWorks license file expired or missing.
 3. `NOT INSTALLED`: Executable not detected on host.
@@ -58,7 +58,7 @@ JETWISE AI distinguishes six formal MATLAB operational states:
 5. `NOT VERIFIED`: Executable detected, pending execution benchmark.
 6. `INCOMPATIBLE`: Release/architecture mismatch with Python 3.11 64-bit.
 
-### Linking MATLAB to JETWISE AI
+### Linking MATLAB to THRUSTLAB
 1. Locate your MATLAB installation bin directory (e.g. `C:\Program Files\MATLAB\R2024a\bin\matlab.exe` or `D:\MATLAB\R2023b\bin\matlab.exe`).
 2. In the Dashboard, open **🎛️ MATLAB & Simulink Centre** -> **🖥️ Environment & Toolboxes**.
 3. Under **Connect Custom MATLAB Installation Path**, paste the path and click **🔗 Link & Verify**.

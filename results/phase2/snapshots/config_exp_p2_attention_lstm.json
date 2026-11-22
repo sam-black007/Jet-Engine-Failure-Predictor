@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "experiment_id": "exp_p2_attention_lstm",
   "profile_name": "attention_lstm_experiment",
-  "description": "JETWISE AI experiment configuration",
+  "description": "THRUSTLAB experiment configuration",
   "created_at": "2026-11-21T17:30:06.283873",
   "git_commit": "b675a59b5fc1bb481e425b0944a89b79913dee69",
   "dataset": {

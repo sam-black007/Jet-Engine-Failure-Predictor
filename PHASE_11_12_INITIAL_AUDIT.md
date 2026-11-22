@@ -1,4 +1,4 @@
-# JETWISE AI — PHASE 11 & PHASE 12 INITIAL TECHNICAL AUDIT
+# THRUSTLAB — PHASE 11 & PHASE 12 INITIAL TECHNICAL AUDIT
 ## Comprehensive Architectural Baseline, Gap Analysis & Roadmap
 
 **Date:** November 22, 2026  
@@ -11,7 +11,7 @@
 
 ## 1. EXECUTIVE AUDIT SUMMARY
 
-This audit establishes the baseline technical state of **JETWISE AI** prior to the implementation of **Phase 11 (Advanced Aerospace Intelligence Centre)** and **Phase 12 (Next-Generation Aerospace Research Intelligence)**.
+This audit establishes the baseline technical state of **THRUSTLAB** prior to the implementation of **Phase 11 (Advanced Aerospace Intelligence Centre)** and **Phase 12 (Next-Generation Aerospace Research Intelligence)**.
 
 The platform currently possesses a hardened core comprising:
 - Multi-dataset data adapters (`NASA C-MAPSS FD001–FD004`, `N-CMAPSS`).
@@ -147,5 +147,5 @@ Stage 10: Full-System Verification & Playwright Screen Capture
    |
    v
 Stage 11: Final Delivery & ChatGPT Handoff
-   - `JETWISE_AI_PHASE_11_12_COMPLETE_HANDOFF.md`
+   - `THRUSTLAB_AI_PHASE_11_12_COMPLETE_HANDOFF.md`
 ```

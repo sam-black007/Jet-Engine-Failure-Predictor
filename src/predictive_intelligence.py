@@ -1,4 +1,4 @@
-"""Predictive Maintenance Intelligence Engine (JETWISE AI Feature 2).
+"""Predictive Maintenance Intelligence Engine (THRUSTLAB Feature 2).
 
 Integrates:
 1. Epistemic & Aleatoric Uncertainty Estimation (MC Dropout & Prediction Intervals)

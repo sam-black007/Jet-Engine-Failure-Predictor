@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerospace Engineering Report Exporter (PDF, MAT, CSV, JSON, HTML).
+"""THRUSTLAB — Aerospace Engineering Report Exporter (PDF, MAT, CSV, JSON, HTML).
 
 Implements Section 13 requirements:
 Traceable 25-point aerospace engineering dossier with verified data provenance,
@@ -84,7 +84,7 @@ class AerospaceReportPackageExporter:
         story = []
 
         # Header Title Banner
-        story.append(Paragraph("JETWISE AI — AEROSPACE ENGINEERING SIMULATION DOSSIER", title_style))
+        story.append(Paragraph("THRUSTLAB — AEROSPACE ENGINEERING SIMULATION DOSSIER", title_style))
         story.append(Paragraph(f"<b>Dossier ID:</b> {self.report_id} | <b>Timestamp:</b> {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}", body_style))
         story.append(Paragraph("<b>Classification:</b> Proprietary Flight Safety & Predictive Maintenance Assessment", body_style))
         story.append(Spacer(1, 10))
@@ -178,7 +178,7 @@ class AerospaceReportPackageExporter:
         # 5. Engineering Sign-Off Block
         story.append(Paragraph("5. Engineering Provenance & Attestation", h2_style))
         sign_data = [
-            [Paragraph("<b>Lead Propulsion Analyst:</b> JETWISE AI Autonomous Kernel", body_style), Paragraph("<b>Signature / Hash:</b> <code>SHA256:8f2a...c719</code>", body_style)],
+            [Paragraph("<b>Lead Propulsion Analyst:</b> THRUSTLAB Autonomous Kernel", body_style), Paragraph("<b>Signature / Hash:</b> <code>SHA256:8f2a...c719</code>", body_style)],
             [Paragraph("<b>Reviewing Authority:</b> Digital Twin Diagnostics Desk", body_style), Paragraph(f"<b>Attestation Date:</b> {time.strftime('%Y-%m-%d', time.gmtime())}", body_style)]
         ]
         t_sign = Table(sign_data, colWidths=[270, 270])

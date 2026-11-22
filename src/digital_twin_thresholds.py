@@ -1,4 +1,4 @@
-"""JETWISE AI — Aerothermal & Mechanical Threshold Configuration System.
+"""THRUSTLAB — Aerothermal & Mechanical Threshold Configuration System.
 
 Enforces Phase 4F: Never hardcode universal limits.
 Provides documented operational and safety boundaries for temperatures, pressures,
