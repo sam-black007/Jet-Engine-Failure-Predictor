@@ -7,6 +7,7 @@ Provides:
 """
 
 from typing import Dict, Any, Optional, Tuple, List
+import os
 import subprocess
 import shutil
 import math
@@ -20,8 +21,18 @@ class MATLABSimulinkBridge:
     """Interface to MATLAB and Simulink physics simulation environments."""
 
     def __init__(self):
-        self.matlab_path = _INITIAL_SYSTEM_MATLAB
-        self.is_matlab_installed = self.matlab_path is not None
+        self.matlab_path = _INITIAL_SYSTEM_MATLAB or os.environ.get("MATLAB_EXECUTABLE_PATH")
+        if not self.matlab_path:
+            for candidate in [
+                r"E:\robotics\New folder (2)\bin\matlab.exe",
+                r"C:\Program Files\MATLAB\R2026b\bin\matlab.exe",
+                r"C:\Program Files\MATLAB\R2024b\bin\matlab.exe",
+                r"C:\Program Files\MATLAB\R2024a\bin\matlab.exe"
+            ]:
+                if os.path.exists(candidate):
+                    self.matlab_path = candidate
+                    break
+        self.is_matlab_installed = self.matlab_path is not None and os.path.exists(str(self.matlab_path))
         self.matlab_engine_available = False
         try:
             import matlab.engine

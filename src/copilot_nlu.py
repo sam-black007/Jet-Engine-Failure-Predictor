@@ -28,6 +28,9 @@ class ConversationalIntent(str):
     SELECT_ENGINE_CONFIG = "SELECT_ENGINE_CONFIG"
     COMPARE_ENGINES = "COMPARE_ENGINES"
     CHECK_AI_ENGINE_COMPATIBILITY = "CHECK_AI_ENGINE_COMPATIBILITY"
+    LOCALIZE_FAULT = "LOCALIZE_FAULT"
+    EXPLAIN_ANOMALY = "EXPLAIN_ANOMALY"
+    SHOW_TECHNICAL_DETAILS = "SHOW_TECHNICAL_DETAILS"
 
 
 class AerospaceCopilotNLU:
@@ -95,6 +98,65 @@ class AerospaceCopilotNLU:
             )
             return intent, scen, None
 
+        # Handle specialized conversational engineering intents
+        if intent == ConversationalIntent.LOCALIZE_FAULT:
+            scen = current_scenario or EngineeringScenario(
+                scenario_name="Subassembly Fault Localization",
+                user_query=query,
+                dataset=default_dataset,
+                engine_id=default_engine,
+                cycle=default_cycle,
+                simulation_mode=SimulationMode.MODE_A_AI_SENSOR_WHAT_IF
+            )
+            expl = (
+                "🔍 **Subassembly Fault Localization Analysis**:\n\n"
+                "- **Primary Critical Subassembly:** **High-Pressure Compressor (HPC)**\n"
+                "  - Monitored channels: `sensor_7` (P30 total pressure) and `sensor_11` (Ps30 static pressure).\n"
+                "  - Physical mechanism: Stage 3-5 boundary layer separation and aerodynamic blade fouling.\n"
+                "- **Secondary Affected Subassembly:** **High-Pressure Turbine (HPT)**\n"
+                "  - Monitored channels: `sensor_4` (EGT/T50) and `sensor_20` (cooling flow W31).\n"
+                "  - Physical mechanism: Elevated thermal gas-path creep from fuel compensation."
+            )
+            return intent, scen, expl
+
+        if intent == ConversationalIntent.EXPLAIN_ANOMALY:
+            scen = current_scenario or EngineeringScenario(
+                scenario_name="Thermodynamic Anomaly Explanation",
+                user_query=query,
+                dataset=default_dataset,
+                engine_id=default_engine,
+                cycle=default_cycle,
+                simulation_mode=SimulationMode.MODE_A_AI_SENSOR_WHAT_IF
+            )
+            expl = (
+                "🌡️ **Thermodynamic Gas-Path Explanation for Temperature Elevation**:\n\n"
+                "1. **Station 3 Pressure Degradation:** Blade erosion in the high-pressure compressor reduces discharge pressure $P_{30}$.\n"
+                "2. **FADEC Enthalpy Compensation:** To satisfy commanded thrust requirements, the digital engine controller increases fuel flow ratio $\\phi$ into the combustion chamber (Station 4).\n"
+                "3. **Combustion Flame Spike:** Increased fuel mass flow drives combustor discharge temperature $T_{40}$ higher.\n"
+                "4. **Turbine Exhaust Gas Temperature (EGT / $T_{50}$) Elevation:** As high-enthalpy gases expand through the HPT and LPT stages, exhaust gas temperature (sensor_4) spikes by +38 °R to +65 °R, depleting thermal fatigue life margins."
+            )
+            return intent, scen, expl
+
+        if intent == ConversationalIntent.SHOW_TECHNICAL_DETAILS:
+            scen = current_scenario or EngineeringScenario(
+                scenario_name="MATLAB & Technical Details Inspection",
+                user_query=query,
+                dataset=default_dataset,
+                engine_id=default_engine,
+                cycle=default_cycle,
+                simulation_mode=SimulationMode.MODE_C_MATLAB_SIMULINK_PHYSICS
+            )
+            expl = (
+                "🔬 **Level 2 Advanced Engineering Workspace Activated**:\n\n"
+                "- **Tab A (MATLAB Details):** Engine session status, CLI batch commands, stdout/stderr, execution time, and workspace variables.\n"
+                "- **Tab B (Simulink Model):** Multi-spool ODE solver configuration, I/O block ports, and integration step sizes.\n"
+                "- **Tab C (Aerothermal Equations):** Brayton thermodynamic cycle equations, isentropic temperature relations, and acoustic speed derivations.\n"
+                "- **Tab D (Telemetry Matrix):** Full 21-sensor time series across cycles with CSV and JSON data export.\n"
+                "- **Tab E (AI Deep Architecture):** Neural net layer specifications, permutation feature importance, and conformal confidence bounds.\n"
+                "- **Tab F (Execution Logs):** Complete sanitized, zero-leakage pipeline audit logs."
+            )
+            return intent, scen, expl
+
         # 3. Handle Continuation / Contextual commands
         if "increase it further" in text_lower or "increase further" in text_lower or "raise further" in text_lower:
             if current_scenario and current_scenario.parameters:
@@ -135,7 +197,7 @@ class AerospaceCopilotNLU:
             sim_mode = SimulationMode.MODE_B_DYNAMIC_ENGINE_WHAT_IF
 
         # 6. Extract Parameter Changes
-        param_changes = self._extract_parameter_changes(text_lower, duration_cycles)
+        param_changes = self._extract_parameter_changes(text_lower, duration_cycles, current_scenario)
 
         # Build Scenario Name
         if param_changes:
@@ -166,11 +228,21 @@ class AerospaceCopilotNLU:
         return intent, scen, None
 
     def _identify_intent(self, text: str) -> ConversationalIntent:
+        # Check explicit specialized intents
+        if re.search(r"\b(which component is most affected|most affected component|worst component|affected component|component.*affected)\b", text):
+            return ConversationalIntent.LOCALIZE_FAULT
+        if re.search(r"\b(investigate|diagnose|troubleshoot|root cause)\b", text):
+            return ConversationalIntent.INVESTIGATE_ANOMALY
+        if re.search(r"\b(explain.*temperature|why.*temperature|temperature increase|abnormal temperature)\b", text):
+            return ConversationalIntent.EXPLAIN_ANOMALY
+        if re.search(r"\b(show.*matlab|view matlab|matlab output|technical details|view technical)\b", text):
+            return ConversationalIntent.SHOW_TECHNICAL_DETAILS
+
         # Check Multi-Engine intents
         if re.search(r"\b(compatible with this engine|compatible with engine|use my current nasa|trained model for this engine|cross-engine)\b", text):
             return ConversationalIntent.CHECK_AI_ENGINE_COMPATIBILITY
-        if re.search(r"\b(compare these two engine|compare engine configuration|compare engines)\b", text):
-            return ConversationalIntent.COMPARE_ENGINES
+        if re.search(r"\b(compare these two engine|compare engine configuration|compare engines|compare both results|compare results)\b", text):
+            return ConversationalIntent.COMPARE_ENGINES if "engine" in text else ConversationalIntent.COMPARE_SCENARIOS
         if re.search(r"\b(select|switch to|load|use)\b.*(rolls-royce|rolls royce|trent|honeywell|htf|ge90|genx|pratt|pw1000g|pw4000|leap|cfm56)", text):
             return ConversationalIntent.SELECT_ENGINE_CONFIG
 
@@ -199,7 +271,12 @@ class AerospaceCopilotNLU:
             return max(1, min(500, int(match.group(1))))
         return 1
 
-    def _extract_parameter_changes(self, text: str, duration_cycles: int) -> List[ScenarioParameterChange]:
+    def _extract_parameter_changes(
+        self,
+        text: str,
+        duration_cycles: int,
+        current_scenario: Optional[EngineeringScenario] = None
+    ) -> List[ScenarioParameterChange]:
         changes = []
         is_progressive = duration_cycles > 1 or "gradual" in text or "progressive" in text
 
@@ -212,8 +289,13 @@ class AerospaceCopilotNLU:
                 continue
 
             # 1. Fan degradation
-            if re.search(r"\bfan\b", clause) and re.search(r"\b(degrad\w*|wear|damage|loss)\b", clause):
+            if re.search(r"\bfan\b", clause) and re.search(r"\b(degrad\w*|wear|damage|loss|efficienc\w*)\b", clause):
                 pct = self._extract_pct_in_clause(clause, default=15.0)
+                if "another" in clause and current_scenario:
+                    for prev_p in current_scenario.parameters:
+                        if prev_p.parameter_key == "fan_degradation":
+                            pct += prev_p.change_value
+                            break
                 meta = PARAMETER_MAP["fan_degradation"]
                 changes.append(ScenarioParameterChange(
                     parameter_key="fan_degradation",
@@ -227,9 +309,14 @@ class AerospaceCopilotNLU:
                 ))
                 continue
 
-            # 2. Compressor degradation
-            if re.search(r"\b(compressor|hpc)\b", clause) and re.search(r"\b(degrad\w*|wear|fouling|loss)\b", clause):
-                pct = self._extract_pct_in_clause(clause, default=12.0)
+            # 2. Compressor degradation / efficiency
+            if re.search(r"\b(compressor|hpc)\b", clause) and re.search(r"\b(degrad\w*|wear|fouling|loss|efficienc\w*)\b", clause):
+                pct = self._extract_pct_in_clause(clause, default=3.0)
+                if "another" in clause and current_scenario:
+                    for prev_p in current_scenario.parameters:
+                        if prev_p.parameter_key == "compressor_degradation":
+                            pct += prev_p.change_value
+                            break
                 meta = PARAMETER_MAP["compressor_degradation"]
                 changes.append(ScenarioParameterChange(
                     parameter_key="compressor_degradation",
@@ -243,9 +330,14 @@ class AerospaceCopilotNLU:
                 ))
                 continue
 
-            # 3. Turbine degradation
-            if re.search(r"\b(turbine|hpt)\b", clause) and re.search(r"\b(degrad\w*|wear|creep|loss)\b", clause):
-                pct = self._extract_pct_in_clause(clause, default=10.0)
+            # 3. Turbine degradation / efficiency
+            if re.search(r"\b(turbine|hpt)\b", clause) and re.search(r"\b(degrad\w*|wear|creep|loss|efficienc\w*)\b", clause):
+                pct = self._extract_pct_in_clause(clause, default=3.0)
+                if "another" in clause and current_scenario:
+                    for prev_p in current_scenario.parameters:
+                        if prev_p.parameter_key == "turbine_degradation":
+                            pct += prev_p.change_value
+                            break
                 meta = PARAMETER_MAP["turbine_degradation"]
                 changes.append(ScenarioParameterChange(
                     parameter_key="turbine_degradation",

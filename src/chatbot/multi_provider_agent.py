@@ -13,6 +13,7 @@ autonomous fallback if external APIs are unreachable or unconfigured.
 
 from typing import Dict, Any, List, Optional, Tuple
 from enum import Enum
+import os
 import json
 import re
 import time
@@ -112,27 +113,28 @@ class MultiProviderAerospaceAgent:
         status_map["google_gemini"] = {
             "name": "Google Gemini",
             "model": "gemini-1.5-flash",
-            "configured": gemini_info.is_configured,
-            "masked_key": gemini_info.masked_key,
-            "badge": "🤖 Gemini Active" if gemini_info.is_configured else "⚪ Unconfigured"
+            "configured": getattr(gemini_info, "is_configured", False),
+            "masked_key": getattr(gemini_info, "masked_key", "Not Set"),
+            "badge": "🤖 Gemini Active" if getattr(gemini_info, "is_configured", False) else "⚪ Unconfigured"
         }
-        # Hugging Face
-        hf_info = self.cred_mgr.get_provider_info("hugging_face")
+        # Hugging Face (supports both 'huggingface' and 'hugging_face')
+        hf_info = self.cred_mgr.get_provider_info("huggingface") or self.cred_mgr.get_provider_info("hugging_face")
         status_map["hugging_face"] = {
             "name": "Hugging Face Inference",
             "model": "mistralai/Mistral-7B-Instruct-v0.3",
-            "configured": hf_info.is_configured,
-            "masked_key": hf_info.masked_key,
-            "badge": "🤗 HF Active" if hf_info.is_configured else "⚪ Unconfigured"
+            "configured": getattr(hf_info, "is_configured", False),
+            "masked_key": getattr(hf_info, "masked_key", "Not Set"),
+            "badge": "🤗 HF Active" if getattr(hf_info, "is_configured", False) else "⚪ Unconfigured"
         }
+        status_map["huggingface"] = status_map["hugging_face"]
         # OpenAI
         openai_info = self.cred_mgr.get_provider_info("openai")
         status_map["openai"] = {
             "name": "OpenAI",
             "model": "gpt-4o-mini",
-            "configured": openai_info.is_configured,
-            "masked_key": openai_info.masked_key,
-            "badge": "⚡ OpenAI Active" if openai_info.is_configured else "⚪ Unconfigured"
+            "configured": getattr(openai_info, "is_configured", False),
+            "masked_key": getattr(openai_info, "masked_key", "Not Set"),
+            "badge": "⚡ OpenAI Active" if getattr(openai_info, "is_configured", False) else "⚪ Unconfigured"
         }
         # Local
         status_map["local_deterministic"] = {
@@ -252,7 +254,7 @@ class MultiProviderAerospaceAgent:
         for m_name in models_to_try:
             try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{m_name}:generateContent?key={api_key}"
-                res = requests.post(url, headers=headers, json=payload, timeout=12.0)
+                res = requests.post(url, headers=headers, json=payload, timeout=4.0)
                 if res.status_code == 200:
                     data = res.json()
                     cands = data.get("candidates", [])
@@ -262,8 +264,14 @@ class MultiProviderAerospaceAgent:
                             raw_text = parts[0].get("text", "")
                             chosen_model = m_name
                             break
+                elif res.status_code in [400, 401, 403, 404]:
+                    # Auth error or quota - stop trying models
+                    break
             except Exception:
                 continue
+
+        if not raw_text:
+            raise RuntimeError("Gemini endpoint unreachable or invalid response")
 
         return self._parse_llm_json_response(raw_text, query, dataset, engine, cycle, "Google Gemini", chosen_model)
 

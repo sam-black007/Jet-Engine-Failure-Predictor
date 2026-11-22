@@ -96,13 +96,13 @@ class CredentialManager:
         if provider_id in self._runtime_keys and self._runtime_keys[provider_id]:
             return self._runtime_keys[provider_id]
 
-        if provider_id == ProviderType.GEMINI.value:
+        if provider_id in [ProviderType.GEMINI.value, "GEMINI_API_KEY", "gemini", "google_gemini"]:
             return os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-        elif provider_id == ProviderType.HUGGINGFACE.value:
+        elif provider_id in [ProviderType.HUGGINGFACE.value, "HF_TOKEN", "huggingface"]:
             return os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
-        elif provider_id == ProviderType.OPENAI.value:
+        elif provider_id in [ProviderType.OPENAI.value, "OPENAI_API_KEY", "openai"]:
             return os.environ.get("OPENAI_API_KEY")
-        elif provider_id == ProviderType.MATLAB.value:
+        elif provider_id in [ProviderType.MATLAB.value, "MATLAB_EXECUTABLE_PATH", "matlab"]:
             return os.environ.get("MATLAB_EXECUTABLE_PATH")
         return None
 
