@@ -238,7 +238,12 @@ try
     fig_path = fullfile(res_dir, fig_name);
     saveas(hFig, fig_path);
     results.matlab_figure_path = fig_path;
-    close(hFig);
+    if usejava('desktop')
+        set(hFig, 'Visible', 'on');
+        drawnow;
+    else
+        close(hFig);
+    end
     fprintf('Exported authentic MATLAB scope figure to: %s\n', fig_path);
 catch ME
     fprintf('MATLAB figure export notice: %s\n', ME.message);

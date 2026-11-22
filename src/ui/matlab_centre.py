@@ -462,9 +462,11 @@ def render_matlab_centre():
                             break
                 if matlab_bin and os.path.exists(str(matlab_bin)):
                     script_file = PROJECT_ROOT / "matlab_models" / "scripts" / "run_turbofan_simulation.m"
-                    cmd = f'cd("{str(script_file.parent)}"); edit("{str(script_file.name)}"); run("{str(script_file.name)}");'
+                    script_parent = str(script_file.parent).replace('\\', '/')
+                    script_name = str(script_file.name)
+                    cmd = f"cd('{script_parent}'); edit('{script_name}'); run('{script_name}');"
                     subprocess.Popen([matlab_bin, "-desktop", "-r", cmd])
-                    st.success(f"🚀 Launching Native MATLAB Desktop! Opening turbofan simulation script and scope figures directly in MATLAB...")
+                    st.success("🚀 Launching Native MATLAB Desktop! Opening turbofan simulation script and scope figures directly in MATLAB...")
                 else:
                     st.warning("MATLAB desktop executable not found yet. Complete the MATLAB installer or link the custom path above.")
 
