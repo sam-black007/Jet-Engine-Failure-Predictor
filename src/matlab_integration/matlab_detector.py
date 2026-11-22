@@ -274,7 +274,7 @@ class MATLABDetector:
         try:
             import matlab.engine
             return True
-        except ImportError:
+        except Exception:
             return False
 
     def _probe_via_cli(self, matlab_exe: str) -> Dict[str, Any]:

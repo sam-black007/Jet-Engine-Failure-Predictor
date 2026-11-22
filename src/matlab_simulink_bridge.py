@@ -47,7 +47,7 @@ class MATLABSimulinkBridge:
         try:
             import matlab.engine
             self.matlab_engine_available = True
-        except ImportError:
+        except Exception:
             self.matlab_engine_available = False
 
     def get_status(self) -> Dict[str, Any]:
