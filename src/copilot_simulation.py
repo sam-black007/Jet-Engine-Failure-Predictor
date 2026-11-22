@@ -418,13 +418,22 @@ class CopilotSimulationEngine:
             {"name": "Simulation Engine Origin Check", "status": "PASS", "details": f"Source: {sim_out.get('simulation_source')}"}
         ]
 
+        _mstatus_raw = sim_out.get("matlab_status", "PHYSICS_ENGINE_ACTIVE")
+        _mstatus_human = {
+            "ONLINE": "MATLAB R2026b ONLINE",
+            "PHYSICS_ENGINE_ACTIVE": "Physics Engine Active (MATLAB launch deferred)",
+            "OFFLINE_NOT_INSTALLED": "MATLAB Offline — Physics Engine Active",
+            "NOT_USED": "Not applicable",
+            "MODEL_UNCONNECTED": "Catalogue profile — no simulation model connected",
+        }.get(_mstatus_raw, _mstatus_raw)
+
         explanation = (
             f"Physical aerothermodynamic simulation executed via {sim_out.get('simulation_source')}. "
             f"Simulated thermodynamic equilibrium: HPC PR = {steady.get('hpc_pressure_ratio', 23.5)}, "
             f"Polytropic Compression Efficiency η_poly = {steady.get('eta_poly', 0.91):.4f}, "
             f"Station 50 EGT = {steady.get('T50_R', 1405.0):.1f}°R. "
             f"Coupled aerothermal parameters altered model input, yielding RUL forecast of {mod_rul} cycles (Δ = {rul_delta:+.1f} cycles). "
-            f"MATLAB Status: {sim_out.get('matlab_status')}."
+            f"Simulation Status: {_mstatus_human}."
         )
 
         return ScenarioResult(

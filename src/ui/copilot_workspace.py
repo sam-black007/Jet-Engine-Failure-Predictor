@@ -194,11 +194,26 @@ def render_copilot_workspace():
             </div>
             """, unsafe_allow_html=True)
 
+            # Choose badge colour based on status value
+            _mstatus = r.matlab_status or "UNKNOWN"
+            _mcolor = (
+                "#10B981" if _mstatus == "ONLINE" else
+                "#F59E0B" if _mstatus in ("PHYSICS_ENGINE_ACTIVE", "OFFLINE_NOT_INSTALLED", "NOT_USED", "MODEL_UNCONNECTED") else
+                "#94A3B8"
+            )
+            _mlabel = {
+                "ONLINE": "✅ MATLAB ONLINE",
+                "PHYSICS_ENGINE_ACTIVE": "⚡ PHYSICS ENGINE ACTIVE",
+                "OFFLINE_NOT_INSTALLED": "🔌 MATLAB OFFLINE",
+                "NOT_USED": "— N/A",
+                "MODEL_UNCONNECTED": "📂 CATALOGUE PROFILE",
+            }.get(_mstatus, f"ℹ️ {_mstatus}")
             st.markdown(f"""
             <div style="background: #111827; border: 1px solid #1F2937; padding: 8px 12px; border-radius: 4px; margin-top: 8px; font-size: 11px;">
                 <span style="color: #94A3B8;">Simulation Engine:</span><br>
                 <b style="color: #00B8D9;">{r.simulation_source}</b><br>
-                <span style="color: #94A3B8;">Status:</span> <code>{r.matlab_status}</code>
+                <span style="color: #94A3B8;">Status:</span>
+                <span style="color: {_mcolor}; font-weight: bold;">{_mlabel}</span>
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -206,12 +221,17 @@ def render_copilot_workspace():
 
         st.markdown("---")
         matlab_status = sim_engine.matlab_bridge.get_status()
-        m_color = "#10B981" if matlab_status["is_installed"] else "#F59E0B"
+        _sc = matlab_status["status_code"]
+        m_color = "#10B981" if _sc == "ONLINE" else "#F59E0B"
+        _sc_label = {
+            "ONLINE": "✅ ONLINE",
+            "OFFLINE_NOT_INSTALLED": "🔌 OFFLINE — Physics Engine Active",
+        }.get(_sc, f"⚡ {_sc}")
         st.markdown(f"""
         <div style="background: #111827; border: 1px solid #1F2937; border-left: 4px solid {m_color}; padding: 8px 12px; border-radius: 4px; font-size: 11px;">
             <div style="display: flex; justify-content: space-between;">
                 <b style="color: #F8FAFC;">MATLAB / Simulink:</b>
-                <span style="color: {m_color}; font-weight: bold;">{matlab_status['status_code']}</span>
+                <span style="color: {m_color}; font-weight: bold;">{_sc_label}</span>
             </div>
             <p style="color: #94A3B8; margin: 4px 0 0 0; font-size: 10px;">
                 {matlab_status['message']}
