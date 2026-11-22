@@ -11,8 +11,13 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
+from pathlib import Path
+import os
+import glob
 import json
 import time
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 from src.matlab_integration.simulation_inputs import SimulationInputs
 from src.matlab_integration.simulation_outputs import SimulationOutputs
