@@ -82,3 +82,12 @@ credentials.json
 check_missing*.py
 run_check*.py
 run_preprocess*.py
+
+# MATLAB Simulation Runtime Outputs
+matlab_models/results/input_*.json
+matlab_models/results/output_*.json
+matlab_models/results/matlab_scope_*.png
+!matlab_models/results/output_test.json
+!matlab_models/results/matlab_scope_MATLAB-08CE5A70.png
+!matlab_models/results/matlab_scope_MATLAB-F8BAE5CC.png
+
