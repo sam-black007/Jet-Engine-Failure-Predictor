@@ -1,0 +1,206 @@
+{
+  "FD003": {
+    "zero_shot": {
+      "metrics_raw": {
+        "MAE": 20.7224,
+        "RMSE": 25.3215,
+        "NASA_score": 1526.1575
+      },
+      "metrics_clipped": {
+        "MAE": 19.1624,
+        "RMSE": 23.2574,
+        "NASA_score": 1360.7882
+      },
+      "duration_seconds": 0.95,
+      "strategy": "zero_shot",
+      "target_subset": "FD003"
+    },
+    "freeze_backbone": {
+      "metrics_raw": {
+        "MAE": 19.2373,
+        "RMSE": 24.8589,
+        "NASA_score": 4591.0964
+      },
+      "metrics_clipped": {
+        "MAE": 17.6773,
+        "RMSE": 23.8166,
+        "NASA_score": 4541.7119
+      },
+      "duration_seconds": 21.82,
+      "strategy": "freeze_backbone",
+      "target_subset": "FD003",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD003_freeze_backbone.pt"
+    },
+    "full_fine_tune": {
+      "metrics_raw": {
+        "MAE": 12.1111,
+        "RMSE": 16.6454,
+        "NASA_score": 705.2603
+      },
+      "metrics_clipped": {
+        "MAE": 10.5511,
+        "RMSE": 15.3244,
+        "NASA_score": 664.7483
+      },
+      "duration_seconds": 47.65,
+      "strategy": "full_fine_tune",
+      "target_subset": "FD003",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD003_full_fine_tune.pt"
+    },
+    "from_scratch": {
+      "metrics_raw": {
+        "MAE": 28.5515,
+        "RMSE": 38.7209,
+        "NASA_score": 6512.8545
+      },
+      "metrics_clipped": {
+        "MAE": 26.9915,
+        "RMSE": 35.7387,
+        "NASA_score": 3383.9677
+      },
+      "duration_seconds": 52.05,
+      "strategy": "from_scratch",
+      "target_subset": "FD003",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD003_from_scratch.pt"
+    }
+  },
+  "FD002": {
+    "zero_shot": {
+      "metrics_raw": {
+        "MAE": 23.6444,
+        "RMSE": 32.7902,
+        "NASA_score": 14526.0831
+      },
+      "metrics_clipped": {
+        "MAE": 16.1502,
+        "RMSE": 19.6356,
+        "NASA_score": 2120.4706
+      },
+      "duration_seconds": 2.34,
+      "strategy": "zero_shot",
+      "target_subset": "FD002"
+    },
+    "freeze_backbone": {
+      "metrics_raw": {
+        "MAE": 22.7703,
+        "RMSE": 31.2505,
+        "NASA_score": 11051.3472
+      },
+      "metrics_clipped": {
+        "MAE": 15.2761,
+        "RMSE": 18.8846,
+        "NASA_score": 2280.439
+      },
+      "duration_seconds": 22.31,
+      "strategy": "freeze_backbone",
+      "target_subset": "FD002",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD002_freeze_backbone.pt"
+    },
+    "full_fine_tune": {
+      "metrics_raw": {
+        "MAE": 18.2676,
+        "RMSE": 27.4149,
+        "NASA_score": 9732.9473
+      },
+      "metrics_clipped": {
+        "MAE": 10.7734,
+        "RMSE": 15.0155,
+        "NASA_score": 1291.9425
+      },
+      "duration_seconds": 50.8,
+      "strategy": "full_fine_tune",
+      "target_subset": "FD002",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD002_full_fine_tune.pt"
+    },
+    "from_scratch": {
+      "metrics_raw": {
+        "MAE": 36.5307,
+        "RMSE": 52.5677,
+        "NASA_score": 297780.886
+      },
+      "metrics_clipped": {
+        "MAE": 29.0365,
+        "RMSE": 38.2254,
+        "NASA_score": 10778.5714
+      },
+      "duration_seconds": 54.57,
+      "strategy": "from_scratch",
+      "target_subset": "FD002",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD002_from_scratch.pt"
+    }
+  },
+  "FD004": {
+    "zero_shot": {
+      "metrics_raw": {
+        "MAE": 29.6324,
+        "RMSE": 37.7893,
+        "NASA_score": 19415.6757
+      },
+      "metrics_clipped": {
+        "MAE": 20.9389,
+        "RMSE": 24.9956,
+        "NASA_score": 5375.9345
+      },
+      "duration_seconds": 2.86,
+      "strategy": "zero_shot",
+      "target_subset": "FD004"
+    },
+    "freeze_backbone": {
+      "metrics_raw": {
+        "MAE": 28.4808,
+        "RMSE": 35.9321,
+        "NASA_score": 16382.0344
+      },
+      "metrics_clipped": {
+        "MAE": 19.7873,
+        "RMSE": 24.9273,
+        "NASA_score": 8496.4147
+      },
+      "duration_seconds": 26.83,
+      "strategy": "freeze_backbone",
+      "target_subset": "FD004",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD004_freeze_backbone.pt"
+    },
+    "full_fine_tune": {
+      "metrics_raw": {
+        "MAE": 20.3351,
+        "RMSE": 27.4821,
+        "NASA_score": 4826.0111
+      },
+      "metrics_clipped": {
+        "MAE": 11.6416,
+        "RMSE": 15.6087,
+        "NASA_score": 1181.9111
+      },
+      "duration_seconds": 59.84,
+      "strategy": "full_fine_tune",
+      "target_subset": "FD004",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD004_full_fine_tune.pt"
+    },
+    "from_scratch": {
+      "metrics_raw": {
+        "MAE": 36.527,
+        "RMSE": 50.7756,
+        "NASA_score": 161596.6126
+      },
+      "metrics_clipped": {
+        "MAE": 27.8334,
+        "RMSE": 35.0323,
+        "NASA_score": 6294.6879
+      },
+      "duration_seconds": 65.05,
+      "strategy": "from_scratch",
+      "target_subset": "FD004",
+      "target_engine_fraction": 0.5,
+      "checkpoint": "models\\transfer\\transfer_FD001_to_FD004_from_scratch.pt"
+    }
+  }
+}

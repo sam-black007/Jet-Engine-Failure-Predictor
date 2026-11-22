@@ -1,0 +1,92 @@
+{
+  "baseline_lstm": {
+    "checkpoint": "models\\lstm\\lstm_model.pt",
+    "input_dim": 17,
+    "eval_raw_target": {
+      "MAE": 11.6931,
+      "RMSE": 16.3288,
+      "NASA_Score": 537.0058
+    },
+    "eval_clipped_target": {
+      "MAE": 10.6231,
+      "RMSE": 14.9864,
+      "NASA_Score": 497.1455
+    },
+    "eval_both_clipped": {
+      "MAE": 10.6231,
+      "NASA_Score": 497.1455
+    }
+  },
+  "nasa_asymmetric": {
+    "checkpoint": "models\\lstm_asymmetric\\nasa_asymmetric_lstm.pt",
+    "input_dim": 17,
+    "eval_raw_target": {
+      "MAE": 12.377,
+      "RMSE": 17.1224,
+      "NASA_Score": 435.3424
+    },
+    "eval_clipped_target": {
+      "MAE": 11.307,
+      "RMSE": 15.2724,
+      "NASA_Score": 359.253
+    },
+    "eval_both_clipped": {
+      "MAE": 11.307,
+      "NASA_Score": 359.253
+    }
+  },
+  "pinball_lstm": {
+    "checkpoint": "models\\lstm_asymmetric\\pinball_lstm.pt",
+    "input_dim": 17,
+    "eval_raw_target": {
+      "MAE": 13.0752,
+      "RMSE": 17.152,
+      "NASA_Score": 528.6711
+    },
+    "eval_clipped_target": {
+      "MAE": 12.0052,
+      "RMSE": 15.465,
+      "NASA_Score": 439.974
+    },
+    "eval_both_clipped": {
+      "MAE": 12.0052,
+      "NASA_Score": 439.974
+    }
+  },
+  "pinball_q35_lstm": {
+    "checkpoint": "models\\lstm_asymmetric\\pinball_q35_lstm.pt",
+    "input_dim": 17,
+    "eval_raw_target": {
+      "MAE": 12.5929,
+      "RMSE": 16.4024,
+      "NASA_Score": 362.0723
+    },
+    "eval_clipped_target": {
+      "MAE": 11.5229,
+      "RMSE": 14.3552,
+      "NASA_Score": 277.2321
+    },
+    "eval_both_clipped": {
+      "MAE": 11.5229,
+      "NASA_Score": 277.2321
+    }
+  },
+  "pinball_q45_lstm": {
+    "checkpoint": "models\\lstm_asymmetric\\pinball_q45_lstm.pt",
+    "input_dim": 17,
+    "eval_raw_target": {
+      "MAE": 12.0487,
+      "RMSE": 16.4418,
+      "NASA_Score": 390.098
+    },
+    "eval_clipped_target": {
+      "MAE": 10.9787,
+      "RMSE": 14.5448,
+      "NASA_Score": 317.1817
+    },
+    "eval_both_clipped": {
+      "MAE": 10.9787,
+      "NASA_Score": 317.1817
+    }
+  }
+}

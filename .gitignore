@@ -64,6 +64,9 @@ dataset/processed/*.npy
 !models/lstm/*.pt
 !models/performance_metrics.json
 
+# Intermediate trial checkpoints
+models/checkpoints/*.pt
+
 # Scratch and diagnostic scripts
 check_missing*.py
 run_check*.py

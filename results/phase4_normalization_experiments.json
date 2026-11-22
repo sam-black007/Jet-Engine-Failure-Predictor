@@ -1,0 +1,466 @@
+{
+  "FD002": [
+    {
+      "exp_id": "EXP-001",
+      "exp_name": "Global Normalization (Baseline)",
+      "subset": "FD002",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 3.29,
+      "metrics_raw": {
+        "MAE": 21.4329,
+        "RMSE": 30.6371,
+        "NASA_score": 22160.1731
+      },
+      "metrics_clipped": {
+        "MAE": 13.9387,
+        "RMSE": 17.8504,
+        "NASA_score": 1850.9129
+      }
+    },
+    {
+      "exp_id": "EXP-002",
+      "exp_name": "Condition-wise StandardScaler",
+      "subset": "FD002",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 4.38,
+      "metrics_raw": {
+        "MAE": 19.4692,
+        "RMSE": 28.7553,
+        "NASA_score": 12616.7099
+      },
+      "metrics_clipped": {
+        "MAE": 11.9749,
+        "RMSE": 15.6705,
+        "NASA_score": 1111.5305
+      }
+    },
+    {
+      "exp_id": "EXP-003",
+      "exp_name": "Condition-wise MinMaxScaler",
+      "subset": "FD002",
+      "scaler_type": "minmax",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 4.48,
+      "metrics_raw": {
+        "MAE": 19.7775,
+        "RMSE": 28.8474,
+        "NASA_score": 10763.5707
+      },
+      "metrics_clipped": {
+        "MAE": 12.2833,
+        "RMSE": 15.9241,
+        "NASA_score": 1097.8441
+      }
+    },
+    {
+      "exp_id": "EXP-004",
+      "exp_name": "Condition-wise RobustScaler",
+      "subset": "FD002",
+      "scaler_type": "robust",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 4.35,
+      "metrics_raw": {
+        "MAE": 19.5503,
+        "RMSE": 28.7062,
+        "NASA_score": 12917.5458
+      },
+      "metrics_clipped": {
+        "MAE": 12.049,
+        "RMSE": 15.853,
+        "NASA_score": 1102.9609
+      }
+    },
+    {
+      "exp_id": "EXP-005",
+      "exp_name": "Regime-Aware Feature Engineering",
+      "subset": "FD002",
+      "scaler_type": "standard",
+      "include_regime_features": true,
+      "feature_count": 27,
+      "duration_seconds": 5.02,
+      "metrics_raw": {
+        "MAE": 19.4692,
+        "RMSE": 28.7553,
+        "NASA_score": 12616.7099
+      },
+      "metrics_clipped": {
+        "MAE": 11.9749,
+        "RMSE": 15.6705,
+        "NASA_score": 1111.5305
+      }
+    },
+    {
+      "exp_id": "EXP-006",
+      "exp_name": "Adaptive Robust Normalization + Features",
+      "subset": "FD002",
+      "scaler_type": "robust",
+      "include_regime_features": true,
+      "feature_count": 27,
+      "duration_seconds": 5.07,
+      "metrics_raw": {
+        "MAE": 19.4483,
+        "RMSE": 28.7,
+        "NASA_score": 12780.9516
+      },
+      "metrics_clipped": {
+        "MAE": 11.9519,
+        "RMSE": 15.8832,
+        "NASA_score": 1127.3338
+      }
+    }
+  ],
+  "FD004": [
+    {
+      "exp_id": "EXP-001",
+      "exp_name": "Global Normalization (Baseline)",
+      "subset": "FD004",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 4.45,
+      "metrics_raw": {
+        "MAE": 23.4583,
+        "RMSE": 30.9504,
+        "NASA_score": 7956.9179
+      },
+      "metrics_clipped": {
+        "MAE": 14.7647,
+        "RMSE": 19.4543,
+        "NASA_score": 2601.6909
+      }
+    },
+    {
+      "exp_id": "EXP-002",
+      "exp_name": "Condition-wise StandardScaler",
+      "subset": "FD004",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 4.64,
+      "metrics_raw": {
+        "MAE": 22.0152,
+        "RMSE": 29.5154,
+        "NASA_score": 6799.5295
+      },
+      "metrics_clipped": {
+        "MAE": 13.3305,
+        "RMSE": 17.99,
+        "NASA_score": 2072.4552
+      }
+    },
+    {
+      "exp_id": "EXP-003",
+      "exp_name": "Condition-wise MinMaxScaler",
+      "subset": "FD004",
+      "scaler_type": "minmax",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 4.58,
+      "metrics_raw": {
+        "MAE": 22.104,
+        "RMSE": 29.811,
+        "NASA_score": 7744.5457
+      },
+      "metrics_clipped": {
+        "MAE": 13.4156,
+        "RMSE": 18.5726,
+        "NASA_score": 2902.8995
+      }
+    },
+    {
+      "exp_id": "EXP-004",
+      "exp_name": "Condition-wise RobustScaler",
+      "subset": "FD004",
+      "scaler_type": "robust",
+      "include_regime_features": false,
+      "feature_count": 21,
+      "duration_seconds": 4.43,
+      "metrics_raw": {
+        "MAE": 21.6416,
+        "RMSE": 29.4999,
+        "NASA_score": 7196.2958
+      },
+      "metrics_clipped": {
+        "MAE": 12.9488,
+        "RMSE": 17.7518,
+        "NASA_score": 2072.5709
+      }
+    },
+    {
+      "exp_id": "EXP-005",
+      "exp_name": "Regime-Aware Feature Engineering",
+      "subset": "FD004",
+      "scaler_type": "standard",
+      "include_regime_features": true,
+      "feature_count": 27,
+      "duration_seconds": 5.32,
+      "metrics_raw": {
+        "MAE": 22.0152,
+        "RMSE": 29.5154,
+        "NASA_score": 6799.5295
+      },
+      "metrics_clipped": {
+        "MAE": 13.3305,
+        "RMSE": 17.99,
+        "NASA_score": 2072.4552
+      }
+    },
+    {
+      "exp_id": "EXP-006",
+      "exp_name": "Adaptive Robust Normalization + Features",
+      "subset": "FD004",
+      "scaler_type": "robust",
+      "include_regime_features": true,
+      "feature_count": 27,
+      "duration_seconds": 5.33,
+      "metrics_raw": {
+        "MAE": 21.7399,
+        "RMSE": 29.5324,
+        "NASA_score": 7003.768
+      },
+      "metrics_clipped": {
+        "MAE": 13.0463,
+        "RMSE": 17.7776,
+        "NASA_score": 1958.2237
+      }
+    }
+  ],
+  "FD001": [
+    {
+      "exp_id": "EXP-001",
+      "exp_name": "Global Normalization (Baseline)",
+      "subset": "FD001",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 15,
+      "duration_seconds": 2.02,
+      "metrics_raw": {
+        "MAE": 11.9374,
+        "RMSE": 15.4472,
+        "NASA_score": 402.0673
+      },
+      "metrics_clipped": {
+        "MAE": 10.8674,
+        "RMSE": 14.1154,
+        "NASA_score": 363.8682
+      }
+    },
+    {
+      "exp_id": "EXP-002",
+      "exp_name": "Condition-wise StandardScaler",
+      "subset": "FD001",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 15,
+      "duration_seconds": 2.48,
+      "metrics_raw": {
+        "MAE": 11.9374,
+        "RMSE": 15.4472,
+        "NASA_score": 402.0673
+      },
+      "metrics_clipped": {
+        "MAE": 10.8674,
+        "RMSE": 14.1154,
+        "NASA_score": 363.8682
+      }
+    },
+    {
+      "exp_id": "EXP-003",
+      "exp_name": "Condition-wise MinMaxScaler",
+      "subset": "FD001",
+      "scaler_type": "minmax",
+      "include_regime_features": false,
+      "feature_count": 15,
+      "duration_seconds": 2.23,
+      "metrics_raw": {
+        "MAE": 11.9374,
+        "RMSE": 15.4472,
+        "NASA_score": 402.0673
+      },
+      "metrics_clipped": {
+        "MAE": 10.8674,
+        "RMSE": 14.1154,
+        "NASA_score": 363.8682
+      }
+    },
+    {
+      "exp_id": "EXP-004",
+      "exp_name": "Condition-wise RobustScaler",
+      "subset": "FD001",
+      "scaler_type": "robust",
+      "include_regime_features": false,
+      "feature_count": 15,
+      "duration_seconds": 2.37,
+      "metrics_raw": {
+        "MAE": 11.9374,
+        "RMSE": 15.4472,
+        "NASA_score": 402.0673
+      },
+      "metrics_clipped": {
+        "MAE": 10.8674,
+        "RMSE": 14.1154,
+        "NASA_score": 363.8682
+      }
+    },
+    {
+      "exp_id": "EXP-005",
+      "exp_name": "Regime-Aware Feature Engineering",
+      "subset": "FD001",
+      "scaler_type": "standard",
+      "include_regime_features": true,
+      "feature_count": 16,
+      "duration_seconds": 2.6,
+      "metrics_raw": {
+        "MAE": 11.9374,
+        "RMSE": 15.4472,
+        "NASA_score": 402.0673
+      },
+      "metrics_clipped": {
+        "MAE": 10.8674,
+        "RMSE": 14.1154,
+        "NASA_score": 363.8682
+      }
+    },
+    {
+      "exp_id": "EXP-006",
+      "exp_name": "Adaptive Robust Normalization + Features",
+      "subset": "FD001",
+      "scaler_type": "robust",
+      "include_regime_features": true,
+      "feature_count": 16,
+      "duration_seconds": 2.43,
+      "metrics_raw": {
+        "MAE": 11.9374,
+        "RMSE": 15.4472,
+        "NASA_score": 402.0673
+      },
+      "metrics_clipped": {
+        "MAE": 10.8674,
+        "RMSE": 14.1154,
+        "NASA_score": 363.8682
+      }
+    }
+  ],
+  "FD003": [
+    {
+      "exp_id": "EXP-001",
+      "exp_name": "Global Normalization (Baseline)",
+      "subset": "FD003",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 16,
+      "duration_seconds": 2.17,
+      "metrics_raw": {
+        "MAE": 12.8186,
+        "RMSE": 17.5088,
+        "NASA_score": 1292.7043
+      },
+      "metrics_clipped": {
+        "MAE": 11.258,
+        "RMSE": 15.9782,
+        "NASA_score": 1241.8301
+      }
+    },
+    {
+      "exp_id": "EXP-002",
+      "exp_name": "Condition-wise StandardScaler",
+      "subset": "FD003",
+      "scaler_type": "standard",
+      "include_regime_features": false,
+      "feature_count": 16,
+      "duration_seconds": 2.15,
+      "metrics_raw": {
+        "MAE": 12.8186,
+        "RMSE": 17.5088,
+        "NASA_score": 1292.7043
+      },
+      "metrics_clipped": {
+        "MAE": 11.258,
+        "RMSE": 15.9782,
+        "NASA_score": 1241.8301
+      }
+    },
+    {
+      "exp_id": "EXP-003",
+      "exp_name": "Condition-wise MinMaxScaler",
+      "subset": "FD003",
+      "scaler_type": "minmax",
+      "include_regime_features": false,
+      "feature_count": 16,
+      "duration_seconds": 2.17,
+      "metrics_raw": {
+        "MAE": 12.8186,
+        "RMSE": 17.5088,
+        "NASA_score": 1292.7043
+      },
+      "metrics_clipped": {
+        "MAE": 11.258,
+        "RMSE": 15.9782,
+        "NASA_score": 1241.8301
+      }
+    },
+    {
+      "exp_id": "EXP-004",
+      "exp_name": "Condition-wise RobustScaler",
+      "subset": "FD003",
+      "scaler_type": "robust",
+      "include_regime_features": false,
+      "feature_count": 16,
+      "duration_seconds": 2.12,
+      "metrics_raw": {
+        "MAE": 12.8186,
+        "RMSE": 17.5088,
+        "NASA_score": 1292.7043
+      },
+      "metrics_clipped": {
+        "MAE": 11.258,
+        "RMSE": 15.9782,
+        "NASA_score": 1241.8301
+      }
+    },
+    {
+      "exp_id": "EXP-005",
+      "exp_name": "Regime-Aware Feature Engineering",
+      "subset": "FD003",
+      "scaler_type": "standard",
+      "include_regime_features": true,
+      "feature_count": 17,
+      "duration_seconds": 2.17,
+      "metrics_raw": {
+        "MAE": 12.8186,
+        "RMSE": 17.5088,
+        "NASA_score": 1292.7043
+      },
+      "metrics_clipped": {
+        "MAE": 11.258,
+        "RMSE": 15.9782,
+        "NASA_score": 1241.8301
+      }
+    },
+    {
+      "exp_id": "EXP-006",
+      "exp_name": "Adaptive Robust Normalization + Features",
+      "subset": "FD003",
+      "scaler_type": "robust",
+      "include_regime_features": true,
+      "feature_count": 17,
+      "duration_seconds": 2.09,
+      "metrics_raw": {
+        "MAE": 12.8186,
+        "RMSE": 17.5088,
+        "NASA_score": 1292.7043
+      },
+      "metrics_clipped": {
+        "MAE": 11.258,
+        "RMSE": 15.9782,
+        "NASA_score": 1241.8301
+      }
+    }
+  ]
+}
