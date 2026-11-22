@@ -1,4 +1,4 @@
-# JETWISE AI: An Open-Architecture Cyber-Physical Digital Twin & Multi-Scale Prognostics Platform for Commercial Turbofan Engines
+# THRUSTLAB: An Integrated AI-Driven and Physics-Informed Digital Twin Framework for Turbofan Engine Prognostics and Health ManagementJETWISE AI: An Open-Architecture Cyber-Physical Digital Twin & Multi-Scale Prognostics Platform for Commercial Turbofan Engines
 
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![PyTorch 2.4](https://img.shields.io/badge/PyTorch-2.4-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/)
