@@ -218,8 +218,17 @@ def test_workflow_08_matlab_simulink_scenario(copilot_setup):
 
     # Must explicitly state MATLAB status without faking
     bridge = MATLABSimulinkBridge()
+    _valid_installed_statuses = (
+        "ONLINE",               # MATLAB started and confirmed in time
+        "PHYSICS_ENGINE_ACTIVE",  # MATLAB found but timed out/failed — physics engine active
+        "ERROR",                # legacy — kept for backwards compat
+        "EMULATED",             # legacy — kept for backwards compat
+    )
     if bridge.is_matlab_installed:
-        assert res.matlab_status in ("ONLINE", "ERROR", "EMULATED")
+        assert res.matlab_status in _valid_installed_statuses, (
+            f"Unexpected matlab_status '{res.matlab_status}' when MATLAB is installed. "
+            f"Expected one of {_valid_installed_statuses}"
+        )
     else:
         assert res.matlab_status == "OFFLINE_NOT_INSTALLED"
     assert "Aerothermal" in res.simulation_source or "MATLAB" in res.simulation_source
