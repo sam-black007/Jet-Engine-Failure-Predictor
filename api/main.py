@@ -108,7 +108,7 @@ class PredictResponse(BaseModel):
     health_state: str
     maintenance_priority_index: float
     priority: str
-    recommended_actions: List[Dict[str, str]]
+    recommended_actions: List[Dict[str, Any]]
 
 
 class WorkOrderCreate(BaseModel):

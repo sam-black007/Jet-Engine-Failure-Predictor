@@ -1,11 +1,13 @@
-"""Predictive Maintenance Intelligence Engine (JETWISE AI Phase 7).
+"""Predictive Maintenance Intelligence Engine (JETWISE AI Feature 2).
 
 Integrates:
 1. Epistemic & Aleatoric Uncertainty Estimation (MC Dropout & Prediction Intervals)
 2. Unsupervised Engine Anomaly Detection (Isolation Forest on Sensor Residuals)
 3. Sequence Explainable AI (Perturbation & Gradient-based Sensor Attribution)
-4. Maintenance Priority & Decision Engine (Health Classification & Maintenance Priority Index)
-5. Persistent SQLite Maintenance Records Database (Audit trail & Work Orders)
+4. Configurable 5-Tier Risk Classification & Explainable Prioritization (MPI 0-100)
+5. Evidence-Traceable Prescriptive Recommendations
+6. Alert Lifecycle Management (De-duplication, Acknowledgement, Resolution)
+7. Persistent SQLite Maintenance Planning & Fleet Intelligence Database
 """
 
 from typing import Dict, List, Optional, Any, Tuple
@@ -26,18 +28,67 @@ from src.data_loader import SENSOR_COLS
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent
 DEFAULT_DB_PATH = PROJECT_ROOT / "database" / "maintenance_records.db"
 
-HEALTH_STATES = {
-    "HEALTHY": {"min_rul": 75, "color": "#21C77A", "description": "Nominal operational status."},
-    "MONITOR": {"min_rul": 40, "color": "#00B8D9", "description": "Elevated wear patterns observed; monitor closely."},
-    "MAINTENANCE_DUE": {"min_rul": 20, "color": "#FFB547", "description": "Maintenance required within scheduled window."},
-    "CRITICAL": {"min_rul": 0, "color": "#FF5252", "description": "Severe degradation; immediate grounding / overhaul recommended."}
+# ---------------------------------------------------------------------------
+# 5-Tier Risk Classification Specification
+# ---------------------------------------------------------------------------
+RISK_CATEGORIES = {
+    "HEALTHY": {
+        "max_rul": 9999.0,
+        "min_rul": 75.0,
+        "priority": "LOW",
+        "urgency_days": 90,
+        "color": "#21C77A",
+        "description": "No significant detected degradation; nominal flight clearance."
+    },
+    "MONITOR": {
+        "max_rul": 75.0,
+        "min_rul": 45.0,
+        "priority": "ROUTINE",
+        "urgency_days": 45,
+        "color": "#00B8D9",
+        "description": "Early indicators observed; increase monitoring frequency."
+    },
+    "WARNING": {
+        "max_rul": 45.0,
+        "min_rul": 25.0,
+        "priority": "MEDIUM",
+        "urgency_days": 21,
+        "color": "#FFB547",
+        "description": "Degradation identified; schedule inspection at next maintenance opportunity."
+    },
+    "HIGH_RISK": {
+        "max_rul": 25.0,
+        "min_rul": 12.0,
+        "priority": "HIGH",
+        "urgency_days": 7,
+        "color": "#FF9800",
+        "description": "Significant risk indicators; schedule prioritized maintenance within 7 days."
+    },
+    "CRITICAL": {
+        "max_rul": 12.0,
+        "min_rul": 0.0,
+        "priority": "URGENT",
+        "urgency_days": 2,
+        "color": "#FF5252",
+        "description": "Severe risk indicators; immediate grounding and shop overhaul recommended."
+    }
 }
+HEALTH_STATES = RISK_CATEGORIES
+
+MAINTENANCE_STATUSES = [
+    "Pending",
+    "Inspection Scheduled",
+    "Under Inspection",
+    "Maintenance In Progress",
+    "Completed",
+    "Deferred"
+]
 
 
 class UncertaintyEstimator:
     """Estimates epistemic and empirical uncertainty via Monte Carlo Dropout."""
 
-    def __init__(self, model: nn.Module, num_samples: int = 30):
+    def __init__(self, model: nn.Module, num_samples: int = 25):
         self.model = model
         self.num_samples = num_samples
 
@@ -48,18 +99,7 @@ class UncertaintyEstimator:
                 m.train()
 
     def predict_with_uncertainty(self, x: np.ndarray) -> Dict[str, Any]:
-        """Perform stochastic Monte Carlo forward passes.
-
-        Parameters
-        ----------
-        x : np.ndarray
-            Input sequence tensor of shape (batch_size, seq_len, num_features) or (seq_len, num_features).
-
-        Returns
-        -------
-        Dict[str, Any]
-            mean_rul, std_dev, q10, q50, q90, confidence_score
-        """
+        """Perform stochastic Monte Carlo forward passes."""
         if x.ndim == 2:
             x = np.expand_dims(x, axis=0)
 
@@ -76,7 +116,7 @@ class UncertaintyEstimator:
                     out = out[0]
                 preds.append(out.squeeze().cpu().numpy())
 
-        preds_arr = np.array(preds)  # shape: (num_samples, batch_size) or (num_samples,)
+        preds_arr = np.array(preds)
         if preds_arr.ndim == 1:
             preds_arr = np.expand_dims(preds_arr, axis=1)
 
@@ -86,8 +126,6 @@ class UncertaintyEstimator:
         q50 = np.percentile(preds_arr, 50, axis=0)
         q90 = np.percentile(preds_arr, 90, axis=0)
 
-        # Confidence: high confidence when std is low and RUL is consistent
-        # Normalized confidence metric 0.0 - 1.0
         confidence = np.clip(1.0 - (std_rul / 35.0), 0.05, 0.99)
 
         if len(mean_rul) == 1:
@@ -128,7 +166,7 @@ class EngineAnomalyDetector:
         self.sensor_stds: Dict[str, float] = {}
 
     def fit(self, baseline_df: pd.DataFrame, feature_cols: List[str]):
-        """Fit Isolation Forest on nominal healthy cycles (e.g. cycle <= 30)."""
+        """Fit Isolation Forest on nominal healthy cycles (e.g. cycle <= 25)."""
         self.feature_cols = feature_cols
         data = baseline_df[feature_cols].dropna().values
         self.model.fit(data)
@@ -141,19 +179,15 @@ class EngineAnomalyDetector:
     def detect_window_anomaly(self, window_vals: np.ndarray) -> Dict[str, Any]:
         """Detect anomaly for a window of shape (window_len, num_features)."""
         if not self.is_fitted:
-            # Fallback simple z-score check
             return {"is_anomaly": False, "anomaly_score": 0.0, "severity": "NORMAL", "top_anomalous_sensors": []}
 
-        # Use final cycle in window or mean of window
         last_cycle = window_vals[-1:]
-        raw_score = self.model.decision_function(last_cycle)[0]  # negative means outlier
-        pred_label = self.model.predict(last_cycle)[0]  # -1 for anomaly, 1 for inlier
+        raw_score = self.model.decision_function(last_cycle)[0]
+        pred_label = self.model.predict(last_cycle)[0]
 
-        # Normalized anomaly score 0.0 (normal) to 1.0 (extreme anomaly)
         norm_score = float(np.clip(0.5 - raw_score, 0.0, 1.0))
         is_anomaly = bool(pred_label == -1 or norm_score > 0.55)
 
-        # Detect top anomalous sensors via z-score
         deviations = {}
         for i, col in enumerate(self.feature_cols):
             mean = self.sensor_means.get(col, 0.0)
@@ -189,25 +223,11 @@ class SequenceFeatureAttribution:
         self.feature_cols = feature_cols
 
     def attribute_window(self, window_vals: np.ndarray, num_steps: int = 15) -> Dict[str, Any]:
-        """Compute integrated gradient approximation for input sequence window.
-
-        Parameters
-        ----------
-        window_vals : np.ndarray
-            Sequence of shape (seq_len, num_features)
-        num_steps : int
-            Number of interpolation steps between baseline (zeros) and input.
-
-        Returns
-        -------
-        Dict[str, Any]
-            Attribution per sensor, relative percentage, and time step importance.
-        """
+        """Compute integrated gradient approximation for input sequence window."""
         self.model.eval()
-        x_target = torch.from_numpy(window_vals.astype(np.float32)).unsqueeze(0)  # (1, seq_len, num_features)
+        x_target = torch.from_numpy(window_vals.astype(np.float32)).unsqueeze(0)
         x_baseline = torch.zeros_like(x_target)
 
-        # Integrated gradients
         alphas = torch.linspace(0.0, 1.0, num_steps)
         accum_grads = torch.zeros_like(x_target)
 
@@ -222,15 +242,13 @@ class SequenceFeatureAttribution:
                 accum_grads += x_interp.grad.detach()
 
         avg_grads = accum_grads / num_steps
-        ig = (x_target - x_baseline).detach() * avg_grads  # (1, seq_len, num_features)
-        ig_abs = torch.abs(ig).squeeze(0).cpu().numpy()  # (seq_len, num_features)
+        ig = (x_target - x_baseline).detach() * avg_grads
+        ig_abs = torch.abs(ig).squeeze(0).cpu().numpy()
 
-        # Sum over time dimension to get sensor importance
         sensor_scores = np.sum(ig_abs, axis=0)
         total_score = np.sum(sensor_scores) + 1e-8
         sensor_weights = (sensor_scores / total_score) * 100.0
 
-        # Temporal importance over window
         temporal_scores = np.sum(ig_abs, axis=1)
         temporal_weights = (temporal_scores / (np.sum(temporal_scores) + 1e-8)) * 100.0
 
@@ -252,125 +270,233 @@ class SequenceFeatureAttribution:
 
 
 class MaintenanceDecisionEngine:
-    """Aerospace Decision Engine: health scoring, priority ranking, and action recommendations."""
+    """Configurable Aerospace Maintenance Decision Engine.
 
-    def __init__(self):
-        pass
+    Calculates transparent 5-tier risk classifications, explainable Maintenance Priority Indices (MPI),
+    and evidence-traceable prescriptive maintenance actions.
+    """
+
+    def __init__(
+        self,
+        weight_rul: float = 0.35,
+        weight_uncertainty: float = 0.15,
+        weight_anomaly: float = 0.20,
+        weight_degradation_rate: float = 0.15,
+        weight_sensor_abnormality: float = 0.15,
+        critical_rul_threshold: float = 15.0,
+        warning_rul_threshold: float = 40.0
+    ):
+        self.w_rul = weight_rul
+        self.w_unc = weight_uncertainty
+        self.w_anom = weight_anomaly
+        self.w_deg = weight_degradation_rate
+        self.w_sens = weight_sensor_abnormality
+        self.crit_threshold = critical_rul_threshold
+        self.warn_threshold = warning_rul_threshold
 
     def evaluate_health(
         self,
         predicted_rul: float,
         uncertainty_std: float = 5.0,
         anomaly_score: float = 0.2,
-        current_cycle: int = 150
+        current_cycle: int = 150,
+        degradation_rate: float = 1.0,
+        max_sensor_zscore: float = 1.0,
+        engine_id: int = 1
     ) -> Dict[str, Any]:
-        """Classify health state, compute Maintenance Priority Index (MPI), and recommend action."""
-        # Health state determination
-        if predicted_rul <= 20:
-            health_state = "CRITICAL"
-        elif predicted_rul <= 40:
-            health_state = "MAINTENANCE_DUE"
-        elif predicted_rul <= 75:
-            health_state = "MONITOR"
+        """Classify health condition and calculate explainable priority index."""
+        # 1. 5-Tier Condition Classification
+        if predicted_rul <= 12.0:
+            condition = "CRITICAL"
+        elif predicted_rul <= 25.0:
+            condition = "HIGH_RISK"
+        elif predicted_rul <= 45.0:
+            condition = "WARNING"
+        elif predicted_rul <= 75.0:
+            condition = "MONITOR"
         else:
-            health_state = "HEALTHY"
+            condition = "HEALTHY"
 
-        if anomaly_score > 0.70 and health_state in ("HEALTHY", "MONITOR"):
-            health_state = "MAINTENANCE_DUE"
+        # Elevated anomaly score can escalate condition
+        if anomaly_score > 0.75 and condition in ("HEALTHY", "MONITOR"):
+            condition = "WARNING"
+        elif anomaly_score > 0.85 and condition == "WARNING":
+            condition = "HIGH_RISK"
 
-        # Maintenance Priority Index (0 to 100)
-        # RUL factor: 0 at RUL=125, 60 at RUL=0
-        rul_factor = max(0.0, (125.0 - min(predicted_rul, 125.0)) / 125.0) * 60.0
-        # Anomaly factor: 0 to 25
-        anomaly_factor = min(1.0, max(0.0, anomaly_score)) * 25.0
-        # Uncertainty factor: 0 to 15
-        unc_factor = min(1.0, max(0.0, uncertainty_std / 25.0)) * 15.0
+        cond_meta = RISK_CATEGORIES[condition]
 
-        mpi = min(100.0, round(rul_factor + anomaly_factor + unc_factor, 1))
+        # 2. Transparent Weighted Maintenance Priority Index (0 to 100)
+        # RUL subscore: 0 at RUL>=125, 100 at RUL=0
+        rul_sub = max(0.0, (125.0 - min(predicted_rul, 125.0)) / 125.0) * 100.0
+        # Uncertainty subscore: 0 at std=0, 100 at std>=25
+        unc_sub = min(100.0, (uncertainty_std / 25.0) * 100.0)
+        # Anomaly subscore: 0 at score=0, 100 at score=1
+        anom_sub = min(100.0, max(0.0, anomaly_score)) * 100.0
+        # Degradation rate subscore: 0 at rate<=0.8, 100 at rate>=2.0
+        deg_sub = min(100.0, max(0.0, (degradation_rate - 0.5) / 1.5) * 100.0)
+        # Sensor abnormality subscore: 0 at z<=1.5, 100 at z>=4.5
+        sens_sub = min(100.0, max(0.0, (max_sensor_zscore - 1.5) / 3.0) * 100.0)
 
-        # Priority label
-        if mpi >= 80:
-            priority = "URGENT"
-            urgency_days = 2
-        elif mpi >= 60:
-            priority = "HIGH"
-            urgency_days = 7
-        elif mpi >= 40:
-            priority = "MEDIUM"
-            urgency_days = 21
-        elif mpi >= 20:
-            priority = "ROUTINE"
-            urgency_days = 45
-        else:
-            priority = "LOW"
-            urgency_days = 90
+        mpi_raw = (
+            self.w_rul * rul_sub +
+            self.w_unc * unc_sub +
+            self.w_anom * anom_sub +
+            self.w_deg * deg_sub +
+            self.w_sens * sens_sub
+        )
+        mpi = round(min(100.0, max(0.0, mpi_raw)), 1)
 
-        # Action recommendation synthesis
-        recommendations = self._generate_recommendations(health_state, mpi, predicted_rul, anomaly_score)
+        priority = cond_meta["priority"]
+        urgency_days = cond_meta["urgency_days"]
+
+        # Explainable Breakdown
+        breakdown = {
+            "rul_subscore": round(rul_sub, 1),
+            "uncertainty_subscore": round(unc_sub, 1),
+            "anomaly_subscore": round(anom_sub, 1),
+            "degradation_rate_subscore": round(deg_sub, 1),
+            "sensor_abnormality_subscore": round(sens_sub, 1),
+            "weights": {
+                "rul": self.w_rul,
+                "uncertainty": self.w_unc,
+                "anomaly": self.w_anom,
+                "degradation_rate": self.w_deg,
+                "sensor_abnormality": self.w_sens
+            }
+        }
+
+        # 3. Evidence-Traceable Recommendations
+        recs = self._generate_traceable_recommendations(
+            engine_id=engine_id,
+            condition=condition,
+            mpi=mpi,
+            predicted_rul=predicted_rul,
+            uncertainty_std=uncertainty_std,
+            anomaly_score=anomaly_score,
+            max_sensor_zscore=max_sensor_zscore
+        )
 
         return {
-            "health_state": health_state,
-            "health_info": HEALTH_STATES[health_state],
+            "engine_id": engine_id,
+            "condition": condition,
+            "health_state": condition,  # backwards compatibility
+            "health_info": cond_meta,
             "maintenance_priority_index": mpi,
             "priority": priority,
             "urgency_days": urgency_days,
-            "recommended_actions": recommendations,
+            "score_breakdown": breakdown,
+            "recommended_actions": recs,
             "inspection_window_cycles": max(1, int(predicted_rul * 0.7))
         }
 
-    def _generate_recommendations(
+    def _generate_traceable_recommendations(
         self,
-        health_state: str,
+        engine_id: int,
+        condition: str,
         mpi: float,
         predicted_rul: float,
-        anomaly_score: float
-    ) -> List[Dict[str, str]]:
+        uncertainty_std: float,
+        anomaly_score: float,
+        max_sensor_zscore: float
+    ) -> List[Dict[str, Any]]:
+        """Synthesize traceable recommendations with concrete evidence attachments."""
         recs = []
-        if health_state == "CRITICAL" or mpi >= 80:
+
+        if condition == "CRITICAL" or mpi >= 80:
             recs.append({
-                "action": "Immediate Grounding & Shop Visit",
+                "engine_id": engine_id,
+                "risk_classification": condition,
+                "supporting_evidence": f"Predicted RUL ({predicted_rul:.1f} cycles) below safety minimum (12 cycles); anomaly score {anomaly_score:.2f}.",
+                "relevant_sensor_or_prediction_info": {"predicted_rul": predicted_rul, "anomaly_score": anomaly_score},
+                "recommended_action": "Immediate Grounding & Engine Core Shop Visit",
                 "subsystem": "Turbine / Combustor",
-                "rationale": f"Estimated RUL is {predicted_rul:.1f} cycles. Exceeds safe flight operational threshold."
+                "action": "Immediate Grounding & Engine Core Shop Visit",
+                "maintenance_priority": "URGENT",
+                "reason": "Exceeds flight-safe fatigue threshold. Physical teardown and borescope required.",
+                "rationale": "Exceeds flight-safe fatigue threshold. Physical teardown and borescope required."
             })
             recs.append({
-                "action": "Complete High-Pressure Turbine (HPT) Borescope",
-                "subsystem": "HPT Blades & Stator Vanes",
-                "rationale": "High thermal stress signatures indicate imminent thermal barrier coating spallation."
+                "engine_id": engine_id,
+                "risk_classification": condition,
+                "supporting_evidence": f"Sensor outlier z-score reached {max_sensor_zscore:.2f} sigma with elevated EGT.",
+                "relevant_sensor_or_prediction_info": {"max_zscore": max_sensor_zscore},
+                "recommended_action": "Borescope Inspection of HPT Stage 1 Blades & Shrouds",
+                "subsystem": "HPT Section",
+                "action": "Borescope Inspection of HPT Stage 1 Blades & Shrouds",
+                "maintenance_priority": "URGENT",
+                "reason": "Verify thermal barrier coating integrity and check for leading-edge creep.",
+                "rationale": "Verify thermal barrier coating integrity and check for leading-edge creep."
             })
-        elif health_state == "MAINTENANCE_DUE" or mpi >= 60:
+        elif condition == "HIGH_RISK" or mpi >= 65:
             recs.append({
-                "action": "Scheduled Engine Core Inspection",
-                "subsystem": "High-Pressure Compressor (HPC)",
-                "rationale": f"Predictive degradation trajectory requires maintenance within {int(predicted_rul)} cycles."
+                "engine_id": engine_id,
+                "risk_classification": condition,
+                "supporting_evidence": f"RUL forecast is {predicted_rul:.1f} cycles with uncertainty +/- {uncertainty_std:.1f} cycles.",
+                "relevant_sensor_or_prediction_info": {"predicted_rul": predicted_rul, "uncertainty_std": uncertainty_std},
+                "recommended_action": "Prioritized High-Pressure Compressor (HPC) Inspection",
+                "subsystem": "HPC Section",
+                "action": "Prioritized High-Pressure Compressor (HPC) Inspection",
+                "maintenance_priority": "HIGH",
+                "reason": "HPC efficiency loss trends indicate blade fouling or tip clearance growth.",
+                "rationale": "HPC efficiency loss trends indicate blade fouling or tip clearance growth."
             })
             recs.append({
-                "action": "Lube System Chip Detector & Filter Analysis",
-                "subsystem": "Bearing Compartment 3 / 4",
-                "rationale": "Verify no mechanical particulate accumulation from high-cycle fatigue."
+                "engine_id": engine_id,
+                "risk_classification": condition,
+                "supporting_evidence": f"Elevated residual vibration / bleed temperatures observed.",
+                "relevant_sensor_or_prediction_info": {"anomaly_score": anomaly_score},
+                "recommended_action": "Lube System Chip Detector & Filter Spectrometry",
+                "subsystem": "Bearing Compartments 3 / 4",
+                "action": "Lube System Chip Detector & Filter Spectrometry",
+                "maintenance_priority": "HIGH",
+                "reason": "Verify mechanical wear particulate levels prior to next flight segment.",
+                "rationale": "Verify mechanical wear particulate levels prior to next flight segment."
             })
-        elif health_state == "MONITOR":
+        elif condition == "WARNING" or mpi >= 45:
             recs.append({
-                "action": "Trend Telemetry Acceleration",
-                "subsystem": "Sensor Fleet Monitoring",
-                "rationale": "Increase data telemetry polling to 10 Hz for vibration (sensor_14) and core temp (sensor_4)."
-            })
-            recs.append({
-                "action": "Routine Borescope at Next Transit",
+                "engine_id": engine_id,
+                "risk_classification": condition,
+                "supporting_evidence": f"RUL estimated at {predicted_rul:.1f} cycles; moderate residual drift.",
+                "relevant_sensor_or_prediction_info": {"predicted_rul": predicted_rul},
+                "recommended_action": "Schedule Visual Borescope at Next Transit Layover",
                 "subsystem": "Combustor Liner",
-                "rationale": "Confirm normal soot deposition and absence of hot spots."
+                "action": "Schedule Visual Borescope at Next Transit Layover",
+                "maintenance_priority": "MEDIUM",
+                "reason": "Inspect for hot-spot soot deposition and fuel nozzle spray pattern uniformity.",
+                "rationale": "Inspect for hot-spot soot deposition and fuel nozzle spray pattern uniformity."
+            })
+        elif condition == "MONITOR":
+            recs.append({
+                "engine_id": engine_id,
+                "risk_classification": condition,
+                "supporting_evidence": f"Nominal RUL ({predicted_rul:.1f} cycles) with mild sensor fluctuation.",
+                "relevant_sensor_or_prediction_info": {"predicted_rul": predicted_rul},
+                "recommended_action": "Accelerate Trend Telemetry Monitoring to 10 Hz",
+                "subsystem": "Telemetry & Controls",
+                "action": "Accelerate Trend Telemetry Monitoring to 10 Hz",
+                "maintenance_priority": "ROUTINE",
+                "reason": "Track rate of change in EGT margin and core speed differential.",
+                "rationale": "Track rate of change in EGT margin and core speed differential."
             })
         else:
             recs.append({
-                "action": "Maintain Standard Flight Clearance",
+                "engine_id": engine_id,
+                "risk_classification": condition,
+                "supporting_evidence": "All sensor parameters and predictions within nominal certified operational limits.",
+                "relevant_sensor_or_prediction_info": {"predicted_rul": predicted_rul, "anomaly_score": anomaly_score},
+                "recommended_action": "Maintain Standard Flight Clearance",
                 "subsystem": "Full Turbofan Assembly",
-                "rationale": "Engine operating within nominal health margins across all aerothermal parameters."
+                "action": "Maintain Standard Flight Clearance",
+                "maintenance_priority": "LOW",
+                "reason": "Engine operating smoothly with healthy remaining life margin.",
+                "rationale": "Engine operating smoothly with healthy remaining life margin."
             })
 
         return recs
 
 
 class MaintenanceDatabase:
-    """Persistent SQLite database for engine health tracking, predictions, and work orders."""
+    """Persistent SQLite database for engine health tracking, work orders, and alert lifecycles."""
 
     def __init__(self, db_path: Optional[pathlib.Path] = None):
         self.db_path = db_path or DEFAULT_DB_PATH
@@ -421,27 +547,33 @@ class MaintenanceDatabase:
             CREATE TABLE IF NOT EXISTS work_orders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 created_at TIMESTAMP,
+                updated_at TIMESTAMP,
                 engine_id INTEGER,
                 dataset_subset TEXT,
                 priority TEXT,
                 title TEXT,
                 subsystem TEXT,
                 description TEXT,
-                status TEXT DEFAULT 'OPEN',
+                status TEXT DEFAULT 'Pending',
+                assigned_to TEXT DEFAULT 'Unassigned',
+                notes TEXT DEFAULT '',
                 closed_at TIMESTAMP
             )
             """)
 
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS sensor_alerts (
+            CREATE TABLE IF NOT EXISTS maintenance_alerts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp TIMESTAMP,
                 engine_id INTEGER,
                 dataset_subset TEXT,
                 cycle INTEGER,
-                sensor_name TEXT,
-                z_score REAL,
-                severity TEXT
+                alert_type TEXT,
+                message TEXT,
+                severity TEXT,
+                status TEXT DEFAULT 'ACTIVE',
+                acknowledged_at TIMESTAMP,
+                resolved_at TIMESTAMP
             )
             """)
             conn.commit()
@@ -459,7 +591,7 @@ class MaintenanceDatabase:
         health_eval: Dict[str, Any],
         model_name: str = "Attention-LSTM"
     ) -> int:
-        """Record prediction and update fleet state."""
+        """Record prediction, update fleet state, and evaluate alert triggers."""
         now = datetime.datetime.now().isoformat()
         conn = self._get_connection()
         try:
@@ -475,7 +607,7 @@ class MaintenanceDatabase:
                 uncertainty.get("q10", 0.0),
                 uncertainty.get("q90", 0.0),
                 anomaly.get("anomaly_score", 0.0),
-                health_eval.get("health_state", "HEALTHY"),
+                health_eval.get("condition", health_eval.get("health_state", "HEALTHY")),
                 health_eval.get("maintenance_priority_index", 0.0),
                 model_name
             ))
@@ -488,26 +620,52 @@ class MaintenanceDatabase:
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (
                 engine_id, dataset_subset, cycle,
-                health_eval.get("health_state", "HEALTHY"),
+                health_eval.get("condition", health_eval.get("health_state", "HEALTHY")),
                 predicted_rul,
                 health_eval.get("maintenance_priority_index", 0.0),
                 now
             ))
 
-            # Auto-generate work order if CRITICAL or URGENT
-            if health_eval.get("priority") in ("URGENT", "HIGH"):
+            # Auto-generate work order if CRITICAL or HIGH_RISK
+            cond = health_eval.get("condition", health_eval.get("health_state", "HEALTHY"))
+            if cond in ("CRITICAL", "HIGH_RISK"):
                 for rec in health_eval.get("recommended_actions", []):
+                    # Check if an unresolved duplicate order already exists
                     cursor.execute("""
-                    INSERT INTO work_orders (
-                        created_at, engine_id, dataset_subset, priority,
-                        title, subsystem, description, status
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, 'OPEN')
+                    SELECT id FROM work_orders
+                    WHERE engine_id = ? AND dataset_subset = ? AND title = ? AND status != 'Completed'
+                    """, (engine_id, dataset_subset, rec.get("recommended_action", rec.get("action"))))
+                    if not cursor.fetchone():
+                        cursor.execute("""
+                        INSERT INTO work_orders (
+                            created_at, updated_at, engine_id, dataset_subset, priority,
+                            title, subsystem, description, status, assigned_to, notes
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending', 'Unassigned', ?)
+                        """, (
+                            now, now, engine_id, dataset_subset,
+                            health_eval.get("priority", "HIGH"),
+                            rec.get("recommended_action", rec.get("action")),
+                            rec.get("subsystem"),
+                            rec.get("supporting_evidence", rec.get("reason", "")),
+                            f"Auto-generated by Maintenance Decision Engine at cycle {cycle}."
+                        ))
+
+            # Auto-generate alert if critical threshold crossed
+            if predicted_rul <= 30.0 or anomaly.get("anomaly_score", 0.0) > 0.65:
+                alert_type = "RUL_THRESHOLD_EXCEEDED" if predicted_rul <= 30.0 else "SEVERE_ANOMALY"
+                cursor.execute("""
+                SELECT id FROM maintenance_alerts
+                WHERE engine_id = ? AND dataset_subset = ? AND alert_type = ? AND status = 'ACTIVE'
+                """, (engine_id, dataset_subset, alert_type))
+                if not cursor.fetchone():
+                    cursor.execute("""
+                    INSERT INTO maintenance_alerts (
+                        timestamp, engine_id, dataset_subset, cycle, alert_type, message, severity, status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE')
                     """, (
-                        now, engine_id, dataset_subset,
-                        health_eval.get("priority"),
-                        rec.get("action"),
-                        rec.get("subsystem"),
-                        rec.get("rationale")
+                        now, engine_id, dataset_subset, cycle, alert_type,
+                        f"Engine #{engine_id} triggered {alert_type}: RUL={predicted_rul:.1f} cycles, Anomaly={anomaly.get('anomaly_score', 0):.2f}.",
+                        "CRITICAL" if predicted_rul <= 15.0 else "WARNING"
                     ))
 
             conn.commit()
@@ -515,8 +673,139 @@ class MaintenanceDatabase:
         finally:
             conn.close()
 
+    # -----------------------------------------------------------------------
+    # Work Order CRUD Operations
+    # -----------------------------------------------------------------------
+    def create_work_order(
+        self,
+        engine_id: int,
+        dataset_subset: str,
+        priority: str,
+        title: str,
+        subsystem: str,
+        description: str,
+        assigned_to: str = "Unassigned",
+        notes: str = ""
+    ) -> int:
+        now = datetime.datetime.now().isoformat()
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+            INSERT INTO work_orders (
+                created_at, updated_at, engine_id, dataset_subset, priority,
+                title, subsystem, description, status, assigned_to, notes
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)
+            """, (now, now, engine_id, dataset_subset, priority, title, subsystem, description, assigned_to, notes))
+            conn.commit()
+            return cursor.lastrowid
+        finally:
+            conn.close()
+
+    def update_work_order(
+        self,
+        order_id: int,
+        status: Optional[str] = None,
+        assigned_to: Optional[str] = None,
+        notes: Optional[str] = None
+    ) -> bool:
+        now = datetime.datetime.now().isoformat()
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            updates = ["updated_at = ?"]
+            params = [now]
+            if status is not None:
+                updates.append("status = ?")
+                params.append(status)
+                if status == "Completed":
+                    updates.append("closed_at = ?")
+                    params.append(now)
+            if assigned_to is not None:
+                updates.append("assigned_to = ?")
+                params.append(assigned_to)
+            if notes is not None:
+                updates.append("notes = ?")
+                params.append(notes)
+
+            params.append(order_id)
+            query = f"UPDATE work_orders SET {', '.join(updates)} WHERE id = ?"
+            cursor.execute(query, params)
+            conn.commit()
+            return cursor.rowcount > 0
+        finally:
+            conn.close()
+
+    def get_work_orders(
+        self,
+        dataset_subset: Optional[str] = None,
+        status: Optional[str] = None,
+        engine_id: Optional[int] = None
+    ) -> List[Dict[str, Any]]:
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            query = "SELECT * FROM work_orders WHERE 1=1"
+            params = []
+            if dataset_subset:
+                query += " AND dataset_subset = ?"
+                params.append(dataset_subset)
+            if status:
+                query += " AND status = ?"
+                params.append(status)
+            if engine_id is not None:
+                query += " AND engine_id = ?"
+                params.append(engine_id)
+            query += " ORDER BY id DESC"
+            cursor.execute(query, params)
+            return [dict(row) for row in cursor.fetchall()]
+        finally:
+            conn.close()
+
+    # -----------------------------------------------------------------------
+    # Alert Lifecycle Operations
+    # -----------------------------------------------------------------------
+    def get_alerts(self, dataset_subset: Optional[str] = None, status: str = "ACTIVE") -> List[Dict[str, Any]]:
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            query = "SELECT * FROM maintenance_alerts WHERE status = ?"
+            params = [status]
+            if dataset_subset:
+                query += " AND dataset_subset = ?"
+                params.append(dataset_subset)
+            query += " ORDER BY id DESC"
+            cursor.execute(query, params)
+            return [dict(row) for row in cursor.fetchall()]
+        finally:
+            conn.close()
+
+    def acknowledge_alert(self, alert_id: int) -> bool:
+        now = datetime.datetime.now().isoformat()
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE maintenance_alerts SET status = 'ACKNOWLEDGED', acknowledged_at = ? WHERE id = ?", (now, alert_id))
+            conn.commit()
+            return cursor.rowcount > 0
+        finally:
+            conn.close()
+
+    def resolve_alert(self, alert_id: int) -> bool:
+        now = datetime.datetime.now().isoformat()
+        conn = self._get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE maintenance_alerts SET status = 'RESOLVED', resolved_at = ? WHERE id = ?", (now, alert_id))
+            conn.commit()
+            return cursor.rowcount > 0
+        finally:
+            conn.close()
+
+    # -----------------------------------------------------------------------
+    # Fleet Intelligence & Reporting
+    # -----------------------------------------------------------------------
     def get_fleet_summary(self, dataset_subset: str = "FD001") -> Dict[str, Any]:
-        """Retrieve aggregated fleet overview statistics."""
         conn = self._get_connection()
         try:
             cursor = conn.cursor()
@@ -530,50 +819,58 @@ class MaintenanceDatabase:
 
             cursor.execute("""
             SELECT count(*) as total_orders,
-                   sum(case when status='OPEN' then 1 else 0 end) as open_orders,
-                   sum(case when priority='URGENT' and status='OPEN' then 1 else 0 end) as urgent_orders
+                   sum(case when status != 'Completed' then 1 else 0 end) as open_orders,
+                   sum(case when priority='URGENT' and status != 'Completed' then 1 else 0 end) as urgent_orders
             FROM work_orders
             WHERE dataset_subset = ?
             """, (dataset_subset,))
             wo_summary = dict(cursor.fetchone() or {})
 
             cursor.execute("""
+            SELECT count(*) as active_alerts,
+                   sum(case when severity='CRITICAL' then 1 else 0 end) as critical_alerts
+            FROM maintenance_alerts
+            WHERE dataset_subset = ? AND status='ACTIVE'
+            """, (dataset_subset,))
+            alert_summary = dict(cursor.fetchone() or {})
+
+            cursor.execute("""
             SELECT engine_id, current_cycle, health_state, last_predicted_rul, mpi
             FROM fleet_engines
             WHERE dataset_subset = ?
-            ORDER BY mpi DESC LIMIT 10
+            ORDER BY mpi DESC LIMIT 15
             """, (dataset_subset,))
             top_urgent = [dict(row) for row in cursor.fetchall()]
 
             return {
                 "health_distribution": health_counts,
                 "work_orders": wo_summary,
+                "alerts": alert_summary,
                 "top_priority_engines": top_urgent
             }
         finally:
             conn.close()
 
-    def get_work_orders(self, dataset_subset: Optional[str] = None, status: str = "OPEN") -> List[Dict[str, Any]]:
-        conn = self._get_connection()
-        try:
-            cursor = conn.cursor()
-            query = "SELECT * FROM work_orders WHERE status = ?"
-            params = [status]
-            if dataset_subset:
-                query += " AND dataset_subset = ?"
-                params.append(dataset_subset)
-            query += " ORDER BY id DESC LIMIT 50"
-            cursor.execute(query, params)
-            return [dict(row) for row in cursor.fetchall()]
-        finally:
-            conn.close()
+    def export_work_orders_df(self, dataset_subset: Optional[str] = None) -> pd.DataFrame:
+        orders = self.get_work_orders(dataset_subset=dataset_subset)
+        if not orders:
+            return pd.DataFrame(columns=["id", "engine_id", "priority", "title", "subsystem", "status", "assigned_to", "created_at"])
+        return pd.DataFrame(orders)
 
 
 if __name__ == "__main__":
-    print("[x] Testing Predictive Maintenance Intelligence Engine...")
+    print("[x] Testing Advanced Predictive Maintenance Intelligence Engine...")
     db = MaintenanceDatabase()
     engine_decision = MaintenanceDecisionEngine()
-    res = engine_decision.evaluate_health(predicted_rul=18.4, uncertainty_std=4.2, anomaly_score=0.72)
-    print("Health Evaluation Result:")
+    res = engine_decision.evaluate_health(
+        predicted_rul=18.4,
+        uncertainty_std=4.2,
+        anomaly_score=0.72,
+        current_cycle=165,
+        degradation_rate=1.4,
+        max_sensor_zscore=2.8,
+        engine_id=14
+    )
+    print("Health Evaluation & Score Breakdown:")
     print(json.dumps(res, indent=2))
     print("[x] Predictive Maintenance Intelligence module verified.")

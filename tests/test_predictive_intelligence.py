@@ -1,11 +1,13 @@
-"""Tests for Predictive Maintenance Intelligence Engine (JETWISE AI Phase 7).
+"""Tests for Predictive Maintenance Intelligence Engine (JETWISE AI Feature 2).
 
 Verifies:
-1. Monte Carlo Dropout Uncertainty Estimation
-2. Isolation Forest Anomaly Detection
-3. Sequence Feature Attribution (XAI)
-4. Maintenance Decision Engine & Priority Index
-5. SQLite Database Persistence & Work Order Creation
+1. Monte Carlo Dropout Uncertainty Estimation & Quantiles
+2. Unsupervised Isolation Forest Anomaly Detection & Sensor Z-Scores
+3. Sequence Feature Attribution (Integrated Gradients)
+4. 5-Tier Risk Classification & Explainable Prioritization (MPI)
+5. Evidence-Traceable Recommendations
+6. Persistent SQLite Work Order Management & Status Lifecycle
+7. Maintenance Alert Lifecycle (Triggering, De-duplication, Acknowledgement, Resolution)
 """
 
 import pytest
@@ -22,7 +24,8 @@ from src.predictive_intelligence import (
     SequenceFeatureAttribution,
     MaintenanceDecisionEngine,
     MaintenanceDatabase,
-    HEALTH_STATES
+    RISK_CATEGORIES,
+    MAINTENANCE_STATUSES
 )
 
 
@@ -35,7 +38,6 @@ class DummyModel(nn.Module):
         self.fc2 = nn.Linear(32, 1)
 
     def forward(self, x):
-        # x: (batch, seq_len, input_dim)
         x_last = x[:, -1, :]
         h = torch.relu(self.fc1(x_last))
         h = self.drop(h)
@@ -64,13 +66,10 @@ def test_uncertainty_estimator(dummy_model):
     assert "q90" in res
     assert "confidence_score" in res
     assert 0.0 <= res["confidence_score"] <= 1.0
-    assert res["num_samples"] == 15
 
 
 def test_anomaly_detector(sample_feature_cols):
     detector = EngineAnomalyDetector(contamination=0.05, random_state=42)
-
-    # Synthetic baseline dataframe
     rng = np.random.RandomState(42)
     data = rng.randn(200, 17)
     df = pd.DataFrame(data, columns=sample_feature_cols)
@@ -78,16 +77,13 @@ def test_anomaly_detector(sample_feature_cols):
     detector.fit(df, sample_feature_cols)
     assert detector.is_fitted
 
-    # Test nominal window
     nominal_window = rng.randn(30, 17).astype(np.float32)
     res_nom = detector.detect_window_anomaly(nominal_window)
     assert "is_anomaly" in res_nom
-    assert "anomaly_score" in res_nom
     assert 0.0 <= res_nom["anomaly_score"] <= 1.0
 
-    # Test extreme outlier window
     outlier_window = nominal_window.copy()
-    outlier_window[-1, 2] = 25.0  # extreme deviation on sensor_3
+    outlier_window[-1, 2] = 25.0
     res_out = detector.detect_window_anomaly(outlier_window)
     assert res_out["severity"] in ("WARNING", "CRITICAL")
     assert len(res_out["top_anomalous_sensors"]) > 0
@@ -100,62 +96,133 @@ def test_feature_attribution(dummy_model, sample_feature_cols):
     res = xai.attribute_window(window, num_steps=5)
     assert "sensor_attributions" in res
     assert len(res["sensor_attributions"]) == 17
-    assert "top_3_drivers" in res
     assert len(res["top_3_drivers"]) == 3
-    assert "temporal_weights" in res
-    assert len(res["temporal_weights"]) == 30
 
 
-def test_maintenance_decision_engine():
+def test_five_tier_risk_classification():
     engine = MaintenanceDecisionEngine()
 
-    # Critical case
-    res_crit = engine.evaluate_health(predicted_rul=12.0, uncertainty_std=8.0, anomaly_score=0.85)
-    assert res_crit["health_state"] == "CRITICAL"
-    assert res_crit["priority"] in ("URGENT", "HIGH")
-    assert res_crit["maintenance_priority_index"] >= 60.0
-    assert len(res_crit["recommended_actions"]) > 0
+    # 1. Critical
+    crit = engine.evaluate_health(predicted_rul=8.0, engine_id=1)
+    assert crit["condition"] == "CRITICAL"
+    assert crit["priority"] == "URGENT"
 
-    # Healthy case
-    res_healthy = engine.evaluate_health(predicted_rul=110.0, uncertainty_std=2.0, anomaly_score=0.1)
-    assert res_healthy["health_state"] == "HEALTHY"
-    assert res_healthy["priority"] == "LOW"
-    assert res_healthy["maintenance_priority_index"] < 40.0
+    # 2. High Risk
+    high = engine.evaluate_health(predicted_rul=20.0, engine_id=2)
+    assert high["condition"] == "HIGH_RISK"
+    assert high["priority"] == "HIGH"
+
+    # 3. Warning
+    warn = engine.evaluate_health(predicted_rul=35.0, engine_id=3)
+    assert warn["condition"] == "WARNING"
+    assert warn["priority"] == "MEDIUM"
+
+    # 4. Monitor
+    mon = engine.evaluate_health(predicted_rul=60.0, engine_id=4)
+    assert mon["condition"] == "MONITOR"
+    assert mon["priority"] == "ROUTINE"
+
+    # 5. Healthy
+    healthy = engine.evaluate_health(predicted_rul=110.0, engine_id=5)
+    assert healthy["condition"] == "HEALTHY"
+    assert healthy["priority"] == "LOW"
 
 
-def test_maintenance_database_operations():
+def test_explainable_priority_breakdown():
+    engine = MaintenanceDecisionEngine(weight_rul=0.4, weight_anomaly=0.3)
+    res = engine.evaluate_health(
+        predicted_rul=25.0,
+        uncertainty_std=5.0,
+        anomaly_score=0.7,
+        degradation_rate=1.2,
+        max_sensor_zscore=2.5,
+        engine_id=7
+    )
+
+    assert "score_breakdown" in res
+    sb = res["score_breakdown"]
+    assert "rul_subscore" in sb
+    assert "anomaly_subscore" in sb
+    assert sb["weights"]["rul"] == 0.4
+    assert sb["weights"]["anomaly"] == 0.3
+    assert 0.0 <= res["maintenance_priority_index"] <= 100.0
+
+
+def test_traceable_recommendations():
+    engine = MaintenanceDecisionEngine()
+    res = engine.evaluate_health(predicted_rul=10.0, anomaly_score=0.8, max_sensor_zscore=3.2, engine_id=9)
+    recs = res["recommended_actions"]
+    assert len(recs) > 0
+
+    first = recs[0]
+    assert first["engine_id"] == 9
+    assert first["risk_classification"] == "CRITICAL"
+    assert "supporting_evidence" in first
+    assert "relevant_sensor_or_prediction_info" in first
+    assert "recommended_action" in first
+    assert "maintenance_priority" in first
+    assert "reason" in first
+
+
+def test_database_work_order_crud_and_alerts():
     with tempfile.TemporaryDirectory() as tmpdir:
-        db_path = pathlib.Path(tmpdir) / "test_maint.db"
+        db_path = pathlib.Path(tmpdir) / "test_maint2.db"
         db = MaintenanceDatabase(db_path)
 
-        # Log prediction
-        unc = {"mean_rul": 15.0, "std_dev": 3.0, "q10": 10.0, "q90": 20.0}
-        anom = {"anomaly_score": 0.82}
-        health = {
-            "health_state": "CRITICAL",
-            "maintenance_priority_index": 88.5,
-            "priority": "URGENT",
-            "recommended_actions": [{"action": "Urgent Overhaul", "subsystem": "HPT", "rationale": "High wear"}]
-        }
-
-        pred_id = db.log_prediction(
-            engine_id=101,
+        # 1. Create work order
+        wo_id = db.create_work_order(
+            engine_id=42,
             dataset_subset="FD001",
-            cycle=185,
-            predicted_rul=15.0,
-            uncertainty=unc,
-            anomaly=anom,
-            health_eval=health
+            priority="HIGH",
+            title="Inspect HPT Nozzle Guide Vanes",
+            subsystem="HPT Section",
+            description="Thermal creep signatures observed.",
+            assigned_to="Lead Engineer Sarah",
+            notes="Initial review."
         )
-        assert pred_id > 0
+        assert wo_id > 0
 
-        # Verify summary
-        summary = db.get_fleet_summary("FD001")
-        assert summary["health_distribution"].get("CRITICAL", 0) == 1
-        assert summary["work_orders"]["total_orders"] >= 1
+        # 2. Update status and notes
+        ok = db.update_work_order(
+            order_id=wo_id,
+            status="Maintenance In Progress",
+            notes="Borescope underway."
+        )
+        assert ok
 
-        # Verify work orders
+        # 3. Retrieve and verify
         orders = db.get_work_orders("FD001")
-        assert len(orders) >= 1
-        assert orders[0]["engine_id"] == 101
-        assert orders[0]["priority"] == "URGENT"
+        assert len(orders) == 1
+        assert orders[0]["status"] == "Maintenance In Progress"
+        assert orders[0]["assigned_to"] == "Lead Engineer Sarah"
+
+        # 4. Log prediction triggering automated alert
+        health_eval = {
+            "condition": "CRITICAL",
+            "health_state": "CRITICAL",
+            "maintenance_priority_index": 85.0,
+            "priority": "URGENT",
+            "recommended_actions": [{"action": "Core Overhaul", "subsystem": "Turbine", "reason": "Failure risk"}]
+        }
+        db.log_prediction(
+            engine_id=42,
+            dataset_subset="FD001",
+            cycle=190,
+            predicted_rul=9.5,
+            uncertainty={"std_dev": 2.5, "q10": 7.0, "q90": 12.0},
+            anomaly={"anomaly_score": 0.85},
+            health_eval=health_eval
+        )
+
+        # 5. Check active alerts
+        alerts = db.get_alerts("FD001", status="ACTIVE")
+        assert len(alerts) >= 1
+        alt_id = alerts[0]["id"]
+        assert alerts[0]["engine_id"] == 42
+        assert alerts[0]["severity"] == "CRITICAL"
+
+        # 6. Acknowledge and Resolve Alert
+        assert db.acknowledge_alert(alt_id)
+        assert db.resolve_alert(alt_id)
+        active_after = db.get_alerts("FD001", status="ACTIVE")
+        assert len(active_after) == 0

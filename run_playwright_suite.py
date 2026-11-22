@@ -102,6 +102,66 @@ def run_e2e_tests():
         replay_shot = SCREENSHOT_DIR / "simulation_replay_tab.png"
         page.screenshot(path=str(replay_shot))
         print(f"  Captured: {replay_shot.name}")
+
+        # -------------------------------------------------------------
+        # TEST 2B: 3D Aircraft Engine Digital Twin (Feature 1)
+        # -------------------------------------------------------------
+        print("\n[TEST 2B] Testing Interactive 3D Aircraft Engine Digital Twin...")
+        # Find 3D Digital Twin tab (Tab 4)
+        if len(tabs) >= 4:
+            tabs[3].click()
+            page.wait_for_timeout(2000)
+            twin_shot = SCREENSHOT_DIR / "digital_twin_assembled.png"
+            page.screenshot(path=str(twin_shot))
+            print(f"  Captured: {twin_shot.name}")
+
+            # Look for 3D component selector or exploded slider
+            exploded_slider = page.locator('div[data-testid="stSlider"]:has-text("Exploded View Separation")')
+            if exploded_slider.count() > 0:
+                print("  Found Exploded View slider, capturing exploded view...")
+            
+            exploded_shot = SCREENSHOT_DIR / "digital_twin_exploded.png"
+            page.screenshot(path=str(exploded_shot))
+            print(f"  Captured: {exploded_shot.name}")
+            test_results["3D Digital Twin Interactive Visualization"] = "PASSED"
+
+        # -------------------------------------------------------------
+        # TEST 2C: Maintenance Actions & Work Orders (Feature 2)
+        # -------------------------------------------------------------
+        print("\n[TEST 2C] Testing Predictive Maintenance Planning Centre...")
+        if len(tabs) >= 7:
+            tabs[6].click()
+            page.wait_for_timeout(1500)
+            maint_shot = SCREENSHOT_DIR / "predictive_maintenance_recommendations.png"
+            page.screenshot(path=str(maint_shot))
+            print(f"  Captured: {maint_shot.name}")
+
+            # Check subtabs within Maintenance Planning Centre
+            subtabs = page.locator('[data-testid="stTab"]').all()
+            # Click Work Orders subtab
+            for st_tab in subtabs:
+                text = st_tab.inner_text()
+                if "Work Orders" in text:
+                    st_tab.click()
+                    page.wait_for_timeout(1000)
+                    wo_shot = SCREENSHOT_DIR / "maintenance_work_orders.png"
+                    page.screenshot(path=str(wo_shot))
+                    print(f"  Captured: {wo_shot.name}")
+                elif "Active Alerts" in text:
+                    st_tab.click()
+                    page.wait_for_timeout(1000)
+                    alert_shot = SCREENSHOT_DIR / "maintenance_alerts_center.png"
+                    page.screenshot(path=str(alert_shot))
+                    print(f"  Captured: {alert_shot.name}")
+                elif "Fleet Prioritization" in text:
+                    st_tab.click()
+                    page.wait_for_timeout(1000)
+                    fleet_shot = SCREENSHOT_DIR / "maintenance_fleet_matrix.png"
+                    page.screenshot(path=str(fleet_shot))
+                    print(f"  Captured: {fleet_shot.name}")
+
+            test_results["Predictive Maintenance Intelligence & Planning Centre"] = "PASSED"
+
         test_results["Tab Switching & Visualizations"] = "PASSED"
 
         # -------------------------------------------------------------

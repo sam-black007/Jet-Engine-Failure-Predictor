@@ -473,27 +473,84 @@ with tab3:
 # TAB 4: 3D DIGITAL TWIN
 with tab4:
     st.markdown("#### Interactive WebGL Turbofan 3D Digital Twin & Thermodynamic Surface Mesh")
+
+    twin_ctrl_col1, twin_ctrl_col2 = st.columns([1, 1])
+    with twin_ctrl_col1:
+        exploded_val = st.slider(
+            "3D Exploded View Displacement",
+            min_value=0.0,
+            max_value=1.0,
+            value=0.0,
+            step=0.05,
+            help="Displace internal engine subassemblies along the longitudinal thrust axis to inspect inner core disks and flame tube."
+        )
+    with twin_ctrl_col2:
+        comp_keys = [
+            ("all", "All Assembled Subassemblies"),
+            ("fan_assembly", "1. Fan Assembly (Intake & Blades)"),
+            ("lpc", "2. Low-Pressure Compressor (Booster)"),
+            ("hpc", "3. High-Pressure Compressor (HPC Stages)"),
+            ("combustor", "4. Combustion Chamber (Flame Tube)"),
+            ("hpt", "5. High-Pressure Turbine (HPT Stages)"),
+            ("lpt", "6. Low-Pressure Turbine (LPT Stages)"),
+            ("exhaust_nozzle", "7. Exhaust Nozzle & Mixer"),
+            ("engine_casing", "8. Outer Nacelle Casing"),
+            ("central_shaft", "9. Central Dual-Spool Shaft Assembly")
+        ]
+        selected_comp_tuple = st.selectbox(
+            "Select Subassembly for Detailed Diagnostic Inspection",
+            options=comp_keys,
+            format_func=lambda x: x[1]
+        )
+        selected_comp_key = None if selected_comp_tuple[0] == "all" else selected_comp_tuple[0]
+
     twin_c1, twin_c2 = st.columns([3, 2])
     with twin_c1:
+        latest_tel = engine_trajectory.iloc[-1].to_dict()
         three_html = render_threejs_digital_twin_html(
             engine_id=selected_engine,
             cycle=max_observed_cycle,
             predicted_rul=predicted_rul,
             health_state=health_state,
-            mpi=max(0.0, min(100.0, (125.0 - predicted_rul) * 0.7))
+            mpi=max(0.0, min(100.0, (125.0 - predicted_rul) * 0.7)),
+            telemetry=latest_tel,
+            anomaly_info=anom_res if 'anom_res' in locals() else {"is_anomaly": False, "severity": "NORMAL"},
+            max_cycles=max_observed_cycle
         )
-        components.html(three_html, height=480)
+        components.html(three_html, height=520)
 
     with twin_c2:
         st.markdown("##### Aerothermal Heat-Map & Station Inspection Points")
-        latest_tel = engine_trajectory.iloc[-1].to_dict()
         twin_fig = generate_turbofan_3d_figure(
             telemetry=latest_tel,
             health_state=health_state,
             predicted_rul=predicted_rul,
-            mpi=max(0.0, min(100.0, (125.0 - predicted_rul) * 0.7))
+            mpi=max(0.0, min(100.0, (125.0 - predicted_rul) * 0.7)),
+            highlight_component=selected_comp_key,
+            exploded_fraction=exploded_val
         )
         st.plotly_chart(twin_fig, use_container_width=True)
+
+    # Component Diagnostic Card with Disclaimer
+    from src.digital_twin import COMPONENT_DEFINITIONS
+    inspect_key = selected_comp_key or "hpc"
+    c_meta = COMPONENT_DEFINITIONS[inspect_key]
+    st.markdown(f"""
+    <div style="background: #151D27; border: 1px solid #1E293B; border-left: 4px solid #00B8D9; border-radius: 6px; padding: 14px 18px; margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="color: #00B8D9; font-size: 1.05rem;">{c_meta['name']} ({c_meta['station']})</b>
+            <span style="color: #94A3B8; font-size: 0.85rem;">Subsystem: {c_meta['subsystem']}</span>
+        </div>
+        <div style="margin-top: 6px; font-size: 0.88rem; color: #E2E8F0;">
+            <strong>Mapped Physical Sensors:</strong> {c_meta['sensor_descriptions']}<br>
+            <strong>Primary Degradation Mode:</strong> {c_meta['degradation_mode']}<br>
+            <strong>Inferred Behavioral Indicators:</strong> {c_meta['inferred_indicators']}
+        </div>
+        <div style="margin-top: 8px; font-size: 0.78rem; color: #FFB547; background: rgba(255, 181, 71, 0.1); padding: 6px 10px; border-radius: 4px; border: 1px solid rgba(255, 181, 71, 0.25);">
+            ⚠️ <strong>Diagnostic Verification Note:</strong> Component health status and 3D highlighting are inferred analytical representations derived from sensor correlation dynamics and AI residual predictions. They must not be interpreted as physical teardown damage without physical borescope verification.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # TAB 5: ANOMALY DETECTION
 with tab5:
@@ -526,25 +583,153 @@ with tab6:
 
 # TAB 7: MAINTENANCE ACTIONS & WORK ORDERS
 with tab7:
-    st.markdown("#### Prescriptive Maintenance Recommendations & SQLite Work Orders")
+    st.markdown("#### Aerospace Predictive Maintenance Intelligence & Planning Centre")
+
+    # Evaluate health with full explainability
     m_eval = decision_engine.evaluate_health(
         predicted_rul=predicted_rul,
         uncertainty_std=unc_res["std_dev"],
         anomaly_score=anom_res["anomaly_score"] if 'anom_res' in locals() else 0.2,
-        current_cycle=max_observed_cycle
+        current_cycle=max_observed_cycle,
+        degradation_rate=1.2,
+        max_sensor_zscore=float(anom_res["top_anomalous_sensors"][0]["z_score"]) if 'anom_res' in locals() and anom_res.get("top_anomalous_sensors") else 1.2,
+        engine_id=selected_engine
     )
-    m_col1, m_col2 = st.columns(2)
-    with m_col1:
-        st.markdown("##### Recommended Actions")
+
+    m_subtab1, m_subtab2, m_subtab3, m_subtab4 = st.tabs([
+        "📋 Traceable Recommendations",
+        "🛠️ Maintenance Planning & Work Orders",
+        "🚨 Active Alerts Center",
+        "🌐 Fleet Prioritization Matrix"
+    ])
+
+    # 1. Traceable Recommendations
+    with m_subtab1:
+        st.markdown(f"##### Evidence-Traceable Recommendations for Engine #{selected_engine}")
         for rec in m_eval.get("recommended_actions", []):
-            st.markdown(f"- **{rec['action']}** ({rec['subsystem']}): {rec['rationale']}")
-    with m_col2:
-        st.markdown("##### Active Fleet Work Orders (SQLite Persistent)")
-        orders = db.get_work_orders(selected_dataset, status="OPEN")
-        if orders:
-            st.dataframe(pd.DataFrame(orders)[["id", "engine_id", "priority", "title", "subsystem"]], height=240, use_container_width=True)
+            st.markdown(f"""
+            <div style="background: #151D27; border: 1px solid #1E293B; border-left: 4px solid {'#FF5252' if rec.get('maintenance_priority') in ('URGENT', 'HIGH') else '#00B8D9'}; padding: 12px 16px; margin-bottom: 10px; border-radius: 6px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <b style="color: #F8FAFC; font-size: 1rem;">{rec.get('recommended_action', rec.get('action'))}</b>
+                    <span style="font-size: 0.8rem; font-weight: bold; color: {'#FF5252' if rec.get('maintenance_priority') in ('URGENT', 'HIGH') else '#21C77A'}; border: 1px solid currentColor; padding: 2px 6px; border-radius: 4px;">{rec.get('maintenance_priority')}</span>
+                </div>
+                <div style="color: #00B8D9; font-size: 0.85rem; margin-top: 4px;">Subsystem: {rec.get('subsystem')} | Risk: {rec.get('risk_classification')}</div>
+                <div style="color: #CBD5E1; font-size: 0.85rem; margin-top: 6px;">
+                    <strong>Supporting Diagnostic Evidence:</strong> {rec.get('supporting_evidence')}<br>
+                    <strong>Engineering Rationale:</strong> {rec.get('reason')}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("##### Explainable Maintenance Priority Index Breakdown")
+        sb = m_eval.get("score_breakdown", {})
+        sb_col1, sb_col2, sb_col3, sb_col4, sb_col5 = st.columns(5)
+        sb_col1.metric("RUL Impact (35%)", f"{sb.get('rul_subscore', 0):.1f}")
+        sb_col2.metric("Uncertainty (15%)", f"{sb.get('uncertainty_subscore', 0):.1f}")
+        sb_col3.metric("Anomaly (20%)", f"{sb.get('anomaly_subscore', 0):.1f}")
+        sb_col4.metric("Degradation (15%)", f"{sb.get('degradation_rate_subscore', 0):.1f}")
+        sb_col5.metric("Sensor Z-Score (15%)", f"{sb.get('sensor_abnormality_subscore', 0):.1f}")
+
+    # 2. Maintenance Planning & Work Orders
+    with m_subtab2:
+        st.markdown("##### Maintenance Work Order Management (SQLite Persistent)")
+        wo_action_col1, wo_action_col2 = st.columns([2, 1])
+
+        with wo_action_col1:
+            status_filter = st.selectbox(
+                "Filter Work Orders by Status",
+                ["All", "Pending", "Inspection Scheduled", "Under Inspection", "Maintenance In Progress", "Completed", "Deferred"]
+            )
+            filter_arg = None if status_filter == "All" else status_filter
+            all_wo = db.get_work_orders(dataset_subset=selected_dataset, status=filter_arg)
+
+            if all_wo:
+                wo_df = pd.DataFrame(all_wo)[["id", "engine_id", "priority", "title", "subsystem", "status", "assigned_to", "created_at"]]
+                st.dataframe(wo_df, use_container_width=True, height=240)
+
+                # CSV Export
+                csv_bytes = wo_df.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "📥 Export Work Orders (.csv)",
+                    data=csv_bytes,
+                    file_name=f"JETWISE_Work_Orders_{selected_dataset}.csv",
+                    mime="text/csv"
+                )
+            else:
+                st.info(f"No work orders found with status '{status_filter}'.")
+
+        with wo_action_col2:
+            st.markdown("###### Update Work Order Status")
+            if all_wo:
+                wo_ids = [w["id"] for w in all_wo]
+                target_wo_id = st.selectbox("Select Order ID", wo_ids)
+                new_status = st.selectbox(
+                    "New Operational Status",
+                    ["Inspection Scheduled", "Under Inspection", "Maintenance In Progress", "Completed", "Deferred"]
+                )
+                engineer_note = st.text_input("Engineering Log Note", "Routine inspection logged.")
+                if st.button("Update Order"):
+                    db.update_work_order(target_wo_id, status=new_status, notes=engineer_note)
+                    st.success(f"Work order #{target_wo_id} updated to {new_status}!")
+                    st.rerun()
+
+        # Create New Work Order Form
+        with st.expander("➕ Create New Aircraft Maintenance Work Order"):
+            with st.form("create_wo_form"):
+                f_title = st.text_input("Work Order Title", f"Scheduled Core Borescope // Unit #{selected_engine}")
+                f_subsystem = st.selectbox("Subsystem", ["High-Pressure Turbine", "High-Pressure Compressor", "Combustor Chamber", "Fan Assembly", "Bearing Compartment", "Exhaust Nozzle"])
+                f_priority = st.selectbox("Priority", ["LOW", "ROUTINE", "MEDIUM", "HIGH", "URGENT"])
+                f_assignee = st.text_input("Assigned Inspection Lead", "Aerospace Propulsion Team A")
+                f_desc = st.text_area("Scope & Supporting Evidence", f"Diagnostic indicators at cycle {max_observed_cycle} show RUL forecast of {predicted_rul:.1f} cycles.")
+                if st.form_submit_button("Submit Work Order"):
+                    new_id = db.create_work_order(
+                        engine_id=selected_engine,
+                        dataset_subset=selected_dataset,
+                        priority=f_priority,
+                        title=f_title,
+                        subsystem=f_subsystem,
+                        description=f_desc,
+                        assigned_to=f_assignee
+                    )
+                    st.success(f"Work Order #{new_id} created and persisted in SQLite!")
+                    st.rerun()
+
+    # 3. Active Alerts Center
+    with m_subtab3:
+        st.markdown("##### Active Flight & Health Telemetry Alerts")
+        active_alerts = db.get_alerts(dataset_subset=selected_dataset, status="ACTIVE")
+        if active_alerts:
+            alert_df = pd.DataFrame(active_alerts)[["id", "timestamp", "engine_id", "alert_type", "severity", "message"]]
+            st.dataframe(alert_df, use_container_width=True, height=220)
+
+            act_col1, act_col2 = st.columns(2)
+            with act_col1:
+                sel_alert_id = st.selectbox("Select Alert ID to Action", [a["id"] for a in active_alerts])
+            with act_col2:
+                btn_c1, btn_c2 = st.columns(2)
+                with btn_c1:
+                    if st.button("Acknowledge Alert"):
+                        db.acknowledge_alert(sel_alert_id)
+                        st.info(f"Alert #{sel_alert_id} acknowledged.")
+                        st.rerun()
+                with btn_c2:
+                    if st.button("Resolve Alert"):
+                        db.resolve_alert(sel_alert_id)
+                        st.success(f"Alert #{sel_alert_id} resolved.")
+                        st.rerun()
         else:
-            st.success("No open emergency work orders.")
+            st.success("No active critical telemetry alerts. Fleet is operating within normal limits.")
+
+    # 4. Fleet Prioritization Matrix
+    with m_subtab4:
+        st.markdown("##### Fleet-Wide Maintenance Prioritization Matrix (Top Units)")
+        fleet_summary = db.get_fleet_summary(dataset_subset=selected_dataset)
+        top_engines = fleet_summary.get("top_priority_engines", [])
+        if top_engines:
+            fleet_rank_df = pd.DataFrame(top_engines)
+            st.dataframe(fleet_rank_df, use_container_width=True, height=300)
+        else:
+            st.info("Fleet summary records loading from database...")
 
 # TAB 8: DIAGNOSTIC DOSSIER
 with tab8:
@@ -572,7 +757,10 @@ Generated: {now_str}
 3. PRESCRIPTIVE ACTIONS:
 """
     for rec in m_eval.get("recommended_actions", []):
-        report_text += f"   * [{rec['subsystem']}] {rec['action']}\n     Rationale: {rec['rationale']}\n"
+        subsys = rec.get("subsystem", "General")
+        act = rec.get("action", rec.get("recommended_action", "Inspection"))
+        rat = rec.get("rationale", rec.get("reason", "Prognostic risk indicator"))
+        report_text += f"   * [{subsys}] {act}\n     Rationale: {rat}\n"
 
     st.text_area("Engineering Diagnostic Dossier", report_text, height=280)
     st.download_button(

@@ -21,7 +21,9 @@
 | **Phase 7** | Advanced Predictive Intelligence Engine | MC Dropout uncertainty $[q_{10}, q_{90}]$, Isolation Forest anomaly detection, Integrated Gradients XAI, MPI scoring (0-100), SQLite database (`database/maintenance_records.db`). | **COMPLETED** | 84/84 Passing |
 | **Phase 8** | Complete SCADA Dark Dashboard & 3D Twin | Aerospace dark CSS (`#0B0F14`, `#101720`, `#00B8D9`), WebGL Three.js 3D turbofan digital twin, Plotly 3D thermodynamic surface mesh, 12 modules. | **COMPLETED** | Live on 8501 |
 | **Phase 9** | FastAPI Backend & Telemetry Streaming | REST endpoints (`/api/datasets`, `/api/models`, `/api/fleet`, `/api/predict`, `/api/maintenance`) + Server-Sent Events (SSE) telemetry stream (`/api/stream/telemetry`). | **COMPLETED** | 93/93 Passing |
-| **Phase 10** | Production Hardening & Handoff Certification | Full 93-test Pytest suite, 6/6 Playwright browser tests across 5 viewports, `FINAL_JETWISE_AI_VALIDATION_REPORT.md`, `JETWISE_AI_COMPLETE_HANDOFF.md`. | **COMPLETED** | 100% Green |
+| **Phase 10** | Production Hardening & Handoff Certification | Full 101-test Pytest suite, Playwright browser E2E tests across 5 viewports, `FINAL_JETWISE_AI_VALIDATION_REPORT.md`, `JETWISE_AI_COMPLETE_HANDOFF.md`. | **COMPLETED** | 101/101 Passing |
+| **Mandatory Core Feature 1** | Interactive 3D Turbofan Digital Twin | 9 distinct subassemblies, Three.js WebGL 60 FPS canvas, OrbitControls, exploded view separation, raycasting click & HUD, Plotly 3D aerothermal mesh, degradation playback. Detailed in `DIGITAL_TWIN_IMPLEMENTATION_REPORT.md`. | **COMPLETED** | Verified (3/3 Tests + E2E) |
+| **Mandatory Core Feature 2** | Advanced Predictive Maintenance Intelligence Engine | 5-tier risk taxonomy (`CRITICAL`, `HIGH_RISK`, `WARNING`, `MONITOR`, `HEALTHY`), explainable MPI scoring breakdown (0-100), evidence-traceable recommendations, SQLite work orders & alert lifecycles, fleet prioritization matrix. Detailed in `PREDICTIVE_MAINTENANCE_IMPLEMENTATION_REPORT.md`. | **COMPLETED** | Verified (7/7 Tests + E2E) |
 
 ---
 

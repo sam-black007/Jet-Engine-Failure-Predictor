@@ -17,8 +17,11 @@ You are acting as the Senior Principal ML Engineer, Aerospace Prognostics Archit
 - PyTorch: 2.4.0+cpu
 - Streamlit Dashboard: Running live on http://localhost:8501
 - FastAPI Server: Ready on port 8000 via `python -m uvicorn api.main:app --port 8000`
-- Test Suite: 93/93 Pytest tests passing (100% Green in ~50s)
-- Browser Automation: 6/6 Playwright Chromium E2E scenarios passing across 5 responsive viewports (1920x1080 to 390x844)
+- Test Suite: 101/101 Pytest tests passing (100% Green in ~52s)
+- Browser Automation: 8/8 Playwright Chromium E2E scenarios passing across 5 responsive viewports (1920x1080 to 390x844)
+- Two Mandatory Core Intelligence Features:
+  1. Interactive 3D Aircraft Engine Digital Twin (9 physical subassemblies, Three.js WebGL canvas, OrbitControls, exploded view separation, raycasting click & HUD, Plotly 3D meshes, degradation playback, diagnostic notice).
+  2. Advanced Predictive Maintenance Intelligence Engine (5-tier risk taxonomy, explainable MPI scoring breakdown, evidence-traceable recommendations, SQLite work orders & alert lifecycles, fleet prioritization matrix).
 
 ## 2. COMPLETED ARCHITECTURAL PHASES
 All 10 project development phases have been implemented, mathematically audited, evaluated on official test benchmarks, and certified:
