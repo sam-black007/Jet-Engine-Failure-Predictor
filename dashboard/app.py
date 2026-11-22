@@ -90,7 +90,7 @@ from src.ui.scada_overview import render_operations_scada_view
 # Page Configuration & SCADA Dark Industrial Styling
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="THRUSTLAB - Turbofan Jet Engine Health Monitor",
+    page_title="THRUSTLAB - Turbofan Engine Prognostics & Health Management",
     page_icon="✈️",
     layout="wide",
     initial_sidebar_state="expanded"
