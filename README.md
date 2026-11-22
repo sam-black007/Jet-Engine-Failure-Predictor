@@ -246,12 +246,21 @@ Simulations are dispatched through `src/matlab_integration/simulink_runner.py`:
 
 ---
 
-### 3.3. Authentic MATLAB Scope Graphics Export
+### 3.3. Native Simulink Turbofan Model Architecture
+
+The multi-stage turbomachinery architecture is compiled into a native Simulink model diagram (`matlab_models/models/turbofan_engine_model.slx`), providing a visual block-diagram representation of the gas path and shaft mechanics:
+
+![Native Simulink Turbofan Engine Model Architecture](assets/simulink_turbofan_model.png)
+*Figure 3: Programmatic 9-stage turbofan gas path model (`turbofan_engine_model.slx`) opened in Simulink R2026b academic environment, illustrating flight envelope operating inputs (Throttle, Fuel Flow, Ambient Pressure & Temperature), aerothermal component subsystems, dual-spool shaft dynamics, and multi-station sensor outports.*
+
+---
+
+### 3.4. Authentic MATLAB Scope Graphics Export
 
 Rather than relying on browser-interpolated WebGL meshes, the MATLAB engine generates and exports authentic, publication-quality figures directly from MathWorks' native graphics subsystem:
 
 ![Authentic MATLAB Scope Output](assets/matlab_scope_output.png)
-*Figure 3: Authentic 4-panel scope graphic generated directly by MathWorks MATLAB R2026b graphics engine illustrating station temperatures ($T_{24}, T_{30}, T_{50}$), pressures ($P_{24}, P_{30}, P_{50}$), spool rotational dynamics ($N_f, N_c$), and gross thrust vs. fuel consumption.*
+*Figure 4: Authentic 4-panel scope graphic generated directly by MathWorks MATLAB R2026b graphics engine illustrating station temperatures ($T_{24}, T_{30}, T_{50}$), pressures ($P_{24}, P_{30}, P_{50}$), spool rotational dynamics ($N_f, N_c$), and gross thrust vs. fuel consumption.*
 
 ---
 
@@ -260,13 +269,13 @@ Rather than relying on browser-interpolated WebGL meshes, the MATLAB engine gene
 The platform features an intelligent, multi-provider **Aerospace Copilot** (`src/chatbot/multi_provider_agent.py`) capable of translating natural-language flight directives into physical simulation runs.
 
 ![Copilot Console](assets/copilot_prompt_console.png)
-*Figure 4: Aerospace Copilot Console showing multi-provider NLU selector (Google Gemini & Local Deterministic Parser), conversation history, and quick-prompt telemetry modifiers.*
+*Figure 5: Aerospace Copilot Console showing multi-provider NLU selector (Google Gemini & Local Deterministic Parser), conversation history, and quick-prompt telemetry modifiers.*
 
 ![Copilot Results](assets/copilot_scenario_results.png)
-*Figure 5: Level 1 Engineering Summary Mode showing top-level KPI scorecards, delta changes from baseline, and component health matrices.*
+*Figure 6: Level 1 Engineering Summary Mode showing top-level KPI scorecards, delta changes from baseline, and component health matrices.*
 
 ![Copilot Advanced Workspace](assets/copilot_level2_workspace.png)
-*Figure 6: Level 2 Advanced Scientific Workspace displaying thermodynamic gas-path station continuity, energy balance verification logs, and mathematical equations.*
+*Figure 7: Level 2 Advanced Scientific Workspace displaying thermodynamic gas-path station continuity, energy balance verification logs, and mathematical equations.*
 
 ### Conversational Intent Taxonomy
 The copilot categorizes queries into 7 formal engineering intents:
@@ -285,10 +294,10 @@ The copilot categorizes queries into 7 formal engineering intents:
 Turbofan engines vary substantially across commercial aviation. THRUSTLAB provides a decoupled **Multi-Engine Configuration Centre** (`src/ui/multi_engine_centre.py`) supporting diverse architectural layouts:
 
 ![Multi-Engine Library](assets/multi_engine_library.png)
-*Figure 7: Multi-Engine Fleet Library cataloging commercial turbofan profiles across CFM, General Electric, Rolls-Royce, and Pratt & Whitney.*
+*Figure 8: Multi-Engine Fleet Library cataloging commercial turbofan profiles across CFM, General Electric, Rolls-Royce, and Pratt & Whitney.*
 
 ![Multi-Engine Comparison](assets/multi_engine_comparison.png)
-*Figure 8: Comparative multi-attribute evaluation across turbofan architectures comparing bypass ratios, overall pressure ratios, and takeoff thrust ratings.*
+*Figure 9: Comparative multi-attribute evaluation across turbofan architectures comparing bypass ratios, overall pressure ratios, and takeoff thrust ratings.*
 
 | Engine Family | Mechanical Architecture | Primary Application | Design BPR | Design OPR | Takeoff Thrust |
 | :--- | :--- | :--- | :---: | :---: | :---: |
@@ -303,16 +312,16 @@ Turbofan engines vary substantially across commercial aviation. THRUSTLAB provid
 ## 6. Advanced Aerospace Intelligence (Phases 11 & 12)
 
 ![Physics Intelligence](assets/physics_intelligence.png)
-*Figure 9: Physics-Informed Aerothermodynamic Engine displaying virtual sensor estimation ($\hat{T}_{40}, \hat{P}_{40}$), polytropic efficiency curves, and energy balance verification.*
+*Figure 10: Physics-Informed Aerothermodynamic Engine displaying virtual sensor estimation ($\hat{T}_{40}, \hat{P}_{40}$), polytropic efficiency curves, and energy balance verification.*
 
 ![Sensor FDIR](assets/sensor_fdir.png)
-*Figure 10: Sensor Fault Detection, Isolation, and Recovery (FDIR) detecting bias drift, stuck-at faults, and high-frequency noise.*
+*Figure 11: Sensor Fault Detection, Isolation, and Recovery (FDIR) detecting bias drift, stuck-at faults, and high-frequency noise.*
 
 ![Knowledge Graph](assets/aerospace_knowledge_graph.png)
-*Figure 11: Aerospace Engineering Knowledge Graph mapping multi-hop ontological relationships from raw sensor anomalies to depot-level corrective actions.*
+*Figure 12: Aerospace Engineering Knowledge Graph mapping multi-hop ontological relationships from raw sensor anomalies to depot-level corrective actions.*
 
 ![Reliability & Survival Analysis](assets/reliability_survival.png)
-*Figure 12: Probabilistic Reliability & Survival Analysis showing 2-Parameter Weibull hazard rates and empirical Kaplan-Meier fleet survival functions.*
+*Figure 13: Probabilistic Reliability & Survival Analysis showing 2-Parameter Weibull hazard rates and empirical Kaplan-Meier fleet survival functions.*
 
 ---
 
@@ -332,13 +341,13 @@ Evaluated on `test_FD001.txt` trajectories truncated prior to failure, compared 
 | **Temporal Transformer** | Multi-Head Self-Attention | **10.84** | **14.41** | **298.12** | **3.8 ms** |
 
 ![Model Comparison](assets/model_performance_comparison.png)
-*Figure 13: Empirical benchmark across 6 model architectures comparing Sequence RMSE, Sequence MAE, and End-of-Life error.*
+*Figure 14: Empirical benchmark across 6 model architectures comparing Sequence RMSE, Sequence MAE, and End-of-Life error.*
 
 ![Actual vs Predicted Scatter](assets/actual_vs_predicted_scatter.png)
-*Figure 14: Actual vs. Predicted RUL scatter plots illustrating tight error bounds around the ideal 45-degree parity line for deep sequence models.*
+*Figure 15: Actual vs. Predicted RUL scatter plots illustrating tight error bounds around the ideal 45-degree parity line for deep sequence models.*
 
 ![NASA Score Comparison](assets/nasa_score_comparison.png)
-*Figure 15: NASA Asymmetric Penalty Score comparison proving the decisive advantage of Asymmetric and Pinball losses over symmetric MSE loss.*
+*Figure 16: NASA Asymmetric Penalty Score comparison proving the decisive advantage of Asymmetric and Pinball losses over symmetric MSE loss.*
 
 ---
 

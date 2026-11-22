@@ -90,4 +90,9 @@ matlab_models/results/matlab_scope_*.png
 !matlab_models/results/output_test.json
 !matlab_models/results/matlab_scope_MATLAB-08CE5A70.png
 !matlab_models/results/matlab_scope_MATLAB-F8BAE5CC.png
+*.autosave
+*.asv
+matlab_models/scripts/matlab_scope_*.png
+matlab_models/scripts/simulation_result.json
+untitled*.m
 
