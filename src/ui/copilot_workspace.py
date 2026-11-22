@@ -48,7 +48,7 @@ from src.dataset_registry import DatasetRegistry
 
 def init_copilot_session():
     """Initialize Streamlit session state variables for Prompt-Driven Intelligence."""
-    if "copilot_history" not in st.session_state:
+    if "copilot_history" not in st.session_state or not st.session_state["copilot_history"]:
         st.session_state["copilot_history"] = [
             {
                 "sender": "AGENT",
@@ -56,7 +56,7 @@ def init_copilot_session():
                     "👋 **Welcome to JETWISE AI — Prompt-Driven Aerospace Engineering Intelligence Console.**\n\n"
                     "Communicate with me in natural English to simulate physical scenarios, evaluate multi-cycle degradation, "
                     "analyze aerodynamic gas-path telemetry, or execute MATLAB/Simulink physics runs.\n\n"
-                    "**Click a suggested command below or type your instruction to begin.**"
+                    "**Click any suggested command on the left or type your instruction below to begin.**"
                 ),
                 "timestamp": time.strftime("%H:%M:%S")
             }
@@ -75,6 +75,15 @@ def init_copilot_session():
         st.session_state["baseline_result"] = None
     if "show_advanced_technical_mode" not in st.session_state:
         st.session_state["show_advanced_technical_mode"] = False
+
+
+@st.cache_resource
+def get_cached_copilot_services():
+    """Cache heavy NLU, ML models, and investigation engines to make page transitions instantaneous."""
+    nlu = AerospaceCopilotNLU()
+    sim_engine = CopilotSimulationEngine()
+    inv_engine = AutonomousInvestigationEngine()
+    return nlu, sim_engine, inv_engine
 
 
 def render_copilot_workspace():
@@ -111,9 +120,7 @@ def render_copilot_workspace():
     </div>
     """, unsafe_allow_html=True)
 
-    nlu = AerospaceCopilotNLU()
-    sim_engine = CopilotSimulationEngine()
-    inv_engine = AutonomousInvestigationEngine()
+    nlu, sim_engine, inv_engine = get_cached_copilot_services()
 
     # Three-Column Industrial Console Layout
     col_left, col_center, col_right = st.columns([1.1, 2.5, 1.1])
@@ -280,9 +287,23 @@ def render_copilot_workspace():
             if f_cols[3].button("🔬 View MATLAB Details", use_container_width=True):
                 preset_click = "Show me the MATLAB simulation outputs"
 
-        # Chat Input
+        # Dedicated In-Console Prompt Input Form
+        st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
+        with st.form(key="copilot_command_form", clear_on_submit=True):
+            p_col1, p_col2 = st.columns([5, 1.3])
+            with p_col1:
+                form_prompt = st.text_input(
+                    "💬 Aerospace Engineering Prompt",
+                    placeholder="💬 Type your engineering prompt here (e.g. 'Increase turbine temperature by 5% and reduce compressor pressure by 3%')...",
+                    label_visibility="collapsed",
+                    key="copilot_form_input"
+                )
+            with p_col2:
+                form_submit = st.form_submit_button("🚀 Run Prompt", use_container_width=True, type="primary")
+
+        # Bottom Streamlit Chat Input (alternate input)
         user_input = st.chat_input("Enter engineering command (e.g. 'Increase turbine temperature by 5% and reduce compressor pressure by 3%')...")
-        query_to_run = user_input or preset_click
+        query_to_run = (form_prompt.strip() if form_submit and form_prompt and form_prompt.strip() else None) or user_input or preset_click
 
         if query_to_run:
             st.session_state["copilot_history"].append({
