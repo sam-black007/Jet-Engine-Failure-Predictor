@@ -19,7 +19,7 @@ from src.digital_twin import (
 )
 
 
-def test_nine_turbofan_components_defined():
+def test_ten_turbofan_components_defined():
     required_components = [
         "fan_assembly",
         "lpc",
@@ -29,7 +29,8 @@ def test_nine_turbofan_components_defined():
         "lpt",
         "exhaust_nozzle",
         "engine_casing",
-        "central_shaft"
+        "central_shaft",
+        "sensors"
     ]
     for comp in required_components:
         assert comp in COMPONENT_DEFINITIONS, f"Missing required component: {comp}"
@@ -96,3 +97,28 @@ def test_threejs_html_generation_and_features():
     assert "resetCamera" in html
     # Verify presence of diagnostic disclaimer
     assert "Inferred Diagnostic" in html
+
+    # Verify 7-state colour legend bar
+    assert "legend-bar" in html
+    assert "BLUE: Cold" in html
+    assert "GREEN: Normal" in html
+    assert "YELLOW: Caution" in html
+    assert "ORANGE: Warning" in html
+    assert "RED: Critical" in html
+    assert "PURPLE: Sensor Fault" in html
+    assert "GREY: Unsimulated" in html
+
+    # Verify 7 selectable Twin Modes
+    assert "twin-mode-select" in html
+    assert "Engine Health Mode" in html
+    assert "Thermal Mode" in html
+    assert "Pressure Mode" in html
+    assert "Component Degradation Mode" in html
+    assert "Sensor Monitoring Mode" in html
+    assert "Predictive Maintenance Mode" in html
+    assert "Baseline Comparison Mode" in html
+
+    # Verify dual-spool rotation and component 10 geometry
+    assert "lpRotSpeed" in html
+    assert "hpRotSpeed" in html
+    assert "sensors" in html

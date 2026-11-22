@@ -72,6 +72,7 @@ from src.ui.configuration_centre import render_global_configuration_centre
 from src.ui.copilot_workspace import render_copilot_workspace
 from src.ui.matlab_centre import render_matlab_centre
 from src.ui.multi_engine_centre import render_multi_engine_centre
+from src.ui.api_configuration_centre import render_api_configuration_centre
 
 # ---------------------------------------------------------------------------
 # Page Configuration & SCADA Dark Industrial Styling
@@ -255,6 +256,7 @@ nav_workspace = st.sidebar.selectbox(
     "Active Workspace",
     [
         "✈️ Operations & 3D Digital Twin",
+        "🔐 API & Integration Configuration Centre",
         "🌐 Multi-Engine Configuration Centre",
         "🎛️ MATLAB & Simulink Simulation Centre",
         "🧑‍✈️ Aerospace Engineering Copilot",
@@ -263,7 +265,7 @@ nav_workspace = st.sidebar.selectbox(
         "⚙️ Global Configuration Centre"
     ],
     index=0,
-    help="Switch between Core Operations, Multi-Engine Centre, MATLAB Simulation Centre, Conversational Copilot, Phase 11 Intelligence, Phase 12 Research, and Global Configuration."
+    help="Switch between Core Operations, API Configuration, Multi-Engine Centre, MATLAB Simulation Centre, Conversational Copilot, Phase 11 Intelligence, Phase 12 Research, and Global Configuration."
 )
 
 # 1. Multi-Dataset Dynamic Selector
@@ -440,7 +442,10 @@ else:
 
 st.markdown("---")
 
-if nav_workspace == "🌐 Multi-Engine Configuration Centre":
+if nav_workspace == "🔐 API & Integration Configuration Centre":
+    render_api_configuration_centre()
+
+elif nav_workspace == "🌐 Multi-Engine Configuration Centre":
     render_multi_engine_centre()
 
 elif nav_workspace == "🎛️ MATLAB & Simulink Simulation Centre":
@@ -675,7 +680,7 @@ else:
                 anomaly_info=anom_res if 'anom_res' in locals() else {"is_anomaly": False, "severity": "NORMAL"},
                 max_cycles=max_observed_cycle
             )
-            components.html(three_html, height=520)
+            components.html(three_html, height=580)
     
         with twin_c2:
             st.markdown("##### Aerothermal Heat-Map & Station Inspection Points")

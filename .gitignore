@@ -67,6 +67,15 @@ dataset/processed/*.npy
 # Intermediate trial checkpoints
 models/checkpoints/*.pt
 
+# Security & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+!*.example
+
 # Scratch and diagnostic scripts
 check_missing*.py
 run_check*.py

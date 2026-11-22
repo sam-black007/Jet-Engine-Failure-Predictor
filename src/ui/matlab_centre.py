@@ -121,13 +121,30 @@ def render_matlab_centre():
 
         # Status summary cards
         c1, c2, c3, c4 = st.columns(4)
-        status_color = "#21C77A" if report["status"] == "AVAILABLE" else ("#FFB547" if report["status"] == "LICENSE_UNAVAILABLE" else "#FF5252")
-        status_icon = "🟢" if report["status"] == "AVAILABLE" else ("🟡" if report["status"] == "LICENSE_UNAVAILABLE" else "🔴")
+        formal_status = report.get("formal_status", "NOT INSTALLED")
+        status_colors = {
+            "INSTALLED AND LICENSED": "#21C77A",
+            "INSTALLED BUT NOT LICENSED": "#FFB547",
+            "NOT INSTALLED": "#64748B",
+            "NOT REQUIRED": "#00B8D9",
+            "NOT VERIFIED": "#F59E0B",
+            "INCOMPATIBLE": "#FF5252"
+        }
+        status_color = status_colors.get(formal_status, "#64748B")
+        status_icons = {
+            "INSTALLED AND LICENSED": "🟢",
+            "INSTALLED BUT NOT LICENSED": "🟡",
+            "NOT INSTALLED": "⚪",
+            "NOT REQUIRED": "🔵",
+            "NOT VERIFIED": "🟠",
+            "INCOMPATIBLE": "🔴"
+        }
+        status_icon = status_icons.get(formal_status, "⚪")
 
         c1.markdown(f"""
         <div style="background: #111827; border: 1px solid #1F2937; border-top: 3px solid {status_color}; padding: 14px; border-radius: 6px;">
-            <div style="color: #9CA3AF; font-size: 0.8rem; text-transform: uppercase;">MATLAB Host Status</div>
-            <div style="font-size: 1.2rem; font-weight: bold; color: {status_color}; margin-top: 4px;">{status_icon} {report['status']}</div>
+            <div style="color: #9CA3AF; font-size: 0.8rem; text-transform: uppercase;">Formal Environment Status</div>
+            <div style="font-size: 1.1rem; font-weight: bold; color: {status_color}; margin-top: 4px;">{status_icon} {formal_status}</div>
             <div style="color: #6B7280; font-size: 0.75rem; margin-top: 4px;">{'Executable Found' if report['is_installed'] else 'Offline / Not in PATH'}</div>
         </div>
         """, unsafe_allow_html=True)
@@ -199,6 +216,30 @@ def render_matlab_centre():
                         st.rerun()
                     else:
                         st.info("No standard MATLAB installations detected on C:, D:, or E:.")
+
+        # Mathematical Calculation Benchmark Expander
+        with st.expander("🧮 Mathematical Engine Calculation Benchmark (Execution Verification)", expanded=False):
+            st.markdown(
+                "Run an actual mathematical calculation test to verify direct computation capability "
+                "(evaluating speed of sound, Brayton gas path pressure ratios, and square root operations) "
+                "to prove execution rather than mere executable presence."
+            )
+            if st.button("▶ Run Engine Calculation Benchmark", key="btn_run_calc_test"):
+                with st.spinner("Executing mathematical verification benchmark..."):
+                    calc_res = runner.engine_mgr.execute_calculation_test()
+                    st.session_state["matlab_calc_test_result"] = calc_res
+
+            calc_res = st.session_state.get("matlab_calc_test_result")
+            if calc_res:
+                if calc_res.get("success"):
+                    st.success(f"✅ Calculation Benchmark Succeeded via {calc_res.get('mode')} (Latency: {calc_res.get('latency_ms')} ms)")
+                    cols = st.columns(len(calc_res.get("operations", [])))
+                    for idx, op in enumerate(calc_res.get("operations", [])):
+                        with cols[idx]:
+                            st.metric(label=op.get("test"), value=str(op.get("actual")), delta="PASS")
+                    st.caption(f"Details: {calc_res.get('details')}")
+                else:
+                    st.error(f"❌ Calculation Benchmark Failed: {calc_res.get('error')}")
 
         # Environment details table
         st.markdown("#### Host Configuration & Installed Toolboxes")

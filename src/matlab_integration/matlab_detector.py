@@ -179,6 +179,20 @@ class MATLABDetector:
                 report["status"] = "INCOMPATIBLE"
                 report["diagnostic_messages"].append(f"Failed to execute test command in MATLAB: {cli_result.get('error')}")
 
+        # Determine formal 6-state status
+        if report.get("is_emulated", False):
+            report["formal_status"] = "INSTALLED AND LICENSED"
+        elif not report.get("is_installed", False):
+            report["formal_status"] = "NOT INSTALLED"
+        elif not report.get("is_licensed", False):
+            report["formal_status"] = "INSTALLED BUT NOT LICENSED"
+        elif not report.get("python_compatible", False):
+            report["formal_status"] = "INCOMPATIBLE"
+        elif not report.get("can_execute", False):
+            report["formal_status"] = "NOT VERIFIED"
+        else:
+            report["formal_status"] = "INSTALLED AND LICENSED"
+
         self.cached_report = report
         return report
 

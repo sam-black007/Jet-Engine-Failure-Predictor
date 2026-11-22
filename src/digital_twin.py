@@ -138,6 +138,23 @@ COMPONENT_DEFINITIONS = {
         "base_color": "#CBD5E1",
         "degradation_mode": "Bearing wear, shaft misalignment, squeeze film damper degradation",
         "inferred_indicators": "Speed differential jitter, inter-shaft bearing vibration"
+    },
+    "sensors": {
+        "id": "sensors",
+        "name": "Sensors & Instrumentation Harness",
+        "station": "Stations 2, 2.5, 3, 4, 5 (Full Gas Path)",
+        "subsystem": "FADEC Instrumentation & Telemetry Rakes",
+        "sensors": [
+            "sensor_1", "sensor_2", "sensor_3", "sensor_4", "sensor_5",
+            "sensor_6", "sensor_7", "sensor_8", "sensor_9", "sensor_10",
+            "sensor_11", "sensor_12", "sensor_13", "sensor_14", "sensor_15",
+            "sensor_16", "sensor_17", "sensor_18", "sensor_19", "sensor_20", "sensor_21"
+        ],
+        "sensor_descriptions": "Thermocouple rakes (T2, T24, T30, T50), Piezoresistive pressure taps (P2, P15, P30, Ps30), Spool speed phonic wheels (Nf, Nc)",
+        "nominal_temp": 850.0,
+        "base_color": "#A855F7",
+        "degradation_mode": "Thermocouple drift, pressure tap icing/blockage, EMI noise, harness corrosion",
+        "inferred_indicators": "Signal noise spikes, anomalous Z-score divergence, persistent delta from redundant channel"
     }
 }
 
@@ -189,7 +206,8 @@ def generate_turbofan_3d_figure(
         "lpt": 4.0 * ef,
         "exhaust_nozzle": 5.8 * ef,
         "central_shaft": 0.0,
-        "engine_casing": 0.0
+        "engine_casing": 0.0,
+        "sensors": 0.0
     }
 
     # Geometric definitions: (key, r1, r2, z1, z2, base_temp, colormap)
@@ -256,6 +274,21 @@ def generate_turbofan_3d_figure(
             hoverinfo="text",
             hovertext="<b>Engine Nacelle & Casing</b><br>Structural Containment & Bypass Cowl"
         ))
+
+    # Sensors & Instrumentation Harness (Component 10)
+    sensors_offset = offsets["sensors"]
+    xsens, ysens, zsens = _cylinder_mesh(2.65, 2.35, 0.4 + sensors_offset, 10.8 + sensors_offset, n_theta=16, n_z=4)
+    is_sens_hl = (highlight_component == "sensors")
+    fig.add_trace(go.Surface(
+        x=xsens, y=ysens, z=zsens,
+        surfacecolor=np.full_like(zsens, 200),
+        colorscale=[[0, "#00E5FF"], [1, "#FFFFFF"]] if is_sens_hl else [[0, "#A855F7"], [1, "#C084FC"]],
+        showscale=False,
+        opacity=0.92 if is_sens_hl else 0.40,
+        name="Sensors & Instrumentation Harness",
+        hoverinfo="text",
+        hovertext="<b>Sensors & Instrumentation Harness</b><br>Stations 2, 2.5, 3, 4, 5<br>Thermocouple Rakes & Piezoresistive Pressure Taps"
+    ))
 
     # Critical Inspection Station Markers
     markers = [
@@ -332,9 +365,12 @@ def render_threejs_digital_twin_html(
     highlight_components: Optional[List[str]] = None,
     component_visual_states: Optional[Dict[str, str]] = None,
     scenario_info: Optional[Dict[str, Any]] = None,
-    compare_mode: bool = False
+    compare_mode: bool = False,
+    twin_mode: str = "Engine Health Mode"
 ) -> str:
-    """Generate interactive WebGL 3D turbofan digital twin HTML using Three.js with full component inspection."""
+    """Generate interactive WebGL 3D turbofan digital twin HTML using Three.js with full component inspection,
+    7 selectable twin modes, 10 independently selectable components, 7-state threshold evaluation,
+    dual-spool rotation animation, and persistent canvas color legend."""
     telemetry = telemetry or {}
     anomaly_info = anomaly_info or {}
     highlight_components = highlight_components or []
@@ -351,22 +387,55 @@ def render_threejs_digital_twin_html(
     }
     glow_color = state_colors.get(health_state, "#00B8D9")
 
+    # Evaluate 7-State Thresholds via ThresholdManager
+    threshold_eval: Dict[str, Dict[str, str]] = {}
+    try:
+        from src.digital_twin_thresholds import get_threshold_manager
+        tm = get_threshold_manager()
+        for cid in COMPONENT_DEFINITIONS.keys():
+            is_fault = (cid == "sensors" and anomaly_info.get("is_anomaly", False))
+            c_hex, c_state, c_rat = tm.evaluate_component_health_color(
+                component_id=cid,
+                telemetry=telemetry,
+                is_sensor_fault=is_fault
+            )
+            # If explicit visual override was provided
+            if component_visual_states and cid in component_visual_states:
+                ov = component_visual_states[cid]
+                if ov == "CRITICAL":
+                    c_hex, c_state = "#EF4444", "CRITICAL"
+                elif ov == "WARNING":
+                    c_hex, c_state = "#F97316", "WARNING"
+                elif ov == "MODIFIED":
+                    c_hex, c_state = "#00B8D9", "MODIFIED"
+                elif ov == "NORMAL":
+                    c_hex, c_state = "#10B981", "NORMAL"
+            threshold_eval[cid] = {"color": c_hex, "state": c_state, "rationale": c_rat}
+    except Exception:
+        threshold_eval = {
+            cid: {"color": "#10B981", "state": "NORMAL", "rationale": "Nominal operational envelope"}
+            for cid in COMPONENT_DEFINITIONS.keys()
+        }
+
     # Serialize component definitions and live readings for embedded JS
     components_payload = {}
     for k, v in COMPONENT_DEFINITIONS.items():
         comp_copy = dict(v)
-        # Attach live telemetry values
         readings = {}
         for s in v["sensors"]:
             if s in telemetry:
                 readings[s] = round(float(telemetry[s]), 2)
         comp_copy["live_readings"] = readings
+        comp_copy["threshold_eval"] = threshold_eval.get(k, {})
         components_payload[k] = comp_copy
 
     components_json = json.dumps(components_payload)
     visual_states_json = json.dumps(component_visual_states)
     highlight_json = json.dumps(highlight_components)
+    threshold_eval_json = json.dumps(threshold_eval)
+    telemetry_json = json.dumps(telemetry)
     default_selected = highlight_components[0] if highlight_components else "hpc"
+
     scenario_badge_html = f"""
     <div style="margin-top: 6px; padding: 4px 6px; background: rgba(0, 184, 217, 0.15); border: 1px solid #00B8D9; border-radius: 4px; font-size: 10px;">
         <span style="color: #00B8D9; font-weight: bold;">⚡ SCENARIO:</span> {scenario_info.get("name", "Active What-If")}
@@ -393,7 +462,7 @@ def render_threejs_digital_twin_html(
             }}
             #canvas-container {{
                 width: 100%;
-                height: 520px;
+                height: 560px;
                 position: relative;
             }}
             /* Telemetry & Health HUD Overlay */
@@ -401,7 +470,7 @@ def render_threejs_digital_twin_html(
                 position: absolute;
                 top: 12px;
                 left: 14px;
-                background: rgba(16, 23, 32, 0.88);
+                background: rgba(16, 23, 32, 0.90);
                 border: 1px solid #1E293B;
                 border-left: 4px solid {glow_color};
                 padding: 10px 14px;
@@ -419,12 +488,23 @@ def render_threejs_digital_twin_html(
                 text-transform: uppercase;
                 letter-spacing: 0.8px;
             }}
+            .mode-badge {{
+                display: inline-block;
+                padding: 2px 6px;
+                background: rgba(0, 184, 217, 0.2);
+                border: 1px solid #00B8D9;
+                border-radius: 4px;
+                font-size: 10px;
+                font-weight: 700;
+                color: #00B8D9;
+                margin-top: 4px;
+            }}
             /* Component Inspector Card */
             .inspector-card {{
                 position: absolute;
                 top: 12px;
                 right: 14px;
-                background: rgba(16, 23, 32, 0.92);
+                background: rgba(16, 23, 32, 0.94);
                 border: 1px solid #1E293B;
                 border-top: 3px solid #00B8D9;
                 padding: 12px 16px;
@@ -461,14 +541,49 @@ def render_threejs_digital_twin_html(
                 border-radius: 4px;
                 line-height: 1.3;
             }}
-            /* Toolbar / Exploded View & Camera Controls */
+            /* Persistent Canvas Colour Legend */
+            .legend-bar {{
+                position: absolute;
+                bottom: 8px;
+                left: 14px;
+                right: 14px;
+                background: rgba(11, 15, 20, 0.94);
+                border: 1px solid #1E293B;
+                border-radius: 5px;
+                padding: 5px 10px;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px;
+                font-size: 10px;
+                color: #CBD5E1;
+                z-index: 9;
+                backdrop-filter: blur(4px);
+            }}
+            .legend-title {{
+                color: #00B8D9;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+            }}
+            .legend-item {{
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }}
+            .legend-dot {{
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                display: inline-block;
+            }}
+            /* Toolbar / Exploded View, Camera & Mode Controls */
             .toolbar-overlay {{
                 position: absolute;
-                bottom: 12px;
+                bottom: 42px;
                 left: 14px;
-                background: rgba(16, 23, 32, 0.9);
+                background: rgba(16, 23, 32, 0.92);
                 border: 1px solid #1E293B;
-                padding: 8px 12px;
+                padding: 6px 12px;
                 border-radius: 6px;
                 display: flex;
                 gap: 8px;
@@ -480,7 +595,7 @@ def render_threejs_digital_twin_html(
                 background: #151D27;
                 color: #E2E8F0;
                 border: 1px solid #334155;
-                padding: 4px 10px;
+                padding: 3px 9px;
                 border-radius: 4px;
                 cursor: pointer;
                 font-weight: 600;
@@ -499,21 +614,21 @@ def render_threejs_digital_twin_html(
             /* Cycle Timeline Playback Bar */
             .playback-overlay {{
                 position: absolute;
-                bottom: 12px;
+                bottom: 42px;
                 right: 14px;
-                background: rgba(16, 23, 32, 0.9);
+                background: rgba(16, 23, 32, 0.92);
                 border: 1px solid #1E293B;
-                padding: 8px 14px;
+                padding: 6px 12px;
                 border-radius: 6px;
                 display: flex;
-                gap: 8px;
+                gap: 6px;
                 align-items: center;
                 z-index: 10;
                 font-size: 11px;
             }}
             .controls-hint {{
                 position: absolute;
-                bottom: 52px;
+                bottom: 78px;
                 left: 14px;
                 color: #64748B;
                 font-size: 10px;
@@ -533,10 +648,11 @@ def render_threejs_digital_twin_html(
                 <div style="font-size: 10px; color: #94A3B8; margin-top: 2px;">
                     Anomaly Severity: <span style="color: {'#FF5252' if anomaly_info.get('is_anomaly') else '#21C77A'};">{anomaly_info.get('severity', 'NORMAL')}</span>
                 </div>
+                <div class="mode-badge" id="hud-mode-badge">MODE: {twin_mode}</div>
                 {scenario_badge_html}
             </div>
 
-            <!-- Component Inspector Panel -->
+            <!-- Component Inspector Panel (10 Subassemblies) -->
             <div class="inspector-card" id="inspector-panel">
                 <div class="inspector-title" id="comp-name">High-Pressure Compressor (HPC)</div>
                 <div class="inspector-sub" id="comp-station">Station 2.5 - 3 // Core Compression Spool</div>
@@ -545,20 +661,47 @@ def render_threejs_digital_twin_html(
                     <div class="sensor-row"><span>Nc (Core Speed)</span><b id="val-nc">9065.2 rpm</b></div>
                 </div>
                 <div style="margin-top: 8px; font-size: 11px; color: #CBD5E1;">
-                    <strong>Inferred Wear:</strong> <span id="comp-wear">Elevated thermal & blade aerodynamic wear</span>
+                    <strong>Status:</strong> <span id="comp-status" style="font-weight: 700; color: #10B981;">NORMAL</span>
+                </div>
+                <div style="margin-top: 4px; font-size: 10.5px; color: #94A3B8;">
+                    <strong>Wear / Mode:</strong> <span id="comp-wear">Elevated thermal & blade aerodynamic wear</span>
                 </div>
                 <div class="disclaimer-tag">
                     ℹ️ <strong>Inferred Diagnostic:</strong> Highlighting reflects sensor associations & neural prediction models. Not confirmed physical teardown damage.
                 </div>
             </div>
 
-            <!-- Viewport Controls & Exploded View -->
+            <!-- Persistent Canvas Colour Legend (Phase 4 7-State Standards) -->
+            <div class="legend-bar">
+                <span class="legend-title">HEALTH ENVELOPE:</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #3B82F6;"></span>BLUE: Cold</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #10B981;"></span>GREEN: Normal</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #FBBF24;"></span>YELLOW: Caution</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #F97316;"></span>ORANGE: Warning</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #EF4444;"></span>RED: Critical</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #A855F7;"></span>PURPLE: Sensor Fault</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #64748B;"></span>GREY: Unsimulated</span>
+            </div>
+
+            <!-- Viewport Controls & 7 Selectable Twin Modes -->
             <div class="toolbar-overlay">
                 <span>View:</span>
                 <button class="toolbar-btn active" id="btn-assembled" onclick="setExploded(false)">Assembled</button>
                 <button class="toolbar-btn" id="btn-exploded" onclick="setExploded(true)">Exploded (3D)</button>
                 <button class="toolbar-btn" onclick="resetCamera()">Reset Camera</button>
-                <span style="margin-left: 6px;">Inspect:</span>
+
+                <span style="margin-left: 4px;">Mode:</span>
+                <select id="twin-mode-select" onchange="setTwinMode(this.value)" style="background: #151D27; color: #00B8D9; border: 1px solid #00B8D9; border-radius: 4px; padding: 2px 4px; font-size: 11px; font-weight: 600;">
+                    <option value="Engine Health Mode" {'selected' if twin_mode == 'Engine Health Mode' else ''}>1. Engine Health Mode</option>
+                    <option value="Thermal Mode" {'selected' if twin_mode == 'Thermal Mode' else ''}>2. Thermal Mode</option>
+                    <option value="Pressure Mode" {'selected' if twin_mode == 'Pressure Mode' else ''}>3. Pressure Mode</option>
+                    <option value="Component Degradation Mode" {'selected' if twin_mode == 'Component Degradation Mode' else ''}>4. Component Degradation Mode</option>
+                    <option value="Sensor Monitoring Mode" {'selected' if twin_mode == 'Sensor Monitoring Mode' else ''}>5. Sensor Monitoring Mode</option>
+                    <option value="Predictive Maintenance Mode" {'selected' if twin_mode == 'Predictive Maintenance Mode' else ''}>6. Predictive Maintenance Mode</option>
+                    <option value="Baseline Comparison Mode" {'selected' if twin_mode == 'Baseline Comparison Mode' else ''}>7. Baseline Comparison Mode</option>
+                </select>
+
+                <span style="margin-left: 4px;">Inspect:</span>
                 <select id="comp-select" onchange="selectComponentFromDropdown(this.value)" style="background: #151D27; color: #E2E8F0; border: 1px solid #334155; border-radius: 4px; padding: 2px 4px; font-size: 11px;">
                     <option value="fan_assembly">1. Fan Assembly</option>
                     <option value="lpc">2. Low-Pressure Compressor</option>
@@ -569,6 +712,7 @@ def render_threejs_digital_twin_html(
                     <option value="exhaust_nozzle">7. Exhaust Nozzle</option>
                     <option value="engine_casing">8. Outer Nacelle Casing</option>
                     <option value="central_shaft">9. Central Shaft Assembly</option>
+                    <option value="sensors">10. Sensors & Instrumentation</option>
                 </select>
             </div>
 
@@ -587,6 +731,8 @@ def render_threejs_digital_twin_html(
 
         <script>
             const COMPONENT_DATA = {components_json};
+            const THRESHOLD_EVAL = {threshold_eval_json};
+            const TELEMETRY_DATA = {telemetry_json};
             const container = document.getElementById('canvas-container');
             const scene = new THREE.Scene();
             scene.background = new THREE.Color(0x0B0F14);
@@ -621,86 +767,155 @@ def render_threejs_digital_twin_html(
             const partGroups = {{}};
             let isExploded = false;
             let currentSelected = "{default_selected}";
+            let currentTwinMode = "{twin_mode}";
             const visualStates = {visual_states_json};
             const highlightComps = {highlight_json};
 
-            function getCompColor(compKey, defaultHex) {{
+            // 7 Twin Modes Color Palette Evaluator
+            function getCompColorForMode(compKey, mode) {{
+                if (mode === "Thermal Mode") {{
+                    const thermalMap = {{
+                        "fan_assembly": 0x3B82F6,   // Cold inlet (~518 °R)
+                        "lpc": 0x06B6D4,            // Booster (~642 °R)
+                        "hpc": 0xF59E0B,            // Core compressor (~1585 °R)
+                        "combustor": 0xEF4444,      // Burner core (~2100 °R)
+                        "hpt": 0xEA580C,            // HP expansion (~1405 °R)
+                        "lpt": 0xEAB308,            // LP expansion (~1150 °R)
+                        "exhaust_nozzle": 0x64748B, // Exhaust (~850 °R)
+                        "central_shaft": 0x94A3B8,  // Shaft core
+                        "engine_casing": 0x1E293B,  // Ambient nacelle
+                        "sensors": 0xA855F7         // Thermocouple rakes
+                    }};
+                    return thermalMap[compKey] || 0x10B981;
+                }} else if (mode === "Pressure Mode") {{
+                    const pressureMap = {{
+                        "fan_assembly": 0x38BDF8,   // P2 ambient
+                        "lpc": 0x0284C7,            // LPC pressure rise
+                        "hpc": 0xEC4899,            // HPC max pressure (P30 max)
+                        "combustor": 0xF59E0B,      // Burner pressure
+                        "hpt": 0xFBBF24,            // Expansion drop
+                        "lpt": 0x14B8A6,            // Exit expansion
+                        "exhaust_nozzle": 0x3B82F6, // Ambient exhaust
+                        "central_shaft": 0x64748B,
+                        "engine_casing": 0x1E293B,
+                        "sensors": 0xA855F7
+                    }};
+                    return pressureMap[compKey] || 0x10B981;
+                }} else if (mode === "Component Degradation Mode") {{
+                    if (compKey === "hpc" || compKey === "hpt") return 0xF59E0B;
+                    if (compKey === "combustor") return 0xFBBF24;
+                    return 0x10B981;
+                }} else if (mode === "Sensor Monitoring Mode") {{
+                    if (compKey === "sensors") return 0xC084FC;
+                    return 0x475569;
+                }} else if (mode === "Predictive Maintenance Mode") {{
+                    const rulVal = {predicted_rul};
+                    if (rulVal < 35.0 && (compKey === "hpc" || compKey === "hpt")) return 0xEF4444;
+                    if (rulVal < 60.0 && compKey === "hpc") return 0xF97316;
+                    return 0x10B981;
+                }} else if (mode === "Baseline Comparison Mode") {{
+                    if (compKey === "hpc") return 0xF59E0B;
+                    return 0x10B981;
+                }}
+                // Default: Engine Health Mode (7-State Threshold Mapping)
+                if (THRESHOLD_EVAL && THRESHOLD_EVAL[compKey]) {{
+                    const hexStr = THRESHOLD_EVAL[compKey].color.replace('#', '0x');
+                    return parseInt(hexStr, 16);
+                }}
                 if (visualStates && visualStates[compKey]) {{
                     const s = visualStates[compKey];
                     if (s === "CRITICAL") return 0xEF4444;
-                    if (s === "WARNING") return 0xF59E0B;
+                    if (s === "WARNING") return 0xF97316;
                     if (s === "MODIFIED") return 0x00B8D9;
                     if (s === "NORMAL") return 0x10B981;
                 }}
-                return defaultHex;
+                return 0x10B981;
             }}
 
             function getCompEmissive(compKey, defaultHex, defaultIntensity = 0.0) {{
                 if (highlightComps && highlightComps.includes(compKey)) {{
                     return {{ color: 0x00B8D9, intensity: 0.85 }};
                 }}
-                if (visualStates && visualStates[compKey] === "CRITICAL") {{
-                    return {{ color: 0xEF4444, intensity: 0.75 }};
+                if (currentTwinMode === "Sensor Monitoring Mode" && compKey === "sensors") {{
+                    return {{ color: 0xC084FC, intensity: 0.95 }};
                 }}
-                if (visualStates && visualStates[compKey] === "WARNING") {{
-                    return {{ color: 0xF59E0B, intensity: 0.6 }};
-                }}
-                if (visualStates && visualStates[compKey] === "MODIFIED") {{
-                    return {{ color: 0x00B8D9, intensity: 0.6 }};
+                if (THRESHOLD_EVAL && THRESHOLD_EVAL[compKey]) {{
+                    const st = THRESHOLD_EVAL[compKey].state;
+                    if (st === "RED" || st === "CRITICAL") return {{ color: 0xEF4444, intensity: 0.8 }};
+                    if (st === "ORANGE" || st === "WARNING") return {{ color: 0xF97316, intensity: 0.6 }};
+                    if (st === "PURPLE") return {{ color: 0xA855F7, intensity: 0.75 }};
                 }}
                 return {{ color: defaultHex, intensity: defaultIntensity }};
             }}
 
             // Materials
-            const emFan = getCompEmissive("fan_assembly", 0x000000);
-            const emLPC = getCompEmissive("lpc", 0x000000);
-            const emHPC = getCompEmissive("hpc", 0x000000);
-            const emHPT = getCompEmissive("hpt", 0x000000);
-            const emLPT = getCompEmissive("lpt", 0x000000);
-
             const matCasing = new THREE.MeshStandardMaterial({{
                 color: 0x1E293B, metalness: 0.7, roughness: 0.3, transparent: true, opacity: 0.35
             }});
             const matShaft = new THREE.MeshStandardMaterial({{ color: 0x94A3B8, metalness: 0.9, roughness: 0.15 }});
+            
             const matFan = new THREE.MeshStandardMaterial({{
-                color: getCompColor("fan_assembly", 0xCBD5E1),
-                emissive: emFan.color,
-                emissiveIntensity: emFan.intensity,
+                color: getCompColorForMode("fan_assembly", currentTwinMode),
+                emissive: getCompEmissive("fan_assembly", 0x000000).color,
+                emissiveIntensity: getCompEmissive("fan_assembly", 0x000000).intensity,
                 metalness: 0.85, roughness: 0.2
             }});
             const matLPC = new THREE.MeshStandardMaterial({{
-                color: getCompColor("lpc", 0x38BDF8),
-                emissive: emLPC.color,
-                emissiveIntensity: emLPC.intensity,
+                color: getCompColorForMode("lpc", currentTwinMode),
+                emissive: getCompEmissive("lpc", 0x000000).color,
+                emissiveIntensity: getCompEmissive("lpc", 0x000000).intensity,
                 metalness: 0.75, roughness: 0.3
             }});
             const matHPC = new THREE.MeshStandardMaterial({{
-                color: getCompColor("hpc", 0xF59E0B),
-                emissive: emHPC.color,
-                emissiveIntensity: emHPC.intensity,
+                color: getCompColorForMode("hpc", currentTwinMode),
+                emissive: getCompEmissive("hpc", 0x000000).color,
+                emissiveIntensity: getCompEmissive("hpc", 0x000000).intensity,
                 metalness: 0.75, roughness: 0.3
             }});
             const matCombustor = new THREE.MeshStandardMaterial({{
-                color: {glow_color.replace('#', '0x')},
-                emissive: {glow_color.replace('#', '0x')},
-                emissiveIntensity: 0.7,
+                color: getCompColorForMode("combustor", currentTwinMode),
+                emissive: getCompColorForMode("combustor", currentTwinMode),
+                emissiveIntensity: 0.6,
                 roughness: 0.4
             }});
             const matHPT = new THREE.MeshStandardMaterial({{
-                color: getCompColor("hpt", 0xEF4444),
-                emissive: emHPT.color,
-                emissiveIntensity: emHPT.intensity,
+                color: getCompColorForMode("hpt", currentTwinMode),
+                emissive: getCompEmissive("hpt", 0x000000).color,
+                emissiveIntensity: getCompEmissive("hpt", 0x000000).intensity,
                 metalness: 0.85, roughness: 0.2
             }});
             const matLPT = new THREE.MeshStandardMaterial({{
-                color: getCompColor("lpt", 0x10B981),
-                emissive: emLPT.color,
-                emissiveIntensity: emLPT.intensity,
+                color: getCompColorForMode("lpt", currentTwinMode),
+                emissive: getCompEmissive("lpt", 0x000000).color,
+                emissiveIntensity: getCompEmissive("lpt", 0x000000).intensity,
                 metalness: 0.85, roughness: 0.2
             }});
-            const matNozzle = new THREE.MeshStandardMaterial({{ color: 0x475569, metalness: 0.8, roughness: 0.4 }});
+            const matNozzle = new THREE.MeshStandardMaterial({{
+                color: getCompColorForMode("exhaust_nozzle", currentTwinMode),
+                metalness: 0.8, roughness: 0.4
+            }});
+            const matSensors = new THREE.MeshStandardMaterial({{
+                color: getCompColorForMode("sensors", currentTwinMode),
+                emissive: 0x7E22CE,
+                emissiveIntensity: 0.65,
+                metalness: 0.85,
+                roughness: 0.2
+            }});
 
-            // 1. FAN ASSEMBLY
+            const materialMap = {{
+                "fan_assembly": matFan,
+                "lpc": matLPC,
+                "hpc": matHPC,
+                "combustor": matCombustor,
+                "hpt": matHPT,
+                "lpt": matLPT,
+                "exhaust_nozzle": matNozzle,
+                "engine_casing": matCasing,
+                "central_shaft": matShaft,
+                "sensors": matSensors
+            }};
+
+            // 1. FAN ASSEMBLY (Low Pressure Spool)
             const fanGrp = new THREE.Group();
             fanGrp.name = "fan_assembly";
             const spinner = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.6, 24), matFan);
@@ -721,7 +936,7 @@ def render_threejs_digital_twin_html(
             engineGroup.add(fanGrp);
             partGroups["fan_assembly"] = {{ group: fanGrp, origX: 0, explodedX: -3.8 }};
 
-            // 2. LPC (Booster Stages)
+            // 2. LPC (Booster Stages - LP Spool)
             const lpcGrp = new THREE.Group();
             lpcGrp.name = "lpc";
             for (let c = 0; c < 3; c++) {{
@@ -733,7 +948,7 @@ def render_threejs_digital_twin_html(
             engineGroup.add(lpcGrp);
             partGroups["lpc"] = {{ group: lpcGrp, origX: 0, explodedX: -2.0 }};
 
-            // 3. HPC (Core High-Pressure Compressor)
+            // 3. HPC (Core High-Pressure Compressor - HP Spool)
             const hpcGrp = new THREE.Group();
             hpcGrp.name = "hpc";
             for (let c = 0; c < 6; c++) {{
@@ -755,7 +970,7 @@ def render_threejs_digital_twin_html(
             engineGroup.add(combGrp);
             partGroups["combustor"] = {{ group: combGrp, origX: 0, explodedX: 1.4 }};
 
-            // 5. HPT (High-Pressure Turbine)
+            // 5. HPT (High-Pressure Turbine - HP Spool)
             const hptGrp = new THREE.Group();
             hptGrp.name = "hpt";
             for (let t = 0; t < 2; t++) {{
@@ -767,7 +982,7 @@ def render_threejs_digital_twin_html(
             engineGroup.add(hptGrp);
             partGroups["hpt"] = {{ group: hptGrp, origX: 0, explodedX: 2.8 }};
 
-            // 6. LPT (Low-Pressure Turbine)
+            // 6. LPT (Low-Pressure Turbine - LP Spool)
             const lptGrp = new THREE.Group();
             lptGrp.name = "lpt";
             for (let t = 0; t < 3; t++) {{
@@ -789,7 +1004,7 @@ def render_threejs_digital_twin_html(
             engineGroup.add(nozGrp);
             partGroups["exhaust_nozzle"] = {{ group: nozGrp, origX: 0, explodedX: 6.0 }};
 
-            // 8. CENTRAL SHAFT
+            // 8. CENTRAL SHAFT ASSEMBLY (Dual-Spool HP/LP)
             const shaftGrp = new THREE.Group();
             shaftGrp.name = "central_shaft";
             const shaftMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 11.5, 24), matShaft);
@@ -799,7 +1014,7 @@ def render_threejs_digital_twin_html(
             engineGroup.add(shaftGrp);
             partGroups["central_shaft"] = {{ group: shaftGrp, origX: 0, explodedX: 0 }};
 
-            // 9. ENGINE CASING (Cutaway Nacelle)
+            // 9. ENGINE CASING (Semi-Transparent Cutaway Nacelle)
             const casingGrp = new THREE.Group();
             casingGrp.name = "engine_casing";
             const casingMesh = new THREE.Mesh(new THREE.CylinderGeometry(2.7, 2.3, 10.5, 32, 1, true, 0, Math.PI * 1.55), matCasing);
@@ -808,6 +1023,69 @@ def render_threejs_digital_twin_html(
             casingGrp.add(casingMesh);
             engineGroup.add(casingGrp);
             partGroups["engine_casing"] = {{ group: casingGrp, origX: 0, explodedX: 0, origY: 0, explodedY: 3.5 }};
+
+            // 10. SENSORS & INSTRUMENTATION HARNESS (Component 10: Stations 2, 2.5, 3, 4, 5)
+            const sensorsGrp = new THREE.Group();
+            sensorsGrp.name = "sensors";
+
+            // Station 2: Fan Inlet Rake (T2, P2)
+            const sRing1 = new THREE.Mesh(new THREE.TorusGeometry(2.32, 0.05, 12, 36), matSensors);
+            sRing1.rotation.y = Math.PI / 2;
+            sRing1.position.x = -4.3;
+            sensorsGrp.add(sRing1);
+
+            // Station 2.5: LPC Exit Rake (T24)
+            const sRing2 = new THREE.Mesh(new THREE.TorusGeometry(1.86, 0.045, 12, 36), matSensors);
+            sRing2.rotation.y = Math.PI / 2;
+            sRing2.position.x = -2.1;
+            sensorsGrp.add(sRing2);
+
+            // Station 3: HPC Discharge Rake (T30, P30, Ps30)
+            const sRing3 = new THREE.Mesh(new THREE.TorusGeometry(1.58, 0.045, 12, 36), matSensors);
+            sRing3.rotation.y = Math.PI / 2;
+            sRing3.position.x = 0.9;
+            sensorsGrp.add(sRing3);
+
+            // Station 4: Combustor / TIT Thermocouple Rake (T40)
+            const sRing4 = new THREE.Mesh(new THREE.TorusGeometry(1.52, 0.045, 12, 36), matSensors);
+            sRing4.rotation.y = Math.PI / 2;
+            sRing4.position.x = 2.4;
+            sensorsGrp.add(sRing4);
+
+            // Station 5: LPT Exhaust / EGT Thermocouple Harness (T50)
+            const sRing5 = new THREE.Mesh(new THREE.TorusGeometry(1.72, 0.045, 12, 36), matSensors);
+            sRing5.rotation.y = Math.PI / 2;
+            sRing5.position.x = 5.2;
+            sensorsGrp.add(sRing5);
+
+            // Longitudinal FADEC Harness Conduit running along top of casing
+            const conduit = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 10.5, 16), matSensors);
+            conduit.rotation.z = Math.PI / 2;
+            conduit.position.set(0.5, 2.45, 0.0);
+            sensorsGrp.add(conduit);
+
+            engineGroup.add(sensorsGrp);
+            partGroups["sensors"] = {{ group: sensorsGrp, origX: 0, explodedX: 0, origY: 0, explodedY: 3.8 }};
+
+            // Mode Switching
+            function setTwinMode(newMode) {{
+                currentTwinMode = newMode;
+                document.getElementById('hud-mode-badge').innerText = "MODE: " + newMode;
+                for (const [compKey, mat] of Object.entries(materialMap)) {{
+                    const newColor = getCompColorForMode(compKey, newMode);
+                    mat.color.setHex(newColor);
+                    const em = getCompEmissive(compKey, 0x000000);
+                    mat.emissive.setHex(em.color);
+                    mat.emissiveIntensity = em.intensity;
+                    if (newMode === "Sensor Monitoring Mode") {{
+                        mat.opacity = (compKey === "sensors") ? 1.0 : 0.45;
+                        mat.transparent = true;
+                    }} else if (compKey !== "engine_casing") {{
+                        mat.opacity = 1.0;
+                        mat.transparent = false;
+                    }}
+                }}
+            }}
 
             // Camera Reset
             function resetCamera() {{
@@ -832,13 +1110,19 @@ def render_threejs_digital_twin_html(
                 document.getElementById('comp-station').innerText = comp.station + " // " + comp.subsystem;
                 document.getElementById('comp-wear').innerText = comp.degradation_mode;
 
+                const th = comp.threshold_eval || {{}};
+                const stElem = document.getElementById('comp-status');
+                stElem.innerText = th.state || "NORMAL";
+                stElem.style.color = th.color || "#10B981";
+
                 // Populate Sensor Rows
                 let html = "";
-                for (const [sName, sVal] of Object.entries(comp.live_readings || {{}})) {{
+                const readings = comp.live_readings || {{}};
+                for (const [sName, sVal] of Object.entries(readings)) {{
                     html += `<div class="sensor-row"><span>${{sName}}</span><b>${{sVal}}</b></div>`;
                 }}
                 if (!html) {{
-                    html = `<div style="color: #94A3B8; font-size: 11px;">Nominal sensor readings within design limits.</div>`;
+                    html = `<div style="color: #94A3B8; font-size: 11px;">Nominal telemetry within operational design limits.</div>`;
                 }}
                 document.getElementById('comp-sensors').innerHTML = html;
             }}
@@ -897,12 +1181,31 @@ def render_threejs_digital_twin_html(
                 document.getElementById('cycle-indicator').innerText = "Cycle 1";
             }}
 
-            // Animation Loop
+            // Animation Loop (Dual-Spool Dynamic Rotation + Exploded Interpolation)
             let clock = new THREE.Clock();
             function animate() {{
                 requestAnimationFrame(animate);
                 const delta = clock.getDelta();
-                fanGrp.rotation.x += 4.5 * delta;
+
+                // Physical Spool Speeds from telemetry
+                const n1 = (TELEMETRY_DATA.sensor_9) || 2388.0;
+                const n2 = (TELEMETRY_DATA.sensor_8) || 8400.0;
+                const lpRotSpeed = (n1 / 2388.0) * 4.2;
+                const hpRotSpeed = (n2 / 8400.0) * 7.5;
+
+                // LP Spool rotation (Fan, LPC, LPT)
+                fanGrp.rotation.x += lpRotSpeed * delta;
+                lpcGrp.rotation.x += lpRotSpeed * delta;
+                lptGrp.rotation.x += lpRotSpeed * delta;
+
+                // HP Spool rotation (HPC, HPT)
+                hpcGrp.rotation.x += hpRotSpeed * delta;
+                hptGrp.rotation.x += hpRotSpeed * delta;
+
+                // Pulsing glow for Sensor Monitoring Mode
+                if (currentTwinMode === "Sensor Monitoring Mode") {{
+                    matSensors.emissiveIntensity = 0.5 + 0.45 * Math.sin(clock.getElapsedTime() * 4.0);
+                }}
 
                 // Smooth Exploded View Interpolation
                 for (const [key, p] of Object.entries(partGroups)) {{
@@ -926,8 +1229,11 @@ def render_threejs_digital_twin_html(
                 renderer.setSize(container.clientWidth, container.clientHeight);
             }});
 
-            // Initialize default component
-            selectComponentFromDropdown("hpc");
+            // Initialize default component and mode
+            selectComponentFromDropdown("{default_selected}");
+            if (currentTwinMode !== "Engine Health Mode") {{
+                setTwinMode(currentTwinMode);
+            }}
         </script>
     </body>
     </html>

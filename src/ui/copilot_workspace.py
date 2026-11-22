@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 
 from src.copilot_nlu import AerospaceCopilotNLU, ConversationalIntent
+from src.chatbot.multi_provider_agent import get_aerospace_agent, ProviderType, AgentResponse
 from src.copilot_scenarios import (
     EngineeringScenario,
     ScenarioResult,
@@ -193,6 +194,32 @@ def render_copilot_workspace():
     with col_center:
         st.markdown("#### 💬 Conversational Engineering Console")
 
+        prov_col1, prov_col2 = st.columns([2, 1])
+        with prov_col1:
+            provider_labels = {
+                ProviderType.GEMINI: "🤖 Google Gemini (Recommended)",
+                ProviderType.HUGGINGFACE: "🤗 Hugging Face Inference",
+                ProviderType.OPENAI: "⚡ OpenAI (GPT-4o)",
+                ProviderType.LOCAL: "⚙️ Local Deterministic Parser"
+            }
+            selected_prov = st.selectbox(
+                "NLU Intelligence Engine",
+                options=[ProviderType.GEMINI, ProviderType.HUGGINGFACE, ProviderType.OPENAI, ProviderType.LOCAL],
+                format_func=lambda p: provider_labels[p],
+                index=0,
+                key="copilot_nlu_provider_selector"
+            )
+        with prov_col2:
+            agent = get_aerospace_agent(default_provider=selected_prov)
+            prov_meta = agent.get_available_providers().get(selected_prov.value, {})
+            st.markdown(f"""
+            <div style="margin-top: 26px; padding: 5px 8px; background: #151D27; border: 1px solid #1E293B; border-radius: 4px; font-size: 11px; text-align: center;">
+                <span style="color: {'#21C77A' if prov_meta.get('configured') else '#F59E0B'}; font-weight: bold;">
+                    {prov_meta.get('badge', 'Active')}
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+
         # Chat display container
         chat_box = st.container(height=360)
         with chat_box:
@@ -228,20 +255,33 @@ def render_copilot_workspace():
                 "timestamp": time.strftime("%H:%M:%S")
             })
 
-            # Parse query
-            intent, parsed_scen, err = nlu.parse_query(
-                query_to_run,
+            # Process query via Multi-Provider Agent
+            agent = get_aerospace_agent(default_provider=selected_prov)
+            agent_resp = agent.process_query(
+                query=query_to_run,
                 current_scenario=st.session_state["active_scenario"],
                 default_dataset=active_dataset,
-                default_engine=active_engine
+                default_engine=active_engine,
+                preferred_provider=selected_prov
             )
+
+            intent = agent_resp.intent
+            parsed_scen = agent_resp.scenario
+            if parsed_scen is None:
+                _, parsed_scen, _ = nlu.parse_query(
+                    query_to_run,
+                    current_scenario=st.session_state["active_scenario"],
+                    default_dataset=active_dataset,
+                    default_engine=active_engine
+                )
 
             # Route by Intent
             if intent == ConversationalIntent.INVESTIGATE_ANOMALY:
                 # Run autonomous investigation
                 traj = adapter.get_engine_trajectory(active_engine, kind="train")
                 diag = inv_engine.investigate_anomaly(traj, target_symptom=query_to_run)
-                reply_text = f"**Diagnostic Investigation Report:**\n\n{diag['top_explanation']}\n\n"
+                reply_text = f"*[Provider: {agent_resp.provider_used} | Model: {agent_resp.model_name} | Latency: {agent_resp.latency_ms} ms]*\n\n"
+                reply_text += f"**Diagnostic Investigation Report:**\n\n{diag['top_explanation']}\n\n"
                 for h in diag["hypotheses"]:
                     reply_text += f"- **Rank {h['rank']} ({h['subsystem']}):** {h['hypothesis']} (Confidence: {h['confidence_score']*100:.0f}%)\n  - *Action:* {h['recommended_action']}\n"
                 st.session_state["copilot_history"].append({
@@ -256,7 +296,8 @@ def render_copilot_workspace():
                 scen_list = st.session_state["copilot_scenarios"]
                 if len(scen_list) >= 2:
                     comp_res = ScenarioComparisonEngine.compare_scenarios([r for s, r in scen_list])
-                    reply_text = f"**Multi-Scenario Comparative Evaluation:**\n\n{comp_res['summary']}\n\nEvaluated {comp_res['num_scenarios']} scenarios across the fleet."
+                    reply_text = f"*[Provider: {agent_resp.provider_used} | Model: {agent_resp.model_name} | Latency: {agent_resp.latency_ms} ms]*\n\n"
+                    reply_text += f"**Multi-Scenario Comparative Evaluation:**\n\n{comp_res['summary']}\n\nEvaluated {comp_res['num_scenarios']} scenarios across the fleet."
                 else:
                     reply_text = "Need at least two executed scenarios in this session to perform a side-by-side comparison. Execute another scenario and try again!"
                 st.session_state["copilot_history"].append({
@@ -283,10 +324,16 @@ def render_copilot_workspace():
                 # Save to database
                 save_scenario_to_db(parsed_scen, result)
 
-                # Append Agent explanation
+                # Append Agent explanation with Provider provenance badge
+                prov_header = f"*[Provider: {agent_resp.provider_used} | Model: {agent_resp.model_name} | Latency: {agent_resp.latency_ms} ms]*\n\n"
+                if agent_resp.explanation and "⚠️" not in agent_resp.explanation:
+                    full_explanation = f"{prov_header}**Thermodynamic Analysis:**\n{agent_resp.explanation}\n\n---\n{result.engineering_explanation}"
+                else:
+                    full_explanation = f"{prov_header}{result.engineering_explanation}"
+
                 st.session_state["copilot_history"].append({
                     "sender": "AGENT",
-                    "text": result.engineering_explanation,
+                    "text": full_explanation,
                     "timestamp": time.strftime("%H:%M:%S")
                 })
                 st.rerun()
@@ -345,7 +392,7 @@ def render_copilot_workspace():
                         "rul_delta": active_r.rul_delta
                     }
                 )
-                st.components.v1.html(twin_html, height=540, scrolling=False)
+                st.components.v1.html(twin_html, height=580, scrolling=False)
 
             # TAB 2: Synchronized Engineering Charts
             with t2:
