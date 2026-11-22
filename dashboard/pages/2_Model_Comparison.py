@@ -136,28 +136,56 @@ col_v1, col_v2 = st.columns(2)
 
 with col_v1:
     st.subheader("NASA Asymmetric Score Comparison")
-    fig_bar = px.bar(
-        df_master.sort_values("Raw NASA Score", ascending=True),
-        x="Architecture",
-        y="Raw NASA Score",
-        color="Phase",
-        text="Raw NASA Score",
-        title="Official Test Set Raw NASA Score (Lower is Better)"
-    )
+    try:
+        fig_bar = px.bar(
+            df_master.sort_values("Raw NASA Score", ascending=True),
+            x="Architecture",
+            y="Raw NASA Score",
+            color="Phase",
+            text="Raw NASA Score",
+            title="Official Test Set Raw NASA Score (Lower is Better)"
+        )
+    except Exception:
+        df_sorted = df_master.sort_values("Raw NASA Score", ascending=True)
+        fig_bar = go.Figure()
+        for phase in df_sorted["Phase"].unique():
+            sub = df_sorted[df_sorted["Phase"] == phase]
+            fig_bar.add_trace(go.Bar(
+                x=sub["Architecture"],
+                y=sub["Raw NASA Score"],
+                name=phase,
+                text=sub["Raw NASA Score"],
+                textposition="auto"
+            ))
+        fig_bar.update_layout(title="Official Test Set Raw NASA Score (Lower is Better)")
     fig_bar.update_layout(xaxis_tickangle=-45, template="plotly_dark")
     st.plotly_chart(fig_bar, use_container_width=True)
 
 with col_v2:
     st.subheader("MAE vs NASA Score Trade-off")
-    fig_scatter = px.scatter(
-        df_master,
-        x="MAE",
-        y="Raw NASA Score",
-        color="Phase",
-        text="Architecture",
-        title="MAE vs NASA Asymmetric Penalty Trade-off",
-        size=[25 if "BEST" in str(s) else 15 for s in df_master["Status"]]
-    )
+    try:
+        fig_scatter = px.scatter(
+            df_master,
+            x="MAE",
+            y="Raw NASA Score",
+            color="Phase",
+            text="Architecture",
+            title="MAE vs NASA Asymmetric Penalty Trade-off",
+            size=[25 if "BEST" in str(s) else 15 for s in df_master["Status"]]
+        )
+    except Exception:
+        fig_scatter = go.Figure()
+        for phase in df_master["Phase"].unique():
+            sub = df_master[df_master["Phase"] == phase]
+            fig_scatter.add_trace(go.Scatter(
+                x=sub["MAE"],
+                y=sub["Raw NASA Score"],
+                mode="markers+text",
+                name=phase,
+                text=sub["Architecture"],
+                textposition="top center"
+            ))
+        fig_scatter.update_layout(title="MAE vs NASA Asymmetric Penalty Trade-off", xaxis_title="MAE", yaxis_title="Raw NASA Score")
     fig_scatter.update_traces(textposition='top center')
     fig_scatter.update_layout(template="plotly_dark")
     st.plotly_chart(fig_scatter, use_container_width=True)

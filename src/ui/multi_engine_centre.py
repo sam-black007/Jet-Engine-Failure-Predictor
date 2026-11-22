@@ -395,29 +395,62 @@ def render_multi_engine_centre():
             # Visual Comparison Charts
             ch_col1, ch_col2 = st.columns(2)
             with ch_col1:
-                fig_thrust = px.bar(
-                    matrix_df,
-                    x="engine_model",
-                    y="takeoff_thrust_kn",
-                    color="manufacturer",
-                    title="Takeoff Thrust Comparison (kN)",
-                    template="plotly_dark",
-                    text_auto=".1f"
-                )
+                try:
+                    fig_thrust = px.bar(
+                        matrix_df,
+                        x="engine_model",
+                        y="takeoff_thrust_kn",
+                        color="manufacturer",
+                        title="Takeoff Thrust Comparison (kN)",
+                        template="plotly_dark",
+                        text_auto=".1f"
+                    )
+                except Exception:
+                    fig_thrust = go.Figure()
+                    for mfg in matrix_df["manufacturer"].unique():
+                        sub = matrix_df[matrix_df["manufacturer"] == mfg]
+                        fig_thrust.add_trace(go.Bar(
+                            x=sub["engine_model"],
+                            y=sub["takeoff_thrust_kn"],
+                            name=str(mfg),
+                            text=[f"{v:.1f}" for v in sub["takeoff_thrust_kn"]],
+                            textposition="auto"
+                        ))
+                    fig_thrust.update_layout(title="Takeoff Thrust Comparison (kN)", template="plotly_dark")
                 fig_thrust.update_layout(height=320, margin=dict(l=30, r=20, t=40, b=30))
                 st.plotly_chart(fig_thrust, use_container_width=True)
 
             with ch_col2:
-                fig_bpr = px.scatter(
-                    matrix_df,
-                    x="overall_pressure_ratio",
-                    y="bypass_ratio",
-                    size="fan_diameter_m",
-                    color="architecture",
-                    text="engine_model",
-                    title="Bypass Ratio vs Overall Pressure Ratio (OPR)",
-                    template="plotly_dark"
-                )
+                try:
+                    fig_bpr = px.scatter(
+                        matrix_df,
+                        x="overall_pressure_ratio",
+                        y="bypass_ratio",
+                        size="fan_diameter_m",
+                        color="architecture",
+                        text="engine_model",
+                        title="Bypass Ratio vs Overall Pressure Ratio (OPR)",
+                        template="plotly_dark"
+                    )
+                except Exception:
+                    fig_bpr = go.Figure()
+                    for arch in matrix_df["architecture"].unique():
+                        sub = matrix_df[matrix_df["architecture"] == arch]
+                        fig_bpr.add_trace(go.Scatter(
+                            x=sub["overall_pressure_ratio"],
+                            y=sub["bypass_ratio"],
+                            mode="markers+text",
+                            name=str(arch),
+                            text=sub["engine_model"],
+                            textposition="top center",
+                            marker=dict(size=[max(8, float(v) * 8) for v in sub["fan_diameter_m"]])
+                        ))
+                    fig_bpr.update_layout(
+                        title="Bypass Ratio vs Overall Pressure Ratio (OPR)",
+                        xaxis_title="Overall Pressure Ratio",
+                        yaxis_title="Bypass Ratio",
+                        template="plotly_dark"
+                    )
                 fig_bpr.update_layout(height=320, margin=dict(l=30, r=20, t=40, b=30))
                 st.plotly_chart(fig_bpr, use_container_width=True)
 

@@ -12,12 +12,15 @@ import shutil
 import math
 import numpy as np
 
+# Cache initial system PATH detection before any third-party module alters environment variables
+_INITIAL_SYSTEM_MATLAB = shutil.which("matlab")
+
 
 class MATLABSimulinkBridge:
     """Interface to MATLAB and Simulink physics simulation environments."""
 
     def __init__(self):
-        self.matlab_path = shutil.which("matlab")
+        self.matlab_path = _INITIAL_SYSTEM_MATLAB
         self.is_matlab_installed = self.matlab_path is not None
         self.matlab_engine_available = False
         try:

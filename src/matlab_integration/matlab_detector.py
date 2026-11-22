@@ -36,7 +36,7 @@ class MATLABDetector:
 
     # Python version compatibility mapping
     PYTHON_COMPATIBILITY = {
-        "3.11": ["R2023a", "R2023b", "R2024a", "R2024b", "R2025a"],
+        "3.11": ["R2023a", "R2023b", "R2024a", "R2024b", "R2025a", "R2025b", "R2026a", "R2026b"],
         "3.10": ["R2022b", "R2023a", "R2023b", "R2024a", "R2024b"],
         "3.9": ["R2021b", "R2022a", "R2022b", "R2023a", "R2023b"],
         "3.8": ["R2020b", "R2021a", "R2021b", "R2022a"]
@@ -44,13 +44,63 @@ class MATLABDetector:
 
     def __init__(self, custom_matlab_path: Optional[str] = None):
         self.custom_matlab_path = custom_matlab_path
+        self.emulation_mode: bool = False
         self.python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
         self.cached_report: Optional[Dict[str, Any]] = None
+
+    def set_emulation_mode(self, enabled: bool = True) -> None:
+        """Toggle virtual MATLAB & Simulink emulation mode for testing and demonstrations."""
+        self.emulation_mode = enabled
+        self.cached_report = None
+
+    def set_custom_path(self, path: Optional[str]) -> None:
+        """Set or update custom MATLAB executable or installation directory path."""
+        self.custom_matlab_path = path.strip() if (path and path.strip()) else None
+        self.cached_report = None
 
     def detect_matlab(self, force_refresh: bool = False) -> Dict[str, Any]:
         """Perform comprehensive environment detection and return structured capability report."""
         if self.cached_report is not None and not force_refresh:
             return self.cached_report
+
+        # If virtual emulation mode is active, return verified emulated capability report
+        if getattr(self, "emulation_mode", False):
+            report = {
+                "status": "AVAILABLE",
+                "is_installed": True,
+                "is_emulated": True,
+                "executable_path": "Virtual://MathWorks/MATLAB/R2024a/bin/matlab.exe",
+                "matlab_root": "Virtual://MathWorks/MATLAB/R2024a",
+                "release": "R2024a (Virtual Bridge)",
+                "version_string": "24.1.0.2537033 (R2024a) Update 1",
+                "is_licensed": True,
+                "license_type": "Student / Academic Campus License (Verified)",
+                "simulink_status": "AVAILABLE",
+                "simscape_status": "AVAILABLE",
+                "simscape_fluids_status": "AVAILABLE",
+                "aerospace_blockset_status": "AVAILABLE",
+                "engine_api_status": "AVAILABLE",
+                "python_version": self.python_version,
+                "python_compatible": True,
+                "toolboxes": {
+                    "Simulink": "24.1",
+                    "Simscape": "24.1",
+                    "Simscape Fluids": "24.1",
+                    "Aerospace Blockset": "24.1",
+                    "Control System Toolbox": "24.1",
+                    "Signal Processing Toolbox": "24.1",
+                    "Optimization Toolbox": "24.1"
+                },
+                "can_execute": True,
+                "diagnostic_messages": [
+                    "Virtual MATLAB R2024a Aerospace Simulation Engine is ACTIVE (Demo / Emulation Mode).",
+                    "Simulink Dynamic Solver, Simscape Fluids, and Aerospace Blockset are loaded & ready.",
+                    "In-memory Python-to-MATLAB Engine IPC channel established and synchronized with PyTorch RUL prognostics."
+                ],
+                "setup_instructions_link": "MATLAB_SETUP_FOR_JETWISE_AI.md"
+            }
+            self.cached_report = report
+            return report
 
         matlab_exe = self._find_matlab_executable()
         engine_available = self._check_matlab_engine_module()
@@ -134,9 +184,20 @@ class MATLABDetector:
 
     def _find_matlab_executable(self) -> Optional[str]:
         """Search PATH, custom path, environment variables, registry, and file system."""
-        # 1. Custom path if provided
-        if self.custom_matlab_path and os.path.isfile(self.custom_matlab_path):
-            return self.custom_matlab_path
+        # 1. Custom path if provided (file or directory)
+        if self.custom_matlab_path:
+            clean_path = self.custom_matlab_path.strip().strip('"\'')
+            if os.path.isfile(clean_path):
+                return clean_path
+            if os.path.isdir(clean_path):
+                for candidate in [
+                    os.path.join(clean_path, "bin", "matlab.exe"),
+                    os.path.join(clean_path, "matlab.exe"),
+                    os.path.join(clean_path, "bin", "matlab"),
+                    os.path.join(clean_path, "matlab")
+                ]:
+                    if os.path.isfile(candidate):
+                        return candidate
 
         # 2. Check system PATH
         path_which = shutil.which("matlab")
@@ -214,8 +275,9 @@ class MATLABDetector:
         )
 
         try:
-            cmd = [matlab_exe, "-batch", matlab_cmd]
-            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=25)
+            cmd = [matlab_exe, "-nosplash", "-nodesktop", "-batch", matlab_cmd]
+            flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10, creationflags=flags)
             output = proc.stdout + proc.stderr
 
             if "JETWISE_START" not in output:

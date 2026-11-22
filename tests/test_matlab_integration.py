@@ -160,19 +160,20 @@ def test_output_validation_brayton_cycle():
 
 def test_matlab_detector_offline_environment():
     """Verify detection when MATLAB is absent from host PATH (zero fake data)."""
-    # Detector without custom path
+    # Detector with mocked absent executable
     detector = MATLABDetector()
-    report = detector.detect_matlab()
+    with patch.object(detector, "_find_matlab_executable", return_value=None):
+        report = detector.detect_matlab(force_refresh=True)
 
-    assert "status" in report
-    assert "is_installed" in report
-    assert "simulink_status" in report
-    assert "toolboxes" in report
-    assert "python_version" in report
-    assert "setup_instructions_link" in report
+        assert "status" in report
+        assert "is_installed" in report
+        assert "simulink_status" in report
+        assert "toolboxes" in report
+        assert "python_version" in report
+        assert "setup_instructions_link" in report
 
-    # If MATLAB is not installed on this system, verify offline classification
-    if not report["is_installed"]:
+        # Verify offline classification
+        assert report["is_installed"] is False
         assert report["status"] == "MISSING"
         assert report["can_execute"] is False
         assert report["simulink_status"] == "MISSING"
@@ -346,3 +347,33 @@ def test_matlab_assets_exist_and_valid():
     assert "Fan Assembly" in cfg["subsystems"]
     assert "High-Pressure Compressor (HPC)" in cfg["subsystems"]
     assert "High-Pressure Turbine (HPT)" in cfg["subsystems"]
+
+
+# =============================================================================
+# 7. EMULATION & ADVANCED HOST CONFIGURATION TESTS
+# =============================================================================
+
+def test_matlab_detector_emulation_mode():
+    """Verify virtual MATLAB & Simulink emulation mode provides full capability audit."""
+    detector = MATLABDetector()
+    detector.set_emulation_mode(True)
+    report = detector.detect_matlab()
+
+    assert report["status"] == "AVAILABLE"
+    assert report["is_installed"] is True
+    assert report["is_emulated"] is True
+    assert report["simulink_status"] == "AVAILABLE"
+    assert report["simscape_status"] == "AVAILABLE"
+    assert report["engine_api_status"] == "AVAILABLE"
+    assert report["can_execute"] is True
+    assert "Simulink" in report["toolboxes"]
+    assert "Simscape Fluids" in report["toolboxes"]
+
+
+def test_matlab_detector_custom_path():
+    """Verify custom MATLAB path setting and clearing."""
+    detector = MATLABDetector()
+    detector.set_custom_path(r"C:\Custom\MATLAB\R2024a\bin\matlab.exe")
+    assert detector.custom_matlab_path == r"C:\Custom\MATLAB\R2024a\bin\matlab.exe"
+    detector.set_custom_path("")
+    assert detector.custom_matlab_path is None
